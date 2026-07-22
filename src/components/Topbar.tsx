@@ -20,8 +20,12 @@ export default function Topbar() {
   return (
     <>
       <header className="topbar container">
-        <img src="/imagens/arcowsvg.svg" alt="Arcofoods Logo" className="logo-img" />
-        
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <img src="/imagens/arcowsvg.svg" alt="Arcofoods Logo" className="logo-img" />
+          <div style={{ width: '1px', height: '35px', backgroundColor: 'var(--glass-border)' }}></div>
+          <img src="/imagens/jotajasummit.svg" alt="JotaJá Summit Logo" style={{ height: '45px', width: 'auto', flexShrink: 0 }} />
+        </div>
+
         {/* Navegação Desktop */}
         <nav className="desktop-nav">
           <div className="nav-links">

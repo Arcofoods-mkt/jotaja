@@ -4,27 +4,34 @@ import Topbar from '../components/Topbar';
 export default function Home() {
   return (
     <main>
-      <Topbar />
-      
-      {/* 1. HERO SECTION */}
-      <section className="container hero">
+      {/* 1. HERO SECTION (com Topbar inclusa para pegar o background) */}
+      <section className="hero-bg">
+        <Topbar />
+        <div className="container hero">
         <div className="hero-content">
           <h1>
             O futuro do seu negócio no <br/>
             <span className="text-gradient font-display">JotaJá Summit</span>
           </h1>
-          <p style={{ fontSize: '1.125rem', marginBottom: '2rem' }}>
+          <p style={{ fontSize: '1.125rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>
             Conecte-se com as maiores indústrias, descubra inovações do mercado e transforme seus resultados em 2 dias de imersão total.
           </p>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#22c55e' }}></div>
-            <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>Inscrições Abertas</span>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2rem', background: 'rgba(0,0,0,0.2)', padding: '1.5rem', borderRadius: '12px' }}>
+            <h4 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--text-color)' }}>Por que se inscrever agora?</h4>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span style={{ fontSize: '1.05rem' }}><strong>Ganhe 5% OFF</strong> na sua próxima compra Arcofoods</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span style={{ fontSize: '1.05rem' }}>Participe de <strong>sorteios exclusivos</strong> durante os 2 dias de evento</span>
+            </div>
           </div>
         </div>
 
         <div className="hero-form-wrapper">
-          <div className="glass" style={{ padding: '2.5rem 2rem' }}>
-            <div className="badge-discount">Ganhe 5% OFF!</div>
+          <div className="glass" style={{ padding: '2.5rem 2rem', background: 'rgba(255, 255, 255, 0.05)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
             <h3>Garanta seu convite</h3>
             <p style={{ fontSize: '0.875rem' }}>Preencha os dados abaixo e receba 5% de desconto na sua próxima compra.</p>
             
@@ -48,6 +55,7 @@ export default function Home() {
               </button>
             </form>
           </div>
+        </div>
         </div>
       </section>
 
