@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Topbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,9 +22,9 @@ export default function Topbar() {
     <>
       <header className="topbar container">
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          <img src="/imagens/arcowsvg.svg" alt="Arcofoods Logo" className="logo-img" />
+          <Image src="/imagens/arcowsvg.svg" alt="Arcofoods Logo" width={200} height={55} className="logo-img" unoptimized />
           <div style={{ width: '1px', height: '35px', backgroundColor: 'var(--glass-border)' }}></div>
-          <img src="/imagens/jotajasummit.svg" alt="JotaJá Summit Logo" style={{ height: '45px', width: 'auto', flexShrink: 0 }} />
+          <Image src="/imagens/jotajasummit.svg" alt="JotaJá Summit Logo" width={200} height={45} style={{ height: '45px', width: 'auto', flexShrink: 0 }} unoptimized />
         </div>
 
         {/* Navegação Desktop */}
