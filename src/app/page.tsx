@@ -1,14 +1,14 @@
 import React from 'react';
+import Topbar from '../components/Topbar';
 
 export default function Home() {
   return (
     <main>
+      <Topbar />
+      
       {/* 1. HERO SECTION */}
       <section className="container hero">
         <div className="hero-content">
-          <div className="glass tag">
-            Dezembro de 2026 • Local a definir
-          </div>
           <h1>
             O futuro do seu negócio no <br/>
             <span className="text-gradient font-display">JotaJá Summit</span>
@@ -68,19 +68,26 @@ export default function Home() {
       </section>
 
       {/* 3. ESTATÍSTICAS */}
-      <section className="container" style={{ paddingTop: '5rem', paddingBottom: '3rem' }}>
-        <div className="stats-grid">
-          <div className="glass stat-card">
-            <div className="stat-number text-gradient" style={{ color: '#60a5fa' }}>3.000</div>
-            <div className="stat-label">PARTICIPANTES</div>
+      <section className="container" style={{ paddingTop: '5rem', paddingBottom: '5rem', textAlign: 'center' }}>
+        <h2 style={{ fontSize: '3rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.2rem', color: 'var(--text-color)', lineHeight: 1.1 }}>
+          A SUA VIRADA COMEÇA AQUI!
+        </h2>
+        <p style={{ fontSize: '1.2rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.5rem', color: 'var(--text-color)' }}>
+          DA TEORIA À PRÁTICA, O EVENTO QUE MUDA O JOGO.
+        </p>
+
+        <div className="stats-grid" style={{ gap: '1rem', background: 'transparent' }}>
+          <div className="stat-card" style={{ padding: '1rem', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+            <div className="stat-number" style={{ color: 'var(--accent-color)', textShadow: 'none', background: 'none', WebkitTextFillColor: 'var(--accent-color)' }}>3.000</div>
+            <div className="stat-label" style={{ fontSize: '1rem', color: 'var(--text-color)', fontWeight: 800 }}>PARTICIPANTES</div>
           </div>
-          <div className="glass stat-card">
-            <div className="stat-number text-gradient" style={{ color: '#c084fc' }}>70+</div>
-            <div className="stat-label">STANDS</div>
+          <div className="stat-card" style={{ padding: '1rem', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+            <div className="stat-number" style={{ color: 'var(--accent-color)', textShadow: 'none', background: 'none', WebkitTextFillColor: 'var(--accent-color)' }}>70+</div>
+            <div className="stat-label" style={{ fontSize: '1rem', color: 'var(--text-color)', fontWeight: 800 }}>STANDS</div>
           </div>
-          <div className="glass stat-card">
-            <div className="stat-number text-gradient" style={{ color: '#60a5fa' }}>2 DIAS</div>
-            <div className="stat-label">DE IMERSÃO</div>
+          <div className="stat-card" style={{ padding: '1rem', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+            <div className="stat-number" style={{ color: 'var(--accent-color)', textShadow: 'none', background: 'none', WebkitTextFillColor: 'var(--accent-color)' }}>2 DIAS</div>
+            <div className="stat-label" style={{ fontSize: '1rem', color: 'var(--text-color)', fontWeight: 800 }}>DE IMERSÃO</div>
           </div>
         </div>
       </section>
