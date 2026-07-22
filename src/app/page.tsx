@@ -11,7 +11,7 @@ export default function Home() {
           </div>
           <h1>
             O futuro do seu negócio no <br/>
-            <span className="text-gradient">JotaJá Summit</span>
+            <span className="text-gradient font-display">JotaJá Summit</span>
           </h1>
           <p style={{ fontSize: '1.125rem', marginBottom: '2rem' }}>
             Conecte-se com as maiores indústrias, descubra inovações do mercado e transforme seus resultados em 2 dias de imersão total.

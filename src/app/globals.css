@@ -1,17 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+@font-face {
+  font-family: 'Poppins';
+  src: url('/Fontes/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/Fontes/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/Fontes/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/Fontes/Poppins-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Caflisch Script';
+  src: url('/Fontes/Caflisch Script Pro Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
 
 :root {
-  --bg-color: #0b0f19;
-  --bg-color-light: #161e31;
-  --text-color: #f1f5f9;
-  --text-muted: #94a3b8;
-  --accent-color: #3b82f6;
-  --accent-hover: #2563eb;
-  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  --bg-color: #044474; /* Azul Marinho */
+  --bg-color-light: #065b99;
+  --text-color: #F5F7F2; /* Off-white */
+  --text-muted: rgba(245, 247, 242, 0.75);
+  --accent-color: #94c41c; /* Verde Folha */
+  --accent-hover: #7ea317;
+  --gradient-primary: linear-gradient(135deg, #94c41c 0%, #b3e32d 100%);
   --border-radius: 12px;
-  --glass-bg: rgba(22, 30, 49, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --font-main: 'Inter', sans-serif;
+  --glass-bg: rgba(4, 68, 116, 0.6);
+  --glass-border: rgba(245, 247, 242, 0.15);
+  --font-main: 'Poppins', sans-serif;
+  --font-display: 'Caflisch Script', cursive;
   --container-width: 1200px;
 }
 
@@ -55,6 +85,12 @@ p { color: var(--text-muted); margin-bottom: 1rem; }
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-weight: normal;
+  font-size: 1.2em;
 }
 
 .tag {
