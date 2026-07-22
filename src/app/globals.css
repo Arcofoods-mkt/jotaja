@@ -146,7 +146,7 @@ p { color: var(--text-muted); margin-bottom: 1rem; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 0;
+  padding: 1.5rem 1.5rem;
   background-color: transparent;
   position: sticky;
   top: 0;
