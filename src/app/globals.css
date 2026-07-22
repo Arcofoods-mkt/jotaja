@@ -42,7 +42,7 @@
   --glass-border: rgba(245, 247, 242, 0.15);
   --font-main: 'Poppins', sans-serif;
   --font-display: 'Caflisch Script', cursive;
-  --container-width: 1200px;
+  --container-width: 1440px;
 }
 
 * {
@@ -143,10 +143,7 @@ p { color: var(--text-muted); margin-bottom: 1rem; }
 
 /* Topbar */
 .topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 1.5rem;
+  padding: 1.5rem 0;
   background-color: transparent;
   position: sticky;
   top: 0;

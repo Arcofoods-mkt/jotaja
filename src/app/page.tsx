@@ -66,12 +66,14 @@ export default function Home() {
             Empresas e Indústrias Participantes
           </p>
         </div>
-        <div className="carousel-track">
-          {[...Array(14)].map((_, i) => (
-            <div key={i} className="carousel-item">
-              LOGO {i % 7 + 1}
-            </div>
-          ))}
+        <div className="container" style={{ overflow: 'hidden', padding: 0 }}>
+          <div className="carousel-track">
+            {[...Array(14)].map((_, i) => (
+              <div key={i} className="carousel-item">
+                LOGO {i % 7 + 1}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
