@@ -10,7 +10,8 @@ export default function Home() {
         <div className="container hero">
         <div className="hero-content">
           <h1>
-            O futuro do seu negócio no <br/>
+            O futuro do seu <br/>
+            negócio no <br/>
             <span className="text-gradient font-display">JotaJá Summit</span>
           </h1>
           <p style={{ fontSize: '1.125rem', marginBottom: '1.5rem', color: 'var(--text-muted)' }}>
