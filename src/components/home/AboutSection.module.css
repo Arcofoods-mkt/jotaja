@@ -1,0 +1,71 @@
+.aboutSection {
+  padding: 6rem 0;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.aboutGrid {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+}
+
+.aboutContent {
+  flex: 1;
+}
+
+.text {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.featuresList {
+  list-style: none;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.featureItem {
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkIcon {
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+.aboutImages {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.imgPlaceholder {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius);
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: bold;
+}
+
+.img1 {
+  transform: translateY(0);
+}
+
+.img2 {
+  transform: translateY(40px);
+}
+
+@media (max-width: 900px) {
+  .aboutGrid {
+    flex-direction: column;
+    gap: 3rem;
+  }
+}
