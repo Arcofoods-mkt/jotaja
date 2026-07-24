@@ -148,6 +148,22 @@
 }
 
 @media (max-width: 768px) {
+  .heroTitle {
+    font-size: clamp(1.8rem, 7vw, 2.5rem);
+  }
+
+  .highlightText {
+    font-size: 1.2em;
+    display: block;
+    margin-top: 0.2rem;
+    white-space: nowrap;
+  }
+
+  .description {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
   .saveTheDate {
     width: 100%;
     box-sizing: border-box;
