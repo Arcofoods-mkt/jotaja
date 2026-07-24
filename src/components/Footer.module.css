@@ -98,11 +98,26 @@
 
 @media (max-width: 768px) {
   .footerContainer {
-    flex-direction: column;
-    gap: 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .brandColumn {
+    grid-column: 1 / -1;
+  }
+
+  .socialColumn {
+    grid-column: 1 / 2;
   }
 
   .gptwColumn {
-    align-items: flex-start;
+    grid-column: 2 / 3;
+    align-items: flex-end;
+    justify-content: flex-start;
+  }
+  
+  .gptwLogo {
+    height: 150px;
   }
 }

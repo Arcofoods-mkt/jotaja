@@ -134,6 +134,14 @@
 }
 
 @media (max-width: 900px) {
+  .logoImg {
+    height: 38px;
+  }
+  
+  .logoImgSecondary {
+    height: 30px;
+  }
+
   .desktopNav {
     display: none;
   }

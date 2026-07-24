@@ -1,7 +1,23 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import styles from './AboutSection.module.css';
 
+const imagesData = [
+  { id: 1, text: "Foto Barra" },
+  { id: 2, text: "Foto CD" },
+  { id: 3, text: "Foto 2025" }
+];
+
 export default function AboutSectionArcofoods() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % imagesData.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section className={styles.aboutSection} id="sobre-arcofoods">
       <div className={`container ${styles.aboutGrid}`}>
@@ -13,11 +29,28 @@ export default function AboutSectionArcofoods() {
           <p className={styles.text}>
             Com um dos portfólios mais completos do mercado de food service do Rio de Janeiro, oferece um mix diversificado de produtos, sempre apoiado por parcerias com as principais indústrias do setor.
           </p>
-
         </div>
-        <div className={styles.aboutImages}>
-          <div className={`glass ${styles.imgPlaceholder} ${styles.img1}`}>Foto Barra</div>
-          <div className={`glass ${styles.imgPlaceholder} ${styles.img2}`}>Foto CD</div>
+        
+        <div className={styles.carouselContainer}>
+          {imagesData.map((img, index) => (
+            <div 
+              key={img.id} 
+              className={`${styles.carouselSlide} ${index === currentIndex ? styles.active : ''}`}
+            >
+              {img.text}
+            </div>
+          ))}
+          <div className={styles.carouselIndicators}>
+            {imagesData.map((_, index) => (
+              <button 
+                key={index}
+                type="button"
+                className={`${styles.indicator} ${index === currentIndex ? styles.active : ''}`}
+                onClick={() => setCurrentIndex(index)}
+                aria-label={`Ir para foto ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
