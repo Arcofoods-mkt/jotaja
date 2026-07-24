@@ -19,6 +19,15 @@ export default function Topbar() {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      closeMenu(); // fecha o menu mobile se estiver aberto
+    }
+  };
+
   return (
     <>
       <header className={styles.topbar}>
@@ -32,9 +41,9 @@ export default function Topbar() {
           {/* Navegação Desktop */}
           <nav className={styles.desktopNav}>
             <div className={styles.navLinks}>
-              <a href="#sobre" className={styles.navLink}>Sobre nós</a>
-              <a href="#parceiros" className={styles.navLink}>Parceiros</a>
-              <a href="#contatos" className={styles.navLink}>Contatos</a>
+              <a href="#sobre-arcofoods" className={styles.navLink} onClick={(e) => handleScroll(e, 'sobre-arcofoods')}>Sobre nós</a>
+              <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
+              <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
             </div>
             <button type="button" className={`btn-primary ${styles.navButton}`}>
               INSCREVA-SE AGORA
@@ -66,9 +75,9 @@ export default function Topbar() {
           </svg>
         </button>
         <div className={styles.mobileNavLinks}>
-          <a href="#sobre" className={styles.navLink} onClick={closeMenu}>Sobre nós</a>
-          <a href="#parceiros" className={styles.navLink} onClick={closeMenu}>Parceiros</a>
-          <a href="#contatos" className={styles.navLink} onClick={closeMenu}>Contatos</a>
+          <a href="#sobre-arcofoods" className={styles.navLink} onClick={(e) => handleScroll(e, 'sobre-arcofoods')}>Sobre nós</a>
+          <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
+          <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
           <button type="button" className={`btn-primary ${styles.mobileNavBtn}`} onClick={closeMenu}>
             INSCREVA-SE AGORA
           </button>

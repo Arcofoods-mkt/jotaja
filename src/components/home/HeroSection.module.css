@@ -49,9 +49,9 @@
 }
 
 .description {
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   margin-bottom: 1.5rem;
-  color: var(--text-muted);
+  color: #e2e8f0;
 }
 
 .advantagesBox {

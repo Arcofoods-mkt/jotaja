@@ -1,5 +1,6 @@
 import React from 'react';
 import Topbar from '../Topbar';
+import CustomSelect from '../CustomSelect';
 import styles from './HeroSection.module.css';
 
 export default function HeroSection() {
@@ -20,7 +21,7 @@ export default function HeroSection() {
             <h4 className={styles.advantagesTitle}>Por que se inscrever agora?</h4>
             <div className={styles.advantageItem}>
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span className={styles.advantageText}><strong>Ganhe 5% OFF</strong> na sua próxima compra Arcofoods</span>
+              <span className={styles.advantageText}>Garanta sua vaga no <strong>maior evento</strong> do setor</span>
             </div>
             <div className={styles.advantageItem}>
               <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
@@ -31,8 +32,8 @@ export default function HeroSection() {
 
         <div className={styles.heroFormWrapper}>
           <div className={`glass ${styles.formBox}`}>
-            <h3>Cadastrou, ganhou!</h3>
-            <p className={styles.formSubtitle}>Preencha os dados abaixo e receba 5% de desconto na sua próxima compra.</p>
+            <h3>Garanta seu convite!</h3>
+            <p className={styles.formSubtitle}>Preencha os dados abaixo para garantir sua participação no evento.</p>
 
             <form className={styles.form}>
               <input type="text" placeholder="Nome Pessoal" className="input-field" required />
@@ -41,16 +42,18 @@ export default function HeroSection() {
               <input type="email" placeholder="E-mail" className="input-field" required />
               <input type="tel" placeholder="WhatsApp" className="input-field" required />
 
-              <select className="input-field" required defaultValue="">
-                <option value="" disabled>Selecione a Tipologia</option>
-                <option value="varejo">Varejo</option>
-                <option value="atacado">Atacado</option>
-                <option value="industria">Indústria</option>
-                <option value="outro">Outro</option>
-              </select>
+              <CustomSelect 
+                placeholder="Selecione a Tipologia"
+                options={[
+                  { value: 'varejo', label: 'Varejo' },
+                  { value: 'atacado', label: 'Atacado' },
+                  { value: 'industria', label: 'Indústria' },
+                  { value: 'outro', label: 'Outro' }
+                ]}
+              />
 
               <button type="button" className="btn-primary">
-                Quero meu Desconto e Convite
+                Quero meu Convite
               </button>
             </form>
           </div>

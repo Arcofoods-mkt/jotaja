@@ -1,6 +1,14 @@
 import React from 'react';
 import styles from './IndustryCarousel.module.css';
 
+const logos = [
+  { src: '/imagens/unilever-pro_cinza.svg', alt: 'Unilever Pro' },
+  { src: '/imagens/callebaut_cinza.svg', alt: 'Callebaut' },
+  { src: '/imagens/lactalis_cinza.svg', alt: 'Lactalis' },
+  { src: '/imagens/unilever-food-solutions_cinza.svg', alt: 'Unilever Food Solutions' },
+  { src: '/imagens/cargill_cinza.svg', alt: 'Cargill' },
+];
+
 export default function IndustryCarousel() {
   return (
     <section className={styles.carousel} id="parceiros">
@@ -11,9 +19,9 @@ export default function IndustryCarousel() {
       </div>
       <div className="container" style={{ overflow: 'hidden', padding: 0 }}>
         <div className={styles.carouselTrack}>
-          {[...Array(14)].map((_, i) => (
+          {[...logos, ...logos].map((logo, i) => (
             <div key={i} className={styles.carouselItem}>
-              LOGO {i % 7 + 1}
+              <img src={logo.src} alt={logo.alt} style={{ maxWidth: '200px', maxHeight: '110px', objectFit: 'contain' }} />
             </div>
           ))}
         </div>
