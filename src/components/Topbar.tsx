@@ -34,7 +34,7 @@ export default function Topbar() {
 
   useEffect(() => {
     setIsMounted(true);
-    const targetDate = new Date('2026-08-18T09:00:00-03:00').getTime();
+    const targetDate = new Date('2026-08-18T08:00:00-03:00').getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();

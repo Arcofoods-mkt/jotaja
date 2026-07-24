@@ -1,14 +1,14 @@
 .countdownBar {
   background-color: var(--accent-color);
   color: #000000;
-  padding: 1rem 0;
+  padding: 0.6rem 0;
   width: 100%;
   position: relative;
   z-index: 60;
 }
 
 .timeSquare {
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.45);
   color: #000000;
   padding: 0.3rem 0.5rem;
   border-radius: 6px;
@@ -17,7 +17,6 @@
   align-items: center;
   justify-content: center;
   min-width: 36px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   font-size: 1.1rem;
 }
 
