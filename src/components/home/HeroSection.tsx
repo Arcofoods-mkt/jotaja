@@ -30,34 +30,37 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className={styles.heroFormWrapper}>
-          <div className={`glass ${styles.formBox}`}>
-            <h3>Garanta seu convite!</h3>
-            <p className={styles.formSubtitle}>Preencha os dados abaixo para garantir sua participação no evento.</p>
+        {/* Formulário temporariamente oculto */}
+        {false && (
+          <div className={styles.heroFormWrapper}>
+            <div className={`glass ${styles.formBox}`}>
+              <h3>Garanta sua participação!</h3>
+              <p className={styles.formSubtitle}>Preencha os dados abaixo para garantir sua participação no sorteio da Arcofoods no Jotajá Summit!</p>
 
-            <form className={styles.form}>
-              <input type="text" placeholder="Nome Pessoal" className="input-field" required />
-              <input type="text" placeholder="Nome do Estabelecimento" className="input-field" required />
-              <input type="text" placeholder="CNPJ" className="input-field" required />
-              <input type="email" placeholder="E-mail" className="input-field" required />
-              <input type="tel" placeholder="WhatsApp" className="input-field" required />
+              <form className={styles.form}>
+                <input type="text" placeholder="Nome Pessoal" className="input-field" required />
+                <input type="text" placeholder="Nome do Estabelecimento" className="input-field" required />
+                <input type="text" placeholder="CNPJ" className="input-field" required />
+                <input type="email" placeholder="E-mail" className="input-field" required />
+                <input type="tel" placeholder="WhatsApp" className="input-field" required />
 
-              <CustomSelect 
-                placeholder="Selecione a Tipologia"
-                options={[
-                  { value: 'varejo', label: 'Varejo' },
-                  { value: 'atacado', label: 'Atacado' },
-                  { value: 'industria', label: 'Indústria' },
-                  { value: 'outro', label: 'Outro' }
-                ]}
-              />
+                <CustomSelect 
+                  placeholder="Selecione a Tipologia"
+                  options={[
+                    { value: 'varejo', label: 'Varejo' },
+                    { value: 'atacado', label: 'Atacado' },
+                    { value: 'industria', label: 'Indústria' },
+                    { value: 'outro', label: 'Outro' }
+                  ]}
+                />
 
-              <button type="button" className="btn-primary">
-                Quero meu Convite
-              </button>
-            </form>
+                <button type="button" className="btn-primary">
+                  Quero meu Convite
+                </button>
+              </form>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

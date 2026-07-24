@@ -23,9 +23,10 @@
 }
 
 .statsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
   padding: 4rem 0;
   background-color: transparent;
 }
@@ -37,6 +38,7 @@
   background-color: transparent;
   border: none;
   box-shadow: none;
+  min-width: 250px;
 }
 
 .statCard:hover {
