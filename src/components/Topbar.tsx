@@ -58,15 +58,33 @@ export default function Topbar() {
   return (
     <>
       <div className={styles.countdownBar}>
-        <div className="container" style={{ textAlign: 'center', fontSize: '0.9rem', fontWeight: 600 }}>
+        <div className="container" style={{ textAlign: 'center', fontSize: '1rem', fontWeight: 600 }}>
           {isMounted ? (
-            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-              <TbHourglass size={18} />
-              {`Faltam ${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s para o evento!`}
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
+              <TbHourglass size={20} />
+              <span>Faltam</span>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                <span className={styles.timeSquare}>{String(timeLeft.days).padStart(2, '0')}</span><span className={styles.timeLabel}>d</span>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                <span className={styles.timeSquare}>{String(timeLeft.hours).padStart(2, '0')}</span><span className={styles.timeLabel}>h</span>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                <span className={styles.timeSquare}>{String(timeLeft.minutes).padStart(2, '0')}</span><span className={styles.timeLabel}>m</span>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                <span className={styles.timeSquare}>{String(timeLeft.seconds).padStart(2, '0')}</span><span className={styles.timeLabel}>s</span>
+              </div>
+              
+              <span>para o evento!</span>
             </span>
           ) : (
-            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
-              <TbHourglass size={18} />
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem' }}>
+              <TbHourglass size={20} />
               Carregando tempo restante...
             </span>
           )}
@@ -87,9 +105,11 @@ export default function Topbar() {
               <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
               <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
             </div>
-            <button type="button" className={`btn-primary ${styles.navButton}`}>
-              INSCREVA-SE AGORA
-            </button>
+            {false && (
+              <button type="button" className={`btn-primary ${styles.navButton}`}>
+                INSCREVA-SE AGORA
+              </button>
+            )}
           </nav>
 
           {/* Botão Hambúrguer Mobile */}
@@ -120,9 +140,11 @@ export default function Topbar() {
           <a href="#sobre-arcofoods" className={styles.navLink} onClick={(e) => handleScroll(e, 'sobre-arcofoods')}>Sobre nós</a>
           <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
           <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
-          <button type="button" className={`btn-primary ${styles.mobileNavBtn}`} onClick={closeMenu}>
-            INSCREVA-SE AGORA
-          </button>
+          {false && (
+            <button type="button" className={`btn-primary ${styles.mobileNavBtn}`} onClick={closeMenu}>
+              INSCREVA-SE AGORA
+            </button>
+          )}
         </div>
       </div>
     </>

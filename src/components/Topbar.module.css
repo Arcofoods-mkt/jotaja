@@ -1,10 +1,29 @@
 .countdownBar {
   background-color: var(--accent-color);
   color: #000000;
-  padding: 0.5rem 0;
+  padding: 1rem 0;
   width: 100%;
   position: relative;
   z-index: 60;
+}
+
+.timeSquare {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-size: 1.1rem;
+}
+
+.timeLabel {
+  font-weight: 700;
+  font-size: 0.95rem;
 }
 
 .topbar {

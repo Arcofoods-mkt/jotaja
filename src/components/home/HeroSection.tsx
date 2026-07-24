@@ -17,6 +17,11 @@ export default function HeroSection() {
             Conecte-se com as maiores indústrias, descubra inovações do mercado e transforme seus resultados em 2 dias de imersão total.
           </p>
 
+          <div className={styles.saveTheDate}>
+            <span className={styles.saveTheDateTitle}>SAVE THE DATE</span>
+            <span className={styles.saveTheDateText}>18 e 19 de Agosto • 08:00 às 20:00</span>
+          </div>
+
           {/* Seção temporariamente oculta */}
           {false && (
             <div className={styles.advantagesBox}>

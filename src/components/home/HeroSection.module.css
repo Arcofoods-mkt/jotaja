@@ -50,9 +50,36 @@
 }
 
 .description {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   margin-bottom: 1.5rem;
+  line-height: 1.6;
   color: #e2e8f0;
+}
+
+.saveTheDate {
+  display: inline-flex;
+  flex-direction: column;
+  margin-top: 2rem;
+  padding: 1.5rem 3rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+  border-left: 5px solid var(--accent-color);
+}
+
+.saveTheDateTitle {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
+}
+
+.saveTheDateText {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
 }
 
 .advantagesBox {

@@ -17,7 +17,7 @@ function useCountUp(end: number, duration: number = 2000) {
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
           let startTimestamp: number | null = null;
-          
+
           const easeOutExpo = (x: number): number => {
             return x === 1 ? 1 : 1 - Math.pow(2, -10 * x);
           };
@@ -25,10 +25,10 @@ function useCountUp(end: number, duration: number = 2000) {
           const step = (timestamp: number) => {
             if (!startTimestamp) startTimestamp = timestamp;
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            
+
             const easedProgress = easeOutExpo(progress);
             setCount(Math.floor(easedProgress * end));
-            
+
             if (progress < 1) {
               window.requestAnimationFrame(step);
             } else {
@@ -66,16 +66,17 @@ export default function EventStats() {
   return (
     <section className={`container ${styles.statsSection}`}>
       <h2 className={styles.statsTitle}>
-        A SUA VIRADA COMEÇA AQUI!
+        A FORÇA DA NOSSA DISTRIBUIÇÃO
       </h2>
       <p className={styles.statsSubtitle}>
-        DA TEORIA À PRÁTICA, O EVENTO QUE MUDA O JOGO.
+        Uma estrutura preparada para atender às necessidades do seu negócio.
       </p>
 
       <div className={styles.statsGrid}>
-        <StatItem end={3000} label="PARTICIPANTES" />
-        <StatItem end={70} suffix="+" label="STANDS" />
-        <StatItem end={2} suffix=" DIAS" label="DE IMERSÃO" />
+        <StatItem end={8000} suffix="+" label="CLIENTES ATIVOS" />
+        <StatItem end={270} suffix="+" label="FORNECEDORES" />
+        <StatItem end={3000} suffix="+" label="SKUs NO PORTFÓLIO" />
+        <StatItem end={100} suffix="%" label="COBERTURA NO RJ" />
       </div>
     </section>
   );
