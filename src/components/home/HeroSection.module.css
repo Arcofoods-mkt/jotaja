@@ -142,3 +142,17 @@
     max-width: 500px;
   }
 }
+
+@media (max-width: 768px) {
+  .saveTheDate {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1.5rem 1rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .saveTheDateText {
+    font-size: 1.35rem;
+  }
+}
