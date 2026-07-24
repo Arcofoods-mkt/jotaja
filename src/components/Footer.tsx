@@ -8,7 +8,7 @@ export default function Footer() {
       <div className={`container ${styles.footerContainer}`}>
         {/* Coluna da Esquerda: Logo e Frase */}
         <div className={styles.brandColumn}>
-          <img src="/imagens/arcowsvg.svg" alt="Arcofoods" className={styles.footerLogo} />
+          <img src="/Imagens/arcowsvg.svg" alt="Arcofoods" className={styles.footerLogo} />
           <p className={styles.description}>
             O evento que vai revolucionar o seu negócio. Não fique de fora dessa imersão.
           </p>
@@ -35,7 +35,7 @@ export default function Footer() {
 
         {/* Coluna da Direita: GPTW Logo */}
         <div className={styles.gptwColumn}>
-          <img src="/imagens/GPTWlogo.svg" alt="Great Place to Work" className={styles.gptwLogo} />
+          <img src="/Imagens/GPTWlogo.svg" alt="Great Place to Work" className={styles.gptwLogo} />
         </div>
       </div>
       

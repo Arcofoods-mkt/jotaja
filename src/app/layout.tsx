@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title: "Arcofoods | Jotajá Summit",
   description: "O evento que vai revolucionar o seu negócio.",
   icons: {
-    icon: "/imagens/arcofoods-favicon.svg",
+    icon: "/Imagens/arcofoods-favicon.svg",
   },
 };
 

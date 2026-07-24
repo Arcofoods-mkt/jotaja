@@ -2,11 +2,11 @@ import React from 'react';
 import styles from './IndustryCarousel.module.css';
 
 const logos = [
-  { src: '/imagens/unilever-pro_cinza.svg', alt: 'Unilever Pro' },
-  { src: '/imagens/callebaut_cinza.svg', alt: 'Callebaut' },
-  { src: '/imagens/lactalis_cinza.svg', alt: 'Lactalis' },
-  { src: '/imagens/unilever-food-solutions_cinza.svg', alt: 'Unilever Food Solutions' },
-  { src: '/imagens/cargill_cinza.svg', alt: 'Cargill' },
+  { src: '/Imagens/unilever-pro_cinza.svg', alt: 'Unilever Pro' },
+  { src: '/Imagens/callebaut_cinza.svg', alt: 'Callebaut' },
+  { src: '/Imagens/lactalis_cinza.svg', alt: 'Lactalis' },
+  { src: '/Imagens/unilever-food-solutions_cinza.svg', alt: 'Unilever Food Solutions' },
+  { src: '/Imagens/cargill_cinza.svg', alt: 'Cargill' },
 ];
 
 export default function IndustryCarousel() {
