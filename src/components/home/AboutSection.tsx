@@ -21,9 +21,9 @@ export default function AboutSection() {
     <section className={styles.aboutSection} id="sobre">
       <div className={`container ${styles.aboutGrid}`}>
         <div className={styles.aboutContent}>
-          <h2>
-            O que rolou em 2025 e<br />
-            o que esperar de 2026
+          <h2 className={styles.aboutTitle}>
+            <span style={{ whiteSpace: 'nowrap' }}>O que rolou em 2025 e</span><br />
+            <span style={{ whiteSpace: 'nowrap' }}>o que esperar de 2026</span>
           </h2>
           <p className={styles.text}>
             O JotaJá Summit já se consolidou como o maior ponto de encontro para quem quer acelerar os negócios. No ano passado, lotamos os auditórios e geramos milhões em negócios fechados.

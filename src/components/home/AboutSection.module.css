@@ -144,6 +144,10 @@
     flex-direction: column;
     gap: 3rem;
   }
+  
+  .aboutTitle {
+    font-size: clamp(1.4rem, 5.5vw, 2rem);
+  }
 
   .hybridCarouselContainer {
     display: block;
