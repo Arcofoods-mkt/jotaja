@@ -16,8 +16,8 @@ export default function AboutSectionArcofoods() {
 
         </div>
         <div className={styles.aboutImages}>
-          <div className={`glass ${styles.imgPlaceholder} ${styles.img1}`}>Foto 2025</div>
-          <div className={`glass ${styles.imgPlaceholder} ${styles.img2}`}>Foto 2025</div>
+          <div className={`glass ${styles.imgPlaceholder} ${styles.img1}`}>Foto Barra</div>
+          <div className={`glass ${styles.imgPlaceholder} ${styles.img2}`}>Foto CD</div>
         </div>
       </div>
     </section>

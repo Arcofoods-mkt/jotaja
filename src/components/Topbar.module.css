@@ -1,3 +1,12 @@
+.countdownBar {
+  background-color: var(--accent-color);
+  color: #000000;
+  padding: 0.5rem 0;
+  width: 100%;
+  position: relative;
+  z-index: 60;
+}
+
 .topbar {
   padding: 1.5rem 0;
   background-color: transparent;

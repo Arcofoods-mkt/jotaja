@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './Topbar.module.css';
+import { TbHourglass } from 'react-icons/tb';
 
 export default function Topbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,8 +29,49 @@ export default function Topbar() {
     }
   };
 
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const targetDate = new Date('2026-08-18T09:00:00-03:00').getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((difference % (1000 * 60)) / 1000)
+        });
+      }
+    };
+
+    updateCountdown();
+    const intervalId = setInterval(updateCountdown, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
     <>
+      <div className={styles.countdownBar}>
+        <div className="container" style={{ textAlign: 'center', fontSize: '0.9rem', fontWeight: 600 }}>
+          {isMounted ? (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+              <TbHourglass size={18} />
+              {`Faltam ${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s para o evento!`}
+            </span>
+          ) : (
+            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.4rem' }}>
+              <TbHourglass size={18} />
+              Carregando tempo restante...
+            </span>
+          )}
+        </div>
+      </div>
       <header className={styles.topbar}>
         <div className={`container ${styles.topbarContainer}`}>
           <div className={styles.logoGroup}>

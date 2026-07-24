@@ -17,17 +17,20 @@ export default function HeroSection() {
             Conecte-se com as maiores indústrias, descubra inovações do mercado e transforme seus resultados em 2 dias de imersão total.
           </p>
 
-          <div className={styles.advantagesBox}>
-            <h4 className={styles.advantagesTitle}>Por que se inscrever agora?</h4>
-            <div className={styles.advantageItem}>
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span className={styles.advantageText}>Garanta sua vaga no <strong>maior evento</strong> do setor</span>
+          {/* Seção temporariamente oculta */}
+          {false && (
+            <div className={styles.advantagesBox}>
+              <h4 className={styles.advantagesTitle}>Por que se inscrever agora?</h4>
+              <div className={styles.advantageItem}>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span className={styles.advantageText}>Garanta sua vaga no <strong>maior evento</strong> do setor</span>
+              </div>
+              <div className={styles.advantageItem}>
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span className={styles.advantageText}>Participe de <strong>sorteios exclusivos</strong> durante os 2 dias de evento</span>
+              </div>
             </div>
-            <div className={styles.advantageItem}>
-              <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--accent-color)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span className={styles.advantageText}>Participe de <strong>sorteios exclusivos</strong> durante os 2 dias de evento</span>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Formulário temporariamente oculto */}
