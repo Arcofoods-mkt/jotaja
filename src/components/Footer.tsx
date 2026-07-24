@@ -35,7 +35,9 @@ export default function Footer() {
 
         {/* Coluna da Direita: GPTW Logo */}
         <div className={styles.gptwColumn}>
-          <img src="/Imagens/GPTWlogo.svg" alt="Great Place to Work" className={styles.gptwLogo} />
+          <a href="https://certificadas.gptw.com.br/08365731000142" target="_blank" rel="noopener noreferrer">
+            <img src="/Imagens/GPTWlogo.svg" alt="Great Place to Work" className={styles.gptwLogo} />
+          </a>
         </div>
       </div>
       
