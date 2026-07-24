@@ -86,17 +86,15 @@
 
 /* Hybrid Carousel for AboutSection (Desktop: Grid, Mobile: Carousel) */
 .hybridCarouselContainer {
-  flex: 0 1 420px;
+  flex: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
   width: 100%;
-  margin: 0 auto;
 }
 
 .hybridSlide {
-  aspect-ratio: 9 / 16;
-  height: auto;
+  height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
