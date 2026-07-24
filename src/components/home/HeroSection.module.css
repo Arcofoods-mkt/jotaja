@@ -82,6 +82,10 @@
   color: #fff;
 }
 
+.mobileText {
+  display: none;
+}
+
 .advantagesBox {
   display: flex;
   flex-direction: column;
@@ -154,5 +158,13 @@
 
   .saveTheDateText {
     font-size: 1.35rem;
+  }
+
+  .desktopText {
+    display: none;
+  }
+
+  .mobileText {
+    display: block;
   }
 }

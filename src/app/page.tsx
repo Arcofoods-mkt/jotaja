@@ -10,10 +10,10 @@ export default function Home() {
   return (
     <main>
       <HeroSection />
-      <IndustryCarousel />
-      <AboutSectionArcofoods />
-      <EventStats />
       <AboutSection />
+      <IndustryCarousel />
+      <EventStats />
+      <AboutSectionArcofoods />
       <Footer />
     </main>
   );

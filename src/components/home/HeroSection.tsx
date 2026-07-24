@@ -19,7 +19,13 @@ export default function HeroSection() {
 
           <div className={styles.saveTheDate}>
             <span className={styles.saveTheDateTitle}>SAVE THE DATE</span>
-            <span className={styles.saveTheDateText}>18 e 19 de Agosto • 08:00 às 20:00</span>
+            <span className={`${styles.saveTheDateText} ${styles.desktopText}`}>
+              18 e 19 de Agosto • 08:00 às 20:00
+            </span>
+            <span className={`${styles.saveTheDateText} ${styles.mobileText}`}>
+              18 e 19 de agosto<br />
+              08:00 às 20:00
+            </span>
           </div>
 
           {/* Seção temporariamente oculta */}

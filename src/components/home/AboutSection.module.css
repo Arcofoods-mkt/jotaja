@@ -38,6 +38,7 @@
   font-weight: bold;
 }
 
+/* Pure Carousel for AboutSectionArcofoods (Desktop & Mobile) */
 .carouselContainer {
   flex: 1;
   position: relative;
@@ -64,6 +65,7 @@
   color: rgba(255, 255, 255, 0.5);
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -80,6 +82,48 @@
   display: flex;
   gap: 10px;
   z-index: 10;
+}
+
+/* Hybrid Carousel for AboutSection (Desktop: Grid, Mobile: Carousel) */
+.hybridCarouselContainer {
+  flex: 0 1 420px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.hybridSlide {
+  aspect-ratio: 9 / 16;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.5);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: opacity 0.8s ease-in-out;
+}
+
+.hybridSlide:nth-child(1) {
+  transform: translateY(0);
+}
+
+.hybridSlide:nth-child(2) {
+  transform: translateY(40px);
+}
+
+.hybridSlide.active {
+}
+
+.hybridIndicators {
+  display: none;
 }
 
 .indicator {
@@ -101,5 +145,38 @@
   .aboutGrid {
     flex-direction: column;
     gap: 3rem;
+  }
+
+  .hybridCarouselContainer {
+    display: block;
+    position: relative;
+    height: 380px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+  }
+
+  .hybridSlide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: none !important;
+  }
+
+  .hybridSlide.active {
+    opacity: 1;
+  }
+
+  .hybridIndicators {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
   }
 }

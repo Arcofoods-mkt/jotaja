@@ -1,7 +1,22 @@
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import styles from './AboutSection.module.css';
 
+const imagesData = [
+  { id: 1, text: "Foto 2025 1" },
+  { id: 2, text: "Foto 2025 2" }
+];
+
 export default function AboutSection() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % imagesData.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section className={styles.aboutSection} id="sobre">
       <div className={`container ${styles.aboutGrid}`}>
@@ -25,9 +40,27 @@ export default function AboutSection() {
             </li>
           </ul>
         </div>
-        <div className={styles.aboutImages}>
-          <div className={`glass ${styles.imgPlaceholder} ${styles.img1}`}>Foto 2025</div>
-          <div className={`glass ${styles.imgPlaceholder} ${styles.img2}`}>Foto 2025</div>
+        
+        <div className={styles.hybridCarouselContainer}>
+          {imagesData.map((img, index) => (
+            <div 
+              key={img.id} 
+              className={`${styles.hybridSlide} ${index === currentIndex ? styles.active : ''}`}
+            >
+              {img.text}
+            </div>
+          ))}
+          <div className={styles.hybridIndicators}>
+            {imagesData.map((_, index) => (
+              <button 
+                key={index}
+                type="button"
+                className={`${styles.indicator} ${index === currentIndex ? styles.active : ''}`}
+                onClick={() => setCurrentIndex(index)}
+                aria-label={`Ir para foto ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
