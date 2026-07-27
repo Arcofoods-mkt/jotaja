@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 import styles from './AboutSection.module.css';
 
 const imagesData = [
@@ -45,7 +46,12 @@ export default function AboutSectionArcofoods() {
               key={img.id} 
               className={`${styles.carouselSlide} ${index === currentIndex ? styles.active : ''}`}
             >
-              <img src={img.src} alt={img.alt} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
+              <Image 
+                src={img.src} 
+                alt={img.alt} 
+                fill
+                style={{ objectFit: 'cover' }} 
+              />
             </div>
           ))}
           <div className={styles.carouselIndicators}>

@@ -20,7 +20,7 @@ export default function Topbar() {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
-  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+  const handleScroll = (e: React.MouseEvent<HTMLElement>, targetId: string) => {
     e.preventDefault();
     const element = document.getElementById(targetId);
     if (element) {

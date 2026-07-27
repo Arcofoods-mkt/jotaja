@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import styles from './Footer.module.css';
 import { TbBrandInstagram, TbBrandWhatsapp, TbBrandLinkedin } from 'react-icons/tb';
 
@@ -8,7 +9,7 @@ export default function Footer() {
       <div className={`container ${styles.footerContainer}`}>
         {/* Coluna da Esquerda: Logo e Frase */}
         <div className={styles.brandColumn}>
-          <img src="/Imagens/arcowsvg.svg" alt="Arcofoods" className={styles.footerLogo} />
+          <Image src="/Imagens/arcowsvg.svg" alt="Arcofoods" width={200} height={55} className={styles.footerLogo} />
           <p className={styles.description}>
             O evento que vai revolucionar o seu negócio. Não fique de fora dessa imersão.
           </p>
@@ -36,7 +37,7 @@ export default function Footer() {
         {/* Coluna da Direita: GPTW Logo */}
         <div className={styles.gptwColumn}>
           <a href="https://certificadas.gptw.com.br/08365731000142" target="_blank" rel="noopener noreferrer">
-            <img src="/Imagens/GPTWlogo.svg" alt="Great Place to Work" className={styles.gptwLogo} />
+            <Image src="/Imagens/GPTWlogo.svg" alt="Great Place to Work" width={60} height={60} className={styles.gptwLogo} />
           </a>
         </div>
       </div>

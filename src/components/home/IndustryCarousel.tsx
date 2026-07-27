@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import styles from './IndustryCarousel.module.css';
 
 const logos = [
@@ -21,7 +22,13 @@ export default function IndustryCarousel() {
         <div className={styles.carouselTrack}>
           {[...logos, ...logos].map((logo, i) => (
             <div key={i} className={styles.carouselItem}>
-              <img src={logo.src} alt={logo.alt} style={{ maxWidth: '200px', maxHeight: '110px', objectFit: 'contain' }} />
+              <Image 
+                src={logo.src} 
+                alt={logo.alt} 
+                width={200}
+                height={110}
+                style={{ maxWidth: '200px', maxHeight: '110px', objectFit: 'contain' }} 
+              />
             </div>
           ))}
         </div>

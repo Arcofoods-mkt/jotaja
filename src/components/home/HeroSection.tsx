@@ -2,12 +2,23 @@ import React from 'react';
 import Topbar from '../Topbar';
 import CustomSelect from '../CustomSelect';
 import styles from './HeroSection.module.css';
+import Image from 'next/image';
 
 export default function HeroSection() {
   return (
     <section className={styles.heroBg}>
-      <Topbar />
-      <div className={`container ${styles.hero}`}>
+      <Image
+        src="/Imagens/hero.webp"
+        alt="JotaJá Summit Background"
+        fill
+        priority
+        style={{ objectFit: 'cover', objectPosition: 'center top' }}
+      />
+      <div className={styles.heroOverlay} />
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <Topbar />
+      </div>
+      <div className={`container ${styles.hero}`} style={{ position: 'relative', zIndex: 2 }}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
             <span>Venha visitar a</span> <br />
