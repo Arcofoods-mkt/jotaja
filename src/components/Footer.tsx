@@ -22,11 +22,11 @@ export default function Footer() {
               <TbBrandInstagram className={styles.icon} />
               @arcofoods
             </a>
-            <a href="https://wa.me/5521972416096" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/5521972416096?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20JOTAJ%C3%81%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer">
               <TbBrandWhatsapp className={styles.icon} />
               21 97241-6096
             </a>
-            <a href="https://linkedin.com/company/arcofoods" target="_blank" rel="noopener noreferrer">
+            <a href="https://www.linkedin.com/company/arcofoods-arco-sul-distribuidora-de-alimentos-/" target="_blank" rel="noopener noreferrer">
               <TbBrandLinkedin className={styles.icon} />
               Arcofoods
             </a>
