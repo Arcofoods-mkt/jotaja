@@ -3,9 +3,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './AboutSection.module.css';
 
 const imagesData = [
-  { id: 1, text: "Foto Barra" },
-  { id: 2, text: "Foto CD" },
-  { id: 3, text: "Foto 2025" }
+  { id: 1, src: "/Imagens/cd1.webp", alt: "Centro de Distribuição 1" },
+  { id: 2, src: "/Imagens/cd2.webp", alt: "Centro de Distribuição 2" }
 ];
 
 export default function AboutSectionArcofoods() {
@@ -37,7 +36,7 @@ export default function AboutSectionArcofoods() {
               key={img.id} 
               className={`${styles.carouselSlide} ${index === currentIndex ? styles.active : ''}`}
             >
-              {img.text}
+              <img src={img.src} alt={img.alt} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />
             </div>
           ))}
           <div className={styles.carouselIndicators}>
