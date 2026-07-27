@@ -139,14 +139,22 @@
   background: var(--accent-color);
 }
 
+.desktopBr {
+  display: block;
+}
+
 @media (max-width: 900px) {
+  .desktopBr {
+    display: none;
+  }
+
+  .aboutSection {
+    padding: 3rem 0;
+  }
+
   .aboutGrid {
     flex-direction: column;
-    gap: 3rem;
-  }
-  
-  .aboutTitle {
-    font-size: clamp(1.4rem, 5.5vw, 2rem);
+    gap: 2rem;
   }
 
   .hybridCarouselContainer {

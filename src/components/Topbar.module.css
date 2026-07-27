@@ -148,6 +148,7 @@
 
   .mobileMenuBtn {
     display: block;
+    padding: 0.5rem;
   }
 
   .menuOverlay {

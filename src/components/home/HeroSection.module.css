@@ -7,7 +7,8 @@
 }
 
 .hero {
-  padding: 6rem 0 4rem;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
   display: flex;
   gap: 8%;
   align-items: center;
@@ -153,7 +154,7 @@
   }
 
   .highlightText {
-    font-size: 1.2em;
+    font-size: 1.8em;
     display: block;
     margin-top: 0.2rem;
     white-space: nowrap;

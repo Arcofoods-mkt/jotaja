@@ -10,7 +10,7 @@ export default function HeroSection() {
       <div className={`container ${styles.hero}`}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            <span style={{ whiteSpace: 'nowrap' }}>Venha visitar a</span> <br />
+            <span>Venha visitar a</span> <br />
             <span className={`text-gradient font-display ${styles.highlightText}`}>nossa cozinha!</span>
           </h1>
           <p className={styles.description}>
