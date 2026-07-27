@@ -12,8 +12,8 @@ export default function Home() {
       <HeroSection />
       <AboutSection />
       <IndustryCarousel />
-      <EventStats />
       <AboutSectionArcofoods />
+      <EventStats />
       <Footer />
     </main>
   );

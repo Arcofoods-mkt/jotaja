@@ -105,11 +105,9 @@ export default function Topbar() {
               <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
               <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
             </div>
-            {false && (
-              <button type="button" className={`btn-primary ${styles.navButton}`}>
-                INSCREVA-SE AGORA
+              <button type="button" className={`btn-primary ${styles.navButton}`} onClick={(e) => handleScroll(e, 'sobre')}>
+                GARANTA SEU INGRESSO
               </button>
-            )}
           </nav>
 
           {/* Botão Hambúrguer Mobile */}
@@ -140,11 +138,9 @@ export default function Topbar() {
           <a href="#sobre-arcofoods" className={styles.navLink} onClick={(e) => handleScroll(e, 'sobre-arcofoods')}>Sobre nós</a>
           <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
           <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
-          {false && (
-            <button type="button" className={`btn-primary ${styles.mobileNavBtn}`} onClick={closeMenu}>
-              INSCREVA-SE AGORA
+            <button type="button" className={`btn-primary ${styles.mobileNavBtn}`} onClick={(e) => handleScroll(e, 'sobre')}>
+              GARANTA SEU INGRESSO
             </button>
-          )}
         </div>
       </div>
     </>

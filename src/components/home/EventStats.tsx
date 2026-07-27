@@ -27,12 +27,19 @@ function useCountUp(end: number, duration: number = 2000) {
             const progress = Math.min((timestamp - startTimestamp) / duration, 1);
 
             const easedProgress = easeOutExpo(progress);
-            setCount(Math.floor(easedProgress * end));
+            let currentVal = Math.floor(easedProgress * end);
+
+            // Anima subindo de 5 em 5 para ficar menos frenético
+            if (progress < 1) {
+              currentVal = Math.round(currentVal / 5) * 5;
+            } else {
+              currentVal = end;
+            }
+
+            setCount(currentVal);
 
             if (progress < 1) {
               window.requestAnimationFrame(step);
-            } else {
-              setCount(end);
             }
           };
           window.requestAnimationFrame(step);

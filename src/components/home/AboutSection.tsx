@@ -42,6 +42,15 @@ export default function AboutSection() {
               <span className={styles.checkIcon}>✓</span> Inovações do Varejo
             </li>
           </ul>
+          <a 
+            href="https://www.sympla.com.br/evento/jotaja-summit-2026/3179449?referrer=www.google.com&referrer=www.google.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="btn-primary"
+            style={{ display: 'inline-block', marginTop: '2rem', maxWidth: '300px' }}
+          >
+            GARANTA SEU INGRESSO
+          </a>
         </div>
         
         <div className={styles.hybridCarouselContainer}>

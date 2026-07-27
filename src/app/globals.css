@@ -183,6 +183,7 @@ select.input-field {
   border-radius: 8px;
   font-weight: 600;
   font-size: 1rem;
+  text-decoration: none;
   transition: transform 0.2s, box-shadow 0.2s;
   display: inline-block;
   text-align: center;
