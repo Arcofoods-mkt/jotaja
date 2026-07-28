@@ -3,14 +3,17 @@
 import { createClient } from '@supabase/supabase-js'
 
 export async function createAdminUser(formData: any) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  if (supabaseUrl.endsWith('/rest/v1')) {
+    supabaseUrl = supabaseUrl.replace('/rest/v1', '')
+  }
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!supabaseKey) {
     return { error: 'A variável SUPABASE_SERVICE_ROLE_KEY não está configurada no arquivo .env.local. Ela é necessária para criar contas de usuário pelo painel.' }
   }
 
-  const supabase = createClient(supabaseUrl!, supabaseKey)
+  const supabase = createClient(supabaseUrl, supabaseKey)
 
   // 1. Criar Auth User
   const { data: authData, error: authError } = await supabase.auth.admin.createUser({
@@ -42,14 +45,17 @@ export async function createAdminUser(formData: any) {
 }
 
 export async function updateAdminUser(formData: any) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  if (supabaseUrl.endsWith('/rest/v1')) {
+    supabaseUrl = supabaseUrl.replace('/rest/v1', '')
+  }
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!supabaseKey) {
     return { error: 'A variável SUPABASE_SERVICE_ROLE_KEY não está configurada no arquivo .env.local.' }
   }
 
-  const supabase = createClient(supabaseUrl!, supabaseKey)
+  const supabase = createClient(supabaseUrl, supabaseKey)
 
   // 1. Atualizar senha se houver
   if (formData.password) {
@@ -73,14 +79,17 @@ export async function updateAdminUser(formData: any) {
 }
 
 export async function deleteAdminUser(id: string) {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  if (supabaseUrl.endsWith('/rest/v1')) {
+    supabaseUrl = supabaseUrl.replace('/rest/v1', '')
+  }
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!supabaseKey) {
     return { error: 'A variável SUPABASE_SERVICE_ROLE_KEY não está configurada no arquivo .env.local.' }
   }
 
-  const supabase = createClient(supabaseUrl!, supabaseKey)
+  const supabase = createClient(supabaseUrl, supabaseKey)
   
   // Apagar users_profiles
   await supabase.from('users_profiles').delete().eq('id', id)
@@ -94,14 +103,17 @@ export async function deleteAdminUser(id: string) {
 }
 
 export async function getAdminUsersList() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  let supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+  if (supabaseUrl.endsWith('/rest/v1')) {
+    supabaseUrl = supabaseUrl.replace('/rest/v1', '')
+  }
   const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!supabaseKey) {
     return { error: 'Chave de serviço não configurada.' }
   }
 
-  const supabase = createClient(supabaseUrl!, supabaseKey)
+  const supabase = createClient(supabaseUrl, supabaseKey)
 
   // Fetch profiles
   const { data: profiles, error: pError } = await supabase

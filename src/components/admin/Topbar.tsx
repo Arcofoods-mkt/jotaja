@@ -1,15 +1,24 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { FiMenu, FiSun, FiMoon, FiBell } from 'react-icons/fi';
+import { usePathname, useRouter } from 'next/navigation';
+import { FiMenu, FiSun, FiMoon, FiLogOut } from 'react-icons/fi';
 import styles from './Topbar.module.css';
 
 interface TopbarProps {
   toggleSidebar?: () => void;
 }
 
+import { createClient } from '@/utils/supabase/client';
+
 export default function Topbar({ toggleSidebar }: TopbarProps) {
   const [theme, setTheme] = useState('dark');
+  const router = useRouter();
+  const supabase = createClient();
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/painel-administrador/login');
+  };
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('adminTheme');
@@ -43,8 +52,8 @@ export default function Topbar({ toggleSidebar }: TopbarProps) {
         <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
           {theme === 'dark' ? <FiSun /> : <FiMoon />}
         </button>
-        <button className={styles.iconBtn}>
-          <FiBell />
+        <button className={styles.iconBtn} onClick={handleLogout} aria-label="Sair" title="Sair do sistema">
+          <FiLogOut />
         </button>
 
         <div className={styles.profile}>
