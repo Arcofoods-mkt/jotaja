@@ -35,28 +35,6 @@
   line-height: 1;
 }
 
-.heroFormWrapper {
-  flex: 0 0 34%;
-  width: 100%;
-  max-width: none;
-  position: relative;
-}
-
-.badgeDiscount {
-  position: absolute;
-  top: -15px;
-  right: -15px;
-  background-color: #22c55e;
-  color: white;
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 0.4rem 0.8rem;
-  border-radius: 50px;
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
-  transform: rotate(5deg);
-  z-index: 10;
-}
-
 .description {
   font-size: 1.15rem;
   margin-bottom: 1.5rem;
@@ -120,22 +98,6 @@
   font-size: 1.05rem;
 }
 
-.formBox {
-  padding: 2.5rem 2rem;
-  background: rgba(3, 12, 28, 0.85);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.formSubtitle {
-  font-size: 0.875rem;
-}
-
-.form {
-  margin-top: 1.5rem;
-}
-
 @media (max-width: 1000px) {
   .hero {
     flex-direction: column;
@@ -147,11 +109,6 @@
     flex: 0 0 100%;
     text-align: center;
     margin-bottom: 3rem;
-  }
-
-  .heroFormWrapper {
-    flex: 0 0 100%;
-    max-width: 500px;
   }
 }
 
