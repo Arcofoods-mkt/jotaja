@@ -66,7 +66,7 @@ export default function ParticipantesPage() {
     fetchData();
   }, []);
 
-  const openModal = (participant = null) => {
+  const openModal = (participant: any = null) => {
     if (participant) {
       let ddi = '+55';
       let phoneWithoutDdi = participant.whatsapp || '';
