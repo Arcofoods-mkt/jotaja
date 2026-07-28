@@ -6,6 +6,7 @@ import AdminTable from '@/components/admin/AdminTable';
 import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { createClient } from '@/utils/supabase/client';
 import { formatCPF } from '@/utils/formatters';
+import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Usuarios.module.css';
 import { createAdminUser, updateAdminUser, deleteAdminUser, getAdminUsersList } from './actions';
 
@@ -27,6 +28,10 @@ export default function UsuariosPage() {
   };
   const [formData, setFormData] = useState(defaultFormData);
   const [isEditing, setIsEditing] = useState(false);
+
+  // Permissions
+  const { permissions, isAdmin } = usePermissions();
+  const perms = isAdmin ? { ver: true, editar: true, bloquear: true, excluir: true } : (permissions.Usuarios || {});
 
   const supabase = createClient();
 
@@ -155,12 +160,16 @@ export default function UsuariosPage() {
       label: 'Ações',
       render: (row: any) => (
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button className={styles.actionBtn} onClick={() => openModal(row)} title="Editar Usuário">
-            <FiEdit />
-          </button>
-          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Remover Acesso">
-            <FiTrash2 />
-          </button>
+          {perms.editar !== false && (
+            <button className={styles.actionBtn} onClick={() => openModal(row)} title="Editar Usuário">
+              <FiEdit />
+            </button>
+          )}
+          {perms.excluir !== false && (
+            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Remover Acesso">
+              <FiTrash2 />
+            </button>
+          )}
         </div>
       )
     }
@@ -173,13 +182,19 @@ export default function UsuariosPage() {
           <h1 className="adminPageTitle">Usuários</h1>
           <p className="adminPageDescription">Gerencie os membros da equipe e atribua perfis de permissão.</p>
         </div>
-        <button className={styles.addBtn} onClick={() => openModal()}>
-          <FiPlus /> Novo Usuário
-        </button>
+        {perms.editar !== false && (
+          <button className={styles.addBtn} onClick={() => openModal()}>
+            <FiPlus /> Novo Usuário
+          </button>
+        )}
       </div>
 
       {loading ? (
         <p>Carregando usuários...</p>
+      ) : perms.ver === false ? (
+        <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+          <p>Você não tem permissão para visualizar estas informações.</p>
+        </div>
       ) : (
         <AdminTable columns={columns} data={users} searchPlaceholder="Pesquisar por nome ou email..." />
       )}
@@ -231,9 +246,13 @@ export default function UsuariosPage() {
 
             <div className={styles.formGroup}>
               <label className={styles.label}>Status do usuário</label>
-              <div className={styles.checkboxContainer} onClick={() => setFormData({...formData, active: !formData.active})} style={{ marginTop: '0.2rem' }}>
+              <div 
+                className={styles.checkboxContainer} 
+                onClick={() => { if (perms.bloquear !== false) setFormData({...formData, active: !formData.active}); }} 
+                style={{ marginTop: '0.2rem', opacity: perms.bloquear === false ? 0.5 : 1, cursor: perms.bloquear === false ? 'not-allowed' : 'pointer' }}
+              >
                 <label className={styles.switch}>
-                  <input type="checkbox" checked={formData.active} onChange={() => {}} />
+                  <input type="checkbox" checked={formData.active} onChange={() => {}} disabled={perms.bloquear === false} />
                   <span className={styles.slider}></span>
                 </label>
                 <span>{formData.active ? 'Ativo' : 'Inativo'}</span>

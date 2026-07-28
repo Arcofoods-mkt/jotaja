@@ -1,10 +1,13 @@
 import React from 'react';
 import DashboardWrapper from '@/components/admin/DashboardWrapper';
+import { PermissionsProvider } from '@/contexts/PermissionsContext';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <DashboardWrapper>
-      {children}
-    </DashboardWrapper>
+    <PermissionsProvider>
+      <DashboardWrapper>
+        {children}
+      </DashboardWrapper>
+    </PermissionsProvider>
   );
 }

@@ -6,6 +6,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
+import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Participantes.module.css';
 import { COUNTRIES } from '@/utils/countries';
 import { isValidCNPJ, formatCNPJ, formatPhone } from '@/utils/formatters';
@@ -32,6 +33,10 @@ export default function ParticipantesPage() {
   };
   const [formData, setFormData] = useState(defaultFormData);
   const [isEditing, setIsEditing] = useState(false);
+
+  // Permissions
+  const { permissions, isAdmin } = usePermissions();
+  const perms = isAdmin ? { ver: true, editar: true, bloquear: true, excluir: true } : (permissions.Participantes || {});
 
   const supabase = createClient();
 
@@ -224,12 +229,16 @@ export default function ParticipantesPage() {
       label: 'Ações',
       render: (row: any) => (
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button className={styles.actionBtn} onClick={() => openModal(row)} title="Editar">
-            <FiEdit />
-          </button>
-          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Apagar">
-            <FiTrash2 />
-          </button>
+          {perms.editar !== false && (
+            <button className={styles.actionBtn} onClick={() => openModal(row)} title="Editar">
+              <FiEdit />
+            </button>
+          )}
+          {perms.excluir !== false && (
+            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Apagar">
+              <FiTrash2 />
+            </button>
+          )}
         </div>
       )
     }
@@ -242,13 +251,19 @@ export default function ParticipantesPage() {
           <h1 className="adminPageTitle">Participantes</h1>
           <p className="adminPageDescription">Gerencie os inscritos no sorteio e gerencie as tags internas.</p>
         </div>
-        <button className={styles.addBtn} onClick={() => openModal()}>
-          <FiPlus /> Novo Participante
-        </button>
+        {perms.editar !== false && (
+          <button className={styles.addBtn} onClick={() => openModal()}>
+            <FiPlus /> Novo Participante
+          </button>
+        )}
       </div>
 
       {loading ? (
         <p>Carregando...</p>
+      ) : perms.ver === false ? (
+        <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+          <p>Você não tem permissão para visualizar estas informações.</p>
+        </div>
       ) : (
         <AdminTable columns={columns} data={participants} searchPlaceholder="Pesquisar por nome, empresa, cnpj ou email..." />
       )}
@@ -315,8 +330,13 @@ export default function ParticipantesPage() {
             </div>
             
             <div className={styles.formGroup} style={{ justifyContent: 'center' }}>
-              <label className={styles.checkboxContainer}>
-                <input type="checkbox" checked={formData.active} onChange={(e) => setFormData({...formData, active: e.target.checked})} />
+              <label className={styles.checkboxContainer} style={{ opacity: perms.bloquear === false ? 0.5 : 1 }}>
+                <input 
+                  type="checkbox" 
+                  checked={formData.active} 
+                  onChange={(e) => setFormData({...formData, active: e.target.checked})} 
+                  disabled={perms.bloquear === false}
+                />
                 Participante Ativo no Sistema
               </label>
             </div>

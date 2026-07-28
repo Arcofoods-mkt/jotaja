@@ -5,6 +5,7 @@ import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
+import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Categorias.module.css';
 
 export default function CategoriasPage() {
@@ -15,6 +16,10 @@ export default function CategoriasPage() {
   // Form State
   const [formData, setFormData] = useState({ id: '', type: 'tipologia', name: '', color: '#94c41c' });
   const [isEditing, setIsEditing] = useState(false);
+
+  // Permissions
+  const { permissions, isAdmin } = usePermissions();
+  const perms = isAdmin ? { ver: true, editar: true, bloquear: true, excluir: true } : (permissions.Categorias || {});
 
   const supabase = createClient();
 
@@ -62,10 +67,25 @@ export default function CategoriasPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Tem certeza que deseja apagar?')) {
-      await supabase.from('categories').delete().eq('id', id);
-      fetchCategories();
+    // Relational check: check if any participant uses this category
+    const { data: linked } = await supabase
+      .from('participants')
+      .select('id')
+      .or(`category_id.eq.${id},tag_id.eq.${id}`)
+      .limit(1);
+      
+    if (linked && linked.length > 0) {
+      if (!window.confirm('Existem participantes usando esta categoria! A exclusão pode causar inconsistências. Tem certeza que deseja apagar MESMO ASSIM?')) {
+        return;
+      }
+    } else {
+      if (!window.confirm('Tem certeza que deseja apagar esta categoria?')) {
+        return;
+      }
     }
+
+    await supabase.from('categories').delete().eq('id', id);
+    fetchCategories();
   };
 
   const columns = [
@@ -86,12 +106,16 @@ export default function CategoriasPage() {
       label: 'Ações',
       render: (row: any) => (
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button className={styles.actionBtn} onClick={() => openModal(row)}>
-            <FiEdit />
-          </button>
-          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)}>
-            <FiTrash2 />
-          </button>
+          {perms.editar !== false && (
+            <button className={styles.actionBtn} onClick={() => openModal(row)}>
+              <FiEdit />
+            </button>
+          )}
+          {perms.excluir !== false && (
+            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)}>
+              <FiTrash2 />
+            </button>
+          )}
         </div>
       )
     }
@@ -104,13 +128,19 @@ export default function CategoriasPage() {
           <h1 className="adminPageTitle">Categorias</h1>
           <p className="adminPageDescription">Gerencie as categorias disponíveis para participantes.</p>
         </div>
-        <button className={styles.addBtn} onClick={() => openModal()}>
-          <FiPlus /> Nova Categoria
-        </button>
+        {perms.editar !== false && (
+          <button className={styles.addBtn} onClick={() => openModal()}>
+            <FiPlus /> Nova Categoria
+          </button>
+        )}
       </div>
 
       {loading ? (
         <p>Carregando...</p>
+      ) : perms.ver === false ? (
+        <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+          <p>Você não tem permissão para visualizar estas informações.</p>
+        </div>
       ) : (
         <AdminTable columns={columns} data={categories} searchPlaceholder="Pesquisar categoria..." />
       )}

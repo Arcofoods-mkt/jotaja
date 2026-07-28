@@ -8,39 +8,58 @@ import styles from './Sidebar.module.css';
 
 interface SidebarProps {
   isCollapsed?: boolean;
+  permissions?: any;
+  isAdmin?: boolean;
 }
 
-export default function Sidebar({ isCollapsed = false }: SidebarProps) {
+export default function Sidebar({ isCollapsed = false, permissions = {}, isAdmin = false }: SidebarProps) {
   const pathname = usePathname();
 
   const menuItems = [
     {
       title: 'DASHBOARD',
       items: [
-        { name: 'Dashboard', path: '/painel-administrador', icon: <FiHome /> }
+        { name: 'Dashboard', path: '/painel-administrador', icon: <FiHome />, module: 'Dashboard' }
       ]
     },
     {
       title: 'ACESSOS',
       items: [
-        { name: 'Permissões', path: '/painel-administrador/permissoes', icon: <FiKey /> },
-        { name: 'Usuários', path: '/painel-administrador/usuarios', icon: <FiUsers /> }
+        { name: 'Permissões', path: '/painel-administrador/permissoes', icon: <FiKey />, module: 'Permissoes' },
+        { name: 'Usuários', path: '/painel-administrador/usuarios', icon: <FiUsers />, module: 'Usuarios' }
       ]
     },
     {
       title: 'GESTÃO',
       items: [
-        { name: 'Participantes', path: '/painel-administrador/participantes', icon: <FiUsers /> },
-        { name: 'Categorias', path: '/painel-administrador/categorias', icon: <FiTag /> }
+        { name: 'Participantes', path: '/painel-administrador/participantes', icon: <FiUsers />, module: 'Participantes' },
+        { name: 'Categorias', path: '/painel-administrador/categorias', icon: <FiTag />, module: 'Categorias' }
       ]
     },
     {
       title: 'CONFIGURAÇÕES',
       items: [
-        { name: 'Logs', path: '/painel-administrador/logs', icon: <FiFileText /> }
+        { name: 'Logs', path: '/painel-administrador/logs', icon: <FiFileText />, module: 'Logs' }
       ]
     }
   ];
+
+  // Filtra os itens baseado nas permissões (se não for admin)
+  const filteredMenuSections = menuItems.map(section => {
+    return {
+      ...section,
+      items: section.items.filter(item => {
+        if (isAdmin) return true;
+        if (!item.module) return true; // Se não tem módulo configurado, exibe por padrão
+        
+        const modulePerms = permissions[item.module];
+        // Se a permissão de acessar for false, esconde do menu
+        if (modulePerms && modulePerms.acessar === false) return false;
+        
+        return true;
+      })
+    };
+  }).filter(section => section.items.length > 0); // Remove seções vazias
 
   return (
     <aside className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
@@ -57,7 +76,7 @@ export default function Sidebar({ isCollapsed = false }: SidebarProps) {
       </div>
       
       <div className={styles.menu}>
-        {menuItems.map((section, idx) => (
+        {filteredMenuSections.map((section, idx) => (
           <div key={idx} className={styles.section}>
             <div className={styles.sectionTitle}>{section.title}</div>
             {section.items.map((item, i) => {

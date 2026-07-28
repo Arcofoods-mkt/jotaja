@@ -5,6 +5,7 @@ import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
+import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Permissoes.module.css';
 
 export default function PermissoesPage() {
@@ -22,6 +23,11 @@ export default function PermissoesPage() {
   };
 
   const [permissions, setPermissions] = useState<any>(defaultPermissions);
+
+  // Permissions RBAC
+  const { permissions: userPerms, isAdmin } = usePermissions();
+  const perms = isAdmin ? { ver: true, editar: true, bloquear: true, excluir: true } : (userPerms.Permissoes || {});
+
   const supabase = createClient();
 
   const fetchRoles = async () => {
@@ -77,10 +83,26 @@ export default function PermissoesPage() {
       alert('Ação bloqueada: O perfil Admin não pode ser excluído.');
       return;
     }
-    if (confirm('Tem certeza que deseja excluir este Perfil?')) {
-      await supabase.from('roles').delete().eq('id', id);
-      fetchRoles();
+    
+    // Relational check: check if any user is using this role
+    const { data: linked } = await supabase
+      .from('users_profiles')
+      .select('id')
+      .eq('role_id', id)
+      .limit(1);
+
+    if (linked && linked.length > 0) {
+      if (!window.confirm('Existem usuários utilizando este perfil! A exclusão deixará esses usuários sem permissões. Tem certeza que deseja apagar MESMO ASSIM?')) {
+        return;
+      }
+    } else {
+      if (!window.confirm('Tem certeza que deseja excluir este Perfil?')) {
+        return;
+      }
     }
+
+    await supabase.from('roles').delete().eq('id', id);
+    fetchRoles();
   };
 
   const renderModuleRow = (moduleName: string, actions: string[], displayName?: string) => {
@@ -119,8 +141,12 @@ export default function PermissoesPage() {
       label: 'Ações', 
       render: (row: any) => (
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button className="actionBtn" onClick={() => openModal(row)} title="Editar"><FiEdit /></button>
-          <button className="actionBtn deleteBtn" onClick={() => handleDelete(row.id, row.name)} title="Excluir"><FiTrash2 /></button>
+          {perms.editar !== false && (
+            <button className="actionBtn" onClick={() => openModal(row)} title="Editar"><FiEdit /></button>
+          )}
+          {perms.excluir !== false && (
+            <button className="actionBtn deleteBtn" onClick={() => handleDelete(row.id, row.name)} title="Excluir"><FiTrash2 /></button>
+          )}
         </div>
       ) 
     }
@@ -133,12 +159,20 @@ export default function PermissoesPage() {
           <h1 className="adminPageTitle">Perfis de Permissão</h1>
           <p className="adminPageDescription">Configure os níveis de acesso para os usuários do sistema.</p>
         </div>
-        <button className={styles.addBtn} onClick={() => openModal()}>
-          <FiPlus /> Novo Perfil
-        </button>
+        {perms.editar !== false && (
+          <button className={styles.addBtn} onClick={() => openModal()}>
+            <FiPlus /> Novo Perfil
+          </button>
+        )}
       </div>
 
-      <AdminTable columns={columns} data={roles} />
+      {perms.ver === false ? (
+        <div style={{ padding: '2rem', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+          <p>Você não tem permissão para visualizar estas informações.</p>
+        </div>
+      ) : (
+        <AdminTable columns={columns} data={roles} />
+      )}
 
       <AdminModal isOpen={isModalOpen} onClose={closeModal} title={editingRole ? 'Editar Perfil de Permissão' : 'Novo Perfil de Permissão'} maxWidth="50%">
         <form onSubmit={handleSave}>

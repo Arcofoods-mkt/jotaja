@@ -86,8 +86,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: #38d39f; /* A green color matching the design */
-  color: #fff;
+  background-color: var(--accent-color);
+  color: #000;
   display: flex;
   align-items: center;
   justify-content: center;
