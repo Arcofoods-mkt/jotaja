@@ -7,7 +7,7 @@ import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { createClient } from '@/utils/supabase/client';
 import { formatCPF } from '@/utils/formatters';
 import styles from './Usuarios.module.css';
-import { createAdminUser, updateAdminUser, deleteAdminUser } from './actions';
+import { createAdminUser, updateAdminUser, deleteAdminUser, getAdminUsersList } from './actions';
 
 export default function UsuariosPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -33,24 +33,13 @@ export default function UsuariosPage() {
   const fetchData = async () => {
     setLoading(true);
     
-    // Puxando de users_profiles ao invés de admin_users
-    // Como a sua tabela tem id que é foreign key para auth.users.id, 
-    // precisaremos juntar os dados ou usar as roles
-    const { data: pData, error: pError } = await supabase
-      .from('users_profiles')
-      .select(`
-        *,
-        profile:roles(name)
-      `)
-      .order('created_at', { ascending: false });
+    // Puxando usuários com e-mail mesclado pelo Server Action
+    const result = await getAdminUsersList();
       
-    if (!pError && pData) {
-      // Como o e-mail não fica em users_profiles (fica em auth.users), a API admin é a única que consegue ver.
-      // Para exibir no grid sem chamar RPC, vamos deixar um placeholder de e-mail por enquanto.
-      // Ou você pode adicionar email como coluna em users_profiles para ser redundante, que é mais prático.
-      setUsers(pData);
+    if (result.data) {
+      setUsers(result.data);
     }
-    if (pError) console.error("Error fetching users_profiles: ", pError);
+    if (result.error) console.error("Error fetching admin users: ", result.error);
 
     // Fetch Profiles
     const { data: profData, error: profError } = await supabase.from('roles').select('*').order('name');
@@ -139,7 +128,7 @@ export default function UsuariosPage() {
     { 
       key: 'email', 
       label: 'E-mail de Acesso',
-      render: (row: any) => <span style={{ color: 'var(--text-muted)' }}>{row.email || 'Login oculto'}</span>
+      render: (row: any) => <span style={{ color: 'var(--text-color)' }}>{row.email || 'Não encontrado'}</span>
     },
     { 
       key: 'profile', 
