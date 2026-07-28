@@ -11,12 +11,22 @@ interface Option {
 interface CustomSelectProps {
   options: Option[];
   placeholder?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
-export default function CustomSelect({ options, placeholder = "Selecione" }: CustomSelectProps) {
+export default function CustomSelect({ options, placeholder = "Selecione", value, onChange }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState("");
+  const [internalValue, setInternalValue] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const selectedValue = value !== undefined ? value : internalValue;
+  
+  const handleSelect = (val: string) => {
+    if (onChange) onChange(val);
+    else setInternalValue(val);
+    setIsOpen(false);
+  };
 
   const selectedOption = options.find(opt => opt.value === selectedValue);
 
@@ -48,10 +58,7 @@ export default function CustomSelect({ options, placeholder = "Selecione" }: Cus
             <div 
               key={option.value} 
               className={`${styles.option} ${selectedValue === option.value ? styles.selected : ''}`}
-              onClick={() => {
-                setSelectedValue(option.value);
-                setIsOpen(false);
-              }}
+              onClick={() => handleSelect(option.value)}
             >
               {option.label}
               {selectedValue === option.value && (

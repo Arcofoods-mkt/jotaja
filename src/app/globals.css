@@ -1,18 +1,37 @@
 :root {
   --bg-color: #04101d;
-  /* Azul Marinho quase preto (Sales page) */
   --bg-color-light: #08223d;
   --text-color: #F5F7F2;
-  /* Off-white */
   --text-muted: rgba(245, 247, 242, 0.75);
   --accent-color: #94c41c;
-  /* Verde Folha */
   --accent-hover: #7ea317;
   --gradient-primary: linear-gradient(135deg, #94c41c 0%, #b3e32d 100%);
   --border-radius: 12px;
   --glass-bg: rgba(4, 16, 29, 0.75);
   --glass-border: rgba(245, 247, 242, 0.15);
   --container-width: 1440px;
+  
+  /* Admin Panel Variables */
+  --admin-sidebar-bg: #020811;
+  --admin-topbar-bg: #04101d;
+  --admin-table-bg: #06182c;
+  --admin-table-header: #09203a;
+  --admin-border: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='light'] {
+  --bg-color: #f1f5f9;
+  --bg-color-light: #e2e8f0;
+  --text-color: #0f172a;
+  --text-muted: #475569;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  
+  --admin-sidebar-bg: #ffffff;
+  --admin-topbar-bg: #ffffff;
+  --admin-table-bg: #ffffff;
+  --admin-table-header: #f8fafc;
+  --admin-border: #e2e8f0;
 }
 
 * {
@@ -29,6 +48,10 @@ body {
   line-height: 1.6;
   overflow-x: hidden;
   max-width: 100vw;
+}
+
+input, button, textarea, select {
+  font-family: inherit;
 }
 
 .container {
@@ -113,7 +136,53 @@ p {
   color: var(--text-color);
   font-size: 0.95rem;
   transition: border-color 0.3s, box-shadow 0.3s;
-  margin-bottom: 1rem;
+}
+
+/* ADMIN PANEL GLOBAL CLASSES */
+.adminPageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.adminPageTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.adminPageDescription {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+}
+
+/* ADMIN PANEL ACTION BUTTONS (Tables) */
+.actionBtn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  color: var(--accent-color);
+  background-color: rgba(148, 196, 28, 0.1);
+}
+
+.deleteBtn:hover {
+  color: #ff4d4f;
+  background-color: rgba(255, 77, 79, 0.1);
 }
 
 .input-field:focus {
@@ -127,10 +196,18 @@ select.input-field option {
   color: var(--text-color);
 }
 
+:root {
+  --select-arrow: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+[data-theme='light'] {
+  --select-arrow: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
 select.input-field {
   appearance: none;
   -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: var(--select-arrow);
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1.2rem;
@@ -156,4 +233,34 @@ select.input-field {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 15px rgba(148, 196, 28, 0.4);
+}
+
+.btn-danger {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 77, 79, 0.1);
+  color: #ff4d4f;
+  border: 1px solid rgba(255, 77, 79, 0.3);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+  display: inline-block;
+  text-align: center;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background: rgba(255, 77, 79, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(255, 77, 79, 0.2);
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
 }

@@ -1,0 +1,131 @@
+.addBtn {
+  background: var(--gradient-primary);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  transition: opacity 0.3s;
+}
+
+.addBtn:hover {
+  opacity: 0.9;
+}
+
+/* Modal form specific */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.permissionSection {
+  margin-top: 2rem;
+}
+
+.permissionSectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.2rem;
+}
+
+.permissionSectionDesc {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.moduleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-bottom: 0.8rem;
+  background: rgba(255,255,255, 0.02);
+}
+
+.moduleName {
+  color: #00d287;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.togglesContainer {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.toggleWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.toggleLabel {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* The actual Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255,255,255,0.1);
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #00d287;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #00d287;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}

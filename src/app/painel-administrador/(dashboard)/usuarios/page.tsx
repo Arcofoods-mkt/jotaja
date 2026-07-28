@@ -1,0 +1,209 @@
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import AdminTable from '@/components/admin/AdminTable';
+import AdminModal from '@/components/admin/AdminModal';
+import { createClient } from '@/utils/supabase/client';
+import styles from './Usuarios.module.css';
+
+export default function UsuariosPage() {
+  const [users, setUsers] = useState<any[]>([]);
+  const [profiles, setProfiles] = useState<any[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  // Form State
+  const defaultFormData = { 
+    id: '', 
+    name: '', 
+    email: '', 
+    role_id: '', 
+    active: true
+  };
+  const [formData, setFormData] = useState(defaultFormData);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const supabase = createClient();
+
+  const fetchData = async () => {
+    setLoading(true);
+    
+    // Check if table exists (assuming 'admin_users' for now)
+    // Se a tabela não existir, precisaremos criar manualmente no Supabase
+    const { data: pData, error: pError } = await supabase
+      .from('admin_users')
+      .select(`
+        *,
+        profile:roles(name)
+      `)
+      .order('created_at', { ascending: false });
+      
+    if (!pError && pData) setUsers(pData);
+    if (pError) console.error("Error fetching admin_users: ", pError);
+
+    // Fetch Profiles
+    const { data: profData, error: profError } = await supabase.from('roles').select('*').order('name');
+    if (!profError && profData) {
+      setProfiles(profData);
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const openModal = (user = null) => {
+    if (user) {
+      setFormData({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role_id: user.role_id || '',
+        active: user.active
+      });
+      setIsEditing(true);
+    } else {
+      setFormData(defaultFormData);
+      setIsEditing(false);
+    }
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const dataToSave = {
+      name: formData.name,
+      email: formData.email,
+      role_id: formData.role_id || null,
+      active: formData.active
+    };
+
+    if (isEditing) {
+      await supabase.from('admin_users').update(dataToSave).eq('id', formData.id);
+    } else {
+      await supabase.from('admin_users').insert([dataToSave]);
+    }
+    
+    setIsModalOpen(false);
+    fetchData();
+  };
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm('Tem certeza que deseja apagar permanentemente este usuário? O acesso dele será revogado.')) {
+      await supabase.from('admin_users').delete().eq('id', id);
+      fetchData();
+    }
+  };
+
+  const columns = [
+    { 
+      key: 'name', 
+      label: 'Nome Completo', 
+      render: (row: any) => <span style={{ fontWeight: 600 }}>{row.name}</span>
+    },
+    { 
+      key: 'email', 
+      label: 'E-mail de Acesso',
+      render: (row: any) => <span style={{ color: 'var(--text-muted)' }}>{row.email}</span>
+    },
+    { 
+      key: 'profile', 
+      label: 'Perfil (Acesso)', 
+      render: (row: any) => (
+        row.profile ? (
+          <span className={styles.badge} style={{ backgroundColor: 'rgba(148, 196, 28, 0.15)', color: 'var(--accent-color)', border: '1px solid rgba(148, 196, 28, 0.3)' }}>
+            {row.profile.name}
+          </span>
+        ) : <span style={{ color: 'var(--text-muted)' }}>Sem perfil</span>
+      )
+    },
+    { 
+      key: 'active', 
+      label: 'Status', 
+      render: (row: any) => (
+        <span className={`${styles.badge} ${row.active ? styles.badgeActive : styles.badgeInactive}`}>
+          {row.active ? 'Ativo' : 'Inativo'}
+        </span>
+      )
+    },
+    {
+      key: 'actions',
+      label: 'Ações',
+      render: (row: any) => (
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button className={styles.actionBtn} onClick={() => openModal(row)} title="Editar Usuário">
+            <FiEdit />
+          </button>
+          <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Remover Acesso">
+            <FiTrash2 />
+          </button>
+        </div>
+      )
+    }
+  ];
+
+  return (
+    <div>
+      <div className="adminPageHeader">
+        <div>
+          <h1 className="adminPageTitle">Usuários</h1>
+          <p className="adminPageDescription">Gerencie os membros da equipe e atribua perfis de permissão.</p>
+        </div>
+        <button className={styles.addBtn} onClick={() => openModal()}>
+          <FiPlus /> Novo Usuário
+        </button>
+      </div>
+
+      {loading ? (
+        <p>Carregando usuários...</p>
+      ) : (
+        <AdminTable columns={columns} data={users} searchPlaceholder="Pesquisar por nome ou email..." />
+      )}
+
+      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Usuário' : 'Novo Usuário'} maxWidth="50%">
+        <form className={styles.form} onSubmit={handleSave}>
+          <div className={styles.formGrid}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Nome Completo</label>
+              <input type="text" className="input-field" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
+            </div>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>E-mail (Login)</label>
+              <input type="email" className="input-field" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Perfil de Permissão</label>
+              <select className="input-field" value={formData.role_id} onChange={(e) => setFormData({...formData, role_id: e.target.value})} required>
+                <option value="">Selecione um perfil...</option>
+                {profiles.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+              </select>
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Senha Provisória</label>
+              <input type="password" className="input-field" placeholder="Gerada e enviada por e-mail" disabled style={{ opacity: 0.6, cursor: 'not-allowed' }} />
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>O gerenciamento de senhas é feito nativamente pelo serviço de autenticação.</span>
+            </div>
+
+            <div className={styles.formGroupFull} style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+              <label className={styles.checkboxContainer}>
+                <input type="checkbox" checked={formData.active} onChange={(e) => setFormData({...formData, active: e.target.checked})} />
+                Usuário com Acesso Ativo ao Painel
+              </label>
+            </div>
+          </div>
+
+          <div className="modal-actions">
+            <button type="button" className="btn-danger" onClick={() => setIsModalOpen(false)}>Cancelar</button>
+            <button type="submit" className="btn-primary">Salvar Usuário</button>
+          </div>
+        </form>
+      </AdminModal>
+    </div>
+  );
+}

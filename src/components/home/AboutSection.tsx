@@ -1,30 +1,31 @@
-"use client";
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from './AboutSection.module.css';
+import CustomSelect from '../CustomSelect';
+import SorteioForm from './SorteioForm';
+import { createClient } from '@/utils/supabase/server';
 
-const imagesData = [
-  { id: 1, text: "Foto 2025 1" },
-  { id: 2, text: "Foto 2025 2" }
-];
+export default async function AboutSection() {
+  const supabase = await createClient();
+  const { data: tipologias } = await supabase
+    .from('categories')
+    .select('id, name')
+    .eq('type', 'tipologia')
+    .order('name', { ascending: true });
 
-export default function AboutSection() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % imagesData.length);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+  const tipologiaOptions = tipologias?.map(t => ({
+    value: t.id,
+    label: t.name
+  })) || [];
 
   return (
     <section className={styles.aboutSection} id="sobre">
       <div className={`container ${styles.aboutGrid}`}>
         <div className={styles.aboutContent}>
-          <h2 className={styles.aboutTitle}>
-            O que rolou em 2025 e <br className={styles.desktopBr} />
-            o que esperar de 2026
-          </h2>
+          <div className={styles.aboutTitleBox}>
+            <h2 className={styles.aboutTitleText}>
+              O QUE ESPERAR DE 2026
+            </h2>
+          </div>
           <p className={styles.text}>
             O JotaJá Summit já se consolidou como o maior ponto de encontro para quem quer acelerar os negócios. No ano passado, lotamos os auditórios e geramos milhões em negócios fechados.
           </p>
@@ -42,36 +43,14 @@ export default function AboutSection() {
               <span className={styles.checkIcon}>✓</span> Inovações do Varejo
             </li>
           </ul>
-          <a 
-            href="https://www.sympla.com.br/evento/jotaja-summit-2026/3179449?referrer=www.google.com&referrer=www.google.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="btn-primary"
-            style={{ display: 'inline-block', marginTop: '2rem', maxWidth: '300px' }}
-          >
-            GARANTA SEU INGRESSO
-          </a>
         </div>
         
-        <div className={styles.hybridCarouselContainer}>
-          {imagesData.map((img, index) => (
-            <div 
-              key={img.id} 
-              className={`${styles.hybridSlide} ${index === currentIndex ? styles.active : ''}`}
-            >
-              {img.text}
-            </div>
-          ))}
-          <div className={styles.hybridIndicators}>
-            {imagesData.map((_, index) => (
-              <button 
-                key={index}
-                type="button"
-                className={`${styles.indicator} ${index === currentIndex ? styles.active : ''}`}
-                onClick={() => setCurrentIndex(index)}
-                aria-label={`Ir para foto ${index + 1}`}
-              />
-            ))}
+        <div className={styles.formWrapper}>
+          <div className={`glass ${styles.formBox}`}>
+            <h3 style={{ marginBottom: '0.5rem' }}>Sorteio Arcofoods!</h3>
+            <p className={styles.formSubtitle}>Preencha os dados abaixo para garantir sua participação no sorteio da Arcofoods no Jotajá Summit!</p>
+
+            <SorteioForm tipologiaOptions={tipologiaOptions} />
           </div>
         </div>
       </div>
