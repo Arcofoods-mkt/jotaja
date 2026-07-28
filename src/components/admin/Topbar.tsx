@@ -13,6 +13,8 @@ import { createClient } from '@/utils/supabase/client';
 export default function Topbar({ toggleSidebar }: TopbarProps) {
   const [theme, setTheme] = useState('dark');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [userName, setUserName] = useState('Usuário');
+  const [userRole, setUserRole] = useState('');
   const router = useRouter();
   const supabase = createClient();
 
@@ -29,7 +31,32 @@ export default function Topbar({ toggleSidebar }: TopbarProps) {
     } else {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
+
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('users_profiles')
+          .select('name, roles(name)')
+          .eq('id', user.id)
+          .single();
+          
+        if (profile) {
+          setUserName(profile.name || 'Usuário');
+          // @ts-ignore
+          setUserRole(profile.roles?.name || '');
+        }
+      }
+    };
+    fetchUser();
   }, []);
+
+  const getInitials = (name: string) => {
+    if (!name) return 'U';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  };
 
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark';
@@ -59,10 +86,10 @@ export default function Topbar({ toggleSidebar }: TopbarProps) {
             className={styles.profile} 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
-            <div className={styles.avatar}>DR</div>
+            <div className={styles.avatar}>{getInitials(userName)}</div>
             <div className={styles.userInfo}>
-              <span className={styles.userName}>Diogo Rito</span>
-              <span className={styles.userRole}>Admin</span>
+              <span className={styles.userName}>{userName}</span>
+              <span className={styles.userRole}>{userRole}</span>
             </div>
             <FiChevronDown className={styles.profileDropdownIcon} />
           </div>
