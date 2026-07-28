@@ -65,7 +65,7 @@ export default function UsuariosPage() {
     fetchData();
   }, []);
 
-  const openModal = (user = null) => {
+  const openModal = (user: any = null) => {
     if (user) {
       setFormData({
         id: user.id,

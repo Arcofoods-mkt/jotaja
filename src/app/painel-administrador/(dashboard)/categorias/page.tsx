@@ -31,7 +31,7 @@ export default function CategoriasPage() {
     fetchCategories();
   }, []);
 
-  const openModal = (category = null) => {
+  const openModal = (category: any = null) => {
     if (category) {
       setFormData(category);
       setIsEditing(true);
