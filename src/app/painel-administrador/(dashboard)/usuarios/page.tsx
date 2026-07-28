@@ -6,6 +6,7 @@ import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
 import styles from './Usuarios.module.css';
+import { createAdminUser, updateAdminUser, deleteAdminUser } from './actions';
 
 export default function UsuariosPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -18,6 +19,7 @@ export default function UsuariosPage() {
     id: '', 
     name: '', 
     email: '', 
+    password: '',
     role_id: '', 
     active: true
   };
@@ -29,18 +31,24 @@ export default function UsuariosPage() {
   const fetchData = async () => {
     setLoading(true);
     
-    // Check if table exists (assuming 'admin_users' for now)
-    // Se a tabela não existir, precisaremos criar manualmente no Supabase
+    // Puxando de users_profiles ao invés de admin_users
+    // Como a sua tabela tem id que é foreign key para auth.users.id, 
+    // precisaremos juntar os dados ou usar as roles
     const { data: pData, error: pError } = await supabase
-      .from('admin_users')
+      .from('users_profiles')
       .select(`
         *,
         profile:roles(name)
       `)
       .order('created_at', { ascending: false });
       
-    if (!pError && pData) setUsers(pData);
-    if (pError) console.error("Error fetching admin_users: ", pError);
+    if (!pError && pData) {
+      // Como o e-mail não fica em users_profiles (fica em auth.users), a API admin é a única que consegue ver.
+      // Para exibir no grid sem chamar RPC, vamos deixar um placeholder de e-mail por enquanto.
+      // Ou você pode adicionar email como coluna em users_profiles para ser redundante, que é mais prático.
+      setUsers(pData);
+    }
+    if (pError) console.error("Error fetching users_profiles: ", pError);
 
     // Fetch Profiles
     const { data: profData, error: profError } = await supabase.from('roles').select('*').order('name');
@@ -61,6 +69,7 @@ export default function UsuariosPage() {
         id: user.id,
         name: user.name,
         email: user.email,
+        password: '', // Senha em branco ao editar por segurança
         role_id: user.role_id || '',
         active: user.active
       });
@@ -75,27 +84,45 @@ export default function UsuariosPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const dataToSave = {
+    const dataToSave: any = {
       name: formData.name,
       email: formData.email,
       role_id: formData.role_id || null,
       active: formData.active
     };
 
-    if (isEditing) {
-      await supabase.from('admin_users').update(dataToSave).eq('id', formData.id);
-    } else {
-      await supabase.from('admin_users').insert([dataToSave]);
+    if (formData.password) {
+      dataToSave.password = formData.password;
     }
-    
-    setIsModalOpen(false);
-    fetchData();
+
+    try {
+      let result;
+      if (isEditing) {
+        result = await updateAdminUser(dataToSave);
+      } else {
+        result = await createAdminUser(dataToSave);
+      }
+      
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      
+      setIsModalOpen(false);
+      fetchData();
+    } catch (error: any) {
+      console.error("Erro ao salvar usuário:", error);
+      alert("Erro ao salvar usuário: " + (error.message || "Verifique o console para mais detalhes."));
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Tem certeza que deseja apagar permanentemente este usuário? O acesso dele será revogado.')) {
-      await supabase.from('admin_users').delete().eq('id', id);
-      fetchData();
+      const result = await deleteAdminUser(id);
+      if (result.error) {
+        alert("Erro ao deletar: " + result.error);
+      } else {
+        fetchData();
+      }
     }
   };
 
@@ -108,7 +135,7 @@ export default function UsuariosPage() {
     { 
       key: 'email', 
       label: 'E-mail de Acesso',
-      render: (row: any) => <span style={{ color: 'var(--text-muted)' }}>{row.email}</span>
+      render: (row: any) => <span style={{ color: 'var(--text-muted)' }}>{row.email || 'Login oculto'}</span>
     },
     { 
       key: 'profile', 
@@ -185,16 +212,25 @@ export default function UsuariosPage() {
             </div>
             
             <div className={styles.formGroup}>
-              <label className={styles.label}>Senha Provisória</label>
-              <input type="password" className="input-field" placeholder="Gerada e enviada por e-mail" disabled style={{ opacity: 0.6, cursor: 'not-allowed' }} />
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>O gerenciamento de senhas é feito nativamente pelo serviço de autenticação.</span>
+              <label className={styles.label}>Senha de Acesso {isEditing ? '(Deixe em branco para manter)' : ''}</label>
+              <input 
+                type="password" 
+                className="input-field" 
+                placeholder="Digite a senha" 
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                required={!isEditing} 
+              />
             </div>
 
             <div className={styles.formGroupFull} style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-              <label className={styles.checkboxContainer}>
-                <input type="checkbox" checked={formData.active} onChange={(e) => setFormData({...formData, active: e.target.checked})} />
+              <div className={styles.checkboxContainer} onClick={() => setFormData({...formData, active: !formData.active})}>
+                <label className={styles.switch}>
+                  <input type="checkbox" checked={formData.active} onChange={() => {}} />
+                  <span className={styles.slider}></span>
+                </label>
                 Usuário com Acesso Ativo ao Painel
-              </label>
+              </div>
             </div>
           </div>
 

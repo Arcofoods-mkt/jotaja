@@ -12,6 +12,7 @@ export default function HeroSection() {
         alt="JotaJá Summit Background"
         fill
         priority
+        unoptimized
         style={{ objectFit: 'cover', objectPosition: 'center top' }}
       />
       <div className={styles.heroOverlay} />
@@ -21,8 +22,8 @@ export default function HeroSection() {
       <div className={`container ${styles.hero}`} style={{ position: 'relative', zIndex: 2 }}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
-            <span>Venha visitar a</span> <br />
-            <span className={`text-gradient font-display ${styles.highlightText}`}>nossa cozinha!</span>
+            <span>Venha visitar o</span> <br />
+            <span className={`text-gradient font-display ${styles.highlightText}`}>nosso stand!</span>
           </h1>
           <p className={styles.description}>
             Conecte-se com as maiores indústrias, descubra inovações do mercado e transforme seus resultados em 2 dias de imersão total.
