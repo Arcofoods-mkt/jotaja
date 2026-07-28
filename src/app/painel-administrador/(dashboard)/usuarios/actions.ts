@@ -27,6 +27,7 @@ export async function createAdminUser(formData: any) {
   const { error: profileError } = await supabase.from('users_profiles').insert({
     id: authData.user.id,
     name: formData.name,
+    cpf: formData.cpf,
     role_id: formData.role_id || null,
     active: formData.active
   })
@@ -61,6 +62,7 @@ export async function updateAdminUser(formData: any) {
   // 2. Atualizar users_profiles
   const { error: profileError } = await supabase.from('users_profiles').update({
     name: formData.name,
+    cpf: formData.cpf,
     role_id: formData.role_id || null,
     active: formData.active
   }).eq('id', formData.id)

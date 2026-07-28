@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
-import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
+import AdminTable from '@/components/admin/AdminTable';
+import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
 import { createClient } from '@/utils/supabase/client';
+import { formatCPF } from '@/utils/formatters';
 import styles from './Usuarios.module.css';
 import { createAdminUser, updateAdminUser, deleteAdminUser } from './actions';
 
@@ -19,6 +20,7 @@ export default function UsuariosPage() {
     id: '', 
     name: '', 
     email: '', 
+    cpf: '',
     password: '',
     role_id: '', 
     active: true
@@ -69,6 +71,7 @@ export default function UsuariosPage() {
         id: user.id,
         name: user.name,
         email: user.email,
+        cpf: user.cpf ? formatCPF(user.cpf) : '',
         password: '', // Senha em branco ao editar por segurança
         role_id: user.role_id || '',
         active: user.active
@@ -87,6 +90,7 @@ export default function UsuariosPage() {
     const dataToSave: any = {
       name: formData.name,
       email: formData.email,
+      cpf: formData.cpf.replace(/\D/g, ''), // Envia apenas os 11 números para o banco
       role_id: formData.role_id || null,
       active: formData.active
     };
@@ -204,6 +208,19 @@ export default function UsuariosPage() {
             </div>
             
             <div className={styles.formGroup}>
+              <label className={styles.label}>CPF (Obrigatório)</label>
+              <input 
+                type="text" 
+                className="input-field" 
+                value={formData.cpf} 
+                onChange={(e) => setFormData({...formData, cpf: formatCPF(e.target.value)})} 
+                placeholder="000.000.000-00"
+                maxLength={14}
+                required 
+              />
+            </div>
+            
+            <div className={styles.formGroup}>
               <label className={styles.label}>Perfil de Permissão</label>
               <select className="input-field" value={formData.role_id} onChange={(e) => setFormData({...formData, role_id: e.target.value})} required>
                 <option value="">Selecione um perfil...</option>
@@ -223,13 +240,14 @@ export default function UsuariosPage() {
               />
             </div>
 
-            <div className={styles.formGroupFull} style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-              <div className={styles.checkboxContainer} onClick={() => setFormData({...formData, active: !formData.active})}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Status do usuário</label>
+              <div className={styles.checkboxContainer} onClick={() => setFormData({...formData, active: !formData.active})} style={{ marginTop: '0.2rem' }}>
                 <label className={styles.switch}>
                   <input type="checkbox" checked={formData.active} onChange={() => {}} />
                   <span className={styles.slider}></span>
                 </label>
-                Usuário com Acesso Ativo ao Painel
+                <span>{formData.active ? 'Ativo' : 'Inativo'}</span>
               </div>
             </div>
           </div>
