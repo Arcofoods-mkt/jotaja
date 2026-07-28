@@ -3,7 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FiHome, FiKey, FiUsers, FiList, FiTag, FiFileText } from 'react-icons/fi';
+import { FiHome, FiKey, FiUsers, FiList, FiTag, FiFileText, FiGift } from 'react-icons/fi';
 import styles from './Sidebar.module.css';
 
 interface SidebarProps {
@@ -33,7 +33,8 @@ export default function Sidebar({ isCollapsed = false, permissions = {}, isAdmin
       title: 'GESTÃO',
       items: [
         { name: 'Participantes', path: '/painel-administrador/participantes', icon: <FiUsers />, module: 'Participantes' },
-        { name: 'Categorias', path: '/painel-administrador/categorias', icon: <FiTag />, module: 'Categorias' }
+        { name: 'Categorias', path: '/painel-administrador/categorias', icon: <FiTag />, module: 'Categorias' },
+        { name: 'Sorteios', path: '/painel-administrador/sorteios', icon: <FiGift />, module: 'Sorteios' }
       ]
     },
     {

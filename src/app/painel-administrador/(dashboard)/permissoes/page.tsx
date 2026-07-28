@@ -20,6 +20,7 @@ export default function PermissoesPage() {
     Usuarios: { acessar: false, ver: false, editar: false, bloquear: false, excluir: false },
     Participantes: { acessar: false, ver: false, editar: false, bloquear: false, excluir: false },
     Categorias: { acessar: false, ver: false, editar: false, bloquear: false, excluir: false },
+    Sorteios: { acessar: false, ver: false, editar: false, bloquear: false, excluir: false },
   };
 
   const [permissions, setPermissions] = useState<any>(defaultPermissions);
@@ -197,6 +198,7 @@ export default function PermissoesPage() {
             {renderModuleRow('Usuarios', ['acessar', 'ver', 'editar', 'bloquear', 'excluir'], 'Usuários')}
             {renderModuleRow('Participantes', ['acessar', 'ver', 'editar', 'bloquear', 'excluir'], 'Participantes')}
             {renderModuleRow('Categorias', ['acessar', 'ver', 'editar', 'bloquear', 'excluir'], 'Categorias')}
+            {renderModuleRow('Sorteios', ['acessar', 'ver', 'editar', 'bloquear', 'excluir'], 'Sorteios')}
 
           </div>
 

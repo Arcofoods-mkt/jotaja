@@ -22,7 +22,8 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
       '/painel-administrador/permissoes': 'Permissoes',
       '/painel-administrador/usuarios': 'Usuarios',
       '/painel-administrador/participantes': 'Participantes',
-      '/painel-administrador/categorias': 'Categorias'
+      '/painel-administrador/categorias': 'Categorias',
+      '/painel-administrador/sorteios': 'Sorteios'
     };
 
     // Remove trailling slash se houver para match perfeito (exceto na raiz do painel)
