@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { FiMenu, FiSun, FiMoon, FiLogOut } from 'react-icons/fi';
+import { FiMenu, FiSun, FiMoon, FiLogOut, FiChevronDown } from 'react-icons/fi';
 import styles from './Topbar.module.css';
 
 interface TopbarProps {
@@ -12,6 +12,7 @@ import { createClient } from '@/utils/supabase/client';
 
 export default function Topbar({ toggleSidebar }: TopbarProps) {
   const [theme, setTheme] = useState('dark');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -52,18 +53,28 @@ export default function Topbar({ toggleSidebar }: TopbarProps) {
         <button className={styles.iconBtn} onClick={toggleTheme} aria-label="Toggle Theme">
           {theme === 'dark' ? <FiSun /> : <FiMoon />}
         </button>
-        <button className={styles.iconBtn} onClick={handleLogout} aria-label="Sair" title="Sair do sistema">
-          <FiLogOut />
-        </button>
 
-        <div className={styles.profile}>
-          <div className={styles.avatar}>
-            AD
+        <div className={styles.profileContainer}>
+          <div 
+            className={styles.profile} 
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <div className={styles.avatar}>DR</div>
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>Diogo Rito</span>
+              <span className={styles.userRole}>Admin</span>
+            </div>
+            <FiChevronDown className={styles.profileDropdownIcon} />
           </div>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>Admin</span>
-            <span className={styles.userRole}>Super Admin</span>
-          </div>
+
+          {isDropdownOpen && (
+            <div className={styles.dropdownMenu}>
+              <button className={styles.dropdownItem} onClick={handleLogout}>
+                <FiLogOut className={styles.logoutIcon} />
+                <span>Sair do Sistema</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

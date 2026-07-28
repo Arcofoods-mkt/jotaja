@@ -48,25 +48,46 @@
   color: var(--text-muted);
   font-size: 1.25rem;
   cursor: pointer;
-  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
 .iconBtn:hover {
+  background-color: var(--admin-border);
   color: var(--text-color);
+}
+
+.profileContainer {
+  position: relative;
 }
 
 .profile {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  padding-left: 1.5rem;
+  border-left: 1px solid var(--admin-border);
+  cursor: pointer;
+  padding-right: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.profile:hover {
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 .avatar {
   width: 36px;
   height: 36px;
-  background-color: var(--accent-color);
-  color: #000;
   border-radius: 50%;
+  background-color: #38d39f; /* A green color matching the design */
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,7 +101,7 @@
 }
 
 .userName {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-color);
 }
@@ -88,6 +109,60 @@
 .userRole {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+
+.profileDropdownIcon {
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: var(--admin-sidebar-bg);
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  min-width: 200px;
+  padding: 8px 0;
+  z-index: 100;
+  animation: slideDown 0.2s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownItem {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: #ef4444; /* Red color matching design */
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dropdownItem:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.logoutIcon {
+  font-size: 1.2rem;
 }
 
 @media (max-width: 768px) {
