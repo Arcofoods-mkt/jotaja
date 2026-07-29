@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import styles from './AboutSection.module.css';
+import styles from './OQueEsperar.module.css';
 
 const imagesData = [
   { id: 1, src: "/Imagens/cd1.webp", alt: "Centro de Distribuição 1" },

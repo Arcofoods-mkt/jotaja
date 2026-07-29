@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import CustomSelect from '../CustomSelect';
 import { createClient } from '@/utils/supabase/client';
-import styles from './AboutSection.module.css';
+import styles from './OQueEsperar.module.css';
 import { COUNTRIES } from '@/utils/countries';
 import { isValidCNPJ, formatCNPJ, formatPhone } from '@/utils/formatters';
 
@@ -28,7 +28,7 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState({ cnpj: '', email: '', whatsapp: '', general: '' });
 
   const supabase = createClient();
 
@@ -49,25 +49,46 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setErrors({ cnpj: '', email: '', whatsapp: '', general: '' });
     setSuccess(false);
 
     if (!formData.category_id) {
-      setError('Por favor, selecione uma tipologia.');
+      setErrors(prev => ({ ...prev, general: 'Por favor, selecione uma tipologia.' }));
       setLoading(false);
       return;
     }
 
     if (!isValidCNPJ(formData.cnpj)) {
-      setError('CNPJ inválido. Verifique os números digitados.');
+      setErrors(prev => ({ ...prev, cnpj: 'CNPJ inválido. Verifique os números digitados.' }));
       setLoading(false);
       return;
     }
 
-    // Limpar o CNPJ antes de enviar pro banco pra salvar apenas os 14 digitos puros
+    // Limpar o CNPJ antes de enviar pro banco
     const cleanCnpj = formData.cnpj.replace(/\D/g, '');
-    // Juntar o DDI com o número
     const cleanPhone = formData.ddi + formData.whatsapp.replace(/\D/g, '');
+
+    // Verificar duplicidade de CNPJ, email e whatsapp antes de inserir
+    const { data: existingCnpj } = await supabase.from('participants').select('id').eq('cnpj', cleanCnpj).maybeSingle();
+    if (existingCnpj) {
+      setErrors(prev => ({ ...prev, cnpj: 'Esse CNPJ já está participando do sorteio' }));
+      setLoading(false);
+      return;
+    }
+
+    const { data: existingEmail } = await supabase.from('participants').select('id').eq('email', formData.email.trim()).maybeSingle();
+    if (existingEmail) {
+      setErrors(prev => ({ ...prev, email: 'Este e-mail já foi cadastrado no sorteio.' }));
+      setLoading(false);
+      return;
+    }
+
+    const { data: existingPhone } = await supabase.from('participants').select('id').eq('whatsapp', cleanPhone).maybeSingle();
+    if (existingPhone) {
+      setErrors(prev => ({ ...prev, whatsapp: 'Este telefone já foi cadastrado no sorteio.' }));
+      setLoading(false);
+      return;
+    }
 
     const { error: insertError } = await supabase.from('participants').insert([{
       personal_name: formData.personal_name.trim(),
@@ -80,19 +101,7 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
 
     if (insertError) {
       console.error(insertError);
-      
-      // Checar erro de duplicidade (código Postgres: 23505 = unique_violation)
-      if (insertError.code === '23505') {
-        if (insertError.message.includes('participants_cnpj_key')) {
-          setError('Esse CNPJ já está participando do sorteio');
-        } else if (insertError.message.includes('participants_email_key')) {
-          setError('Esse e-mail já está participando do sorteio');
-        } else {
-          setError('Este dado já foi cadastrado no sistema.');
-        }
-      } else {
-        setError('Ocorreu um erro ao enviar sua inscrição. Verifique os dados e tente novamente.');
-      }
+      setErrors(prev => ({ ...prev, general: 'Ocorreu um erro ao enviar sua inscrição. Verifique os dados e tente novamente.' }));
     } else {
       setSuccess(true);
       setFormData({
@@ -123,8 +132,6 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
-      <h3 style={{ marginBottom: '0.5rem' }}>Sorteio Arcofoods!</h3>
-      <p className={styles.formSubtitle}>Preencha os dados abaixo para garantir sua participação no sorteio da Arcofoods no Jotajá Summit!</p>
 
       <input 
         type="text" 
@@ -150,7 +157,10 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
         value={formData.cnpj}
         onChange={handleCnpjChange}
         maxLength={18}
+        style={errors.cnpj ? { borderColor: '#ff4d4f', marginBottom: '0.2rem' } : {}}
       />
+      {errors.cnpj && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginBottom: '1rem', marginTop: 0 }}>{errors.cnpj}</p>}
+      
       <input 
         type="email" 
         placeholder="E-mail" 
@@ -158,7 +168,9 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
         required 
         value={formData.email}
         onChange={(e) => setFormData({...formData, email: e.target.value})}
+        style={errors.email ? { borderColor: '#ff4d4f', marginBottom: '0.2rem' } : {}}
       />
+      {errors.email && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginBottom: '1rem', marginTop: 0 }}>{errors.email}</p>}
       
       <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
         <select 
@@ -177,13 +189,14 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
           type="tel" 
           placeholder="WhatsApp (com DDD)" 
           className="input-field" 
-          style={{ marginBottom: 0, flex: 1 }}
+          style={{ marginBottom: 0, flex: 1, ...(errors.whatsapp ? { borderColor: '#ff4d4f' } : {}) }}
           required 
           value={formData.whatsapp}
           onChange={handlePhoneChange}
           maxLength={15}
         />
       </div>
+      {errors.whatsapp && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginBottom: '1rem', marginTop: '-0.8rem' }}>{errors.whatsapp}</p>}
 
       <CustomSelect 
         placeholder="Selecione a Tipologia"
@@ -192,7 +205,7 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
         onChange={(val) => setFormData({...formData, category_id: val})}
       />
 
-      {error && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginTop: '0.5rem' }}>{error}</p>}
+      {errors.general && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginTop: '0.5rem' }}>{errors.general}</p>}
 
       <button type="submit" className="btn-primary" style={{ marginTop: '0.5rem' }} disabled={loading}>
         {loading ? 'Enviando...' : 'Participar agora!'}
