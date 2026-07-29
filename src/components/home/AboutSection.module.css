@@ -49,21 +49,14 @@
   display: flex;
   align-items: center;
   gap: 15px;
-  padding: 1.2rem 1.5rem;
-  background: rgba(3, 12, 28, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  padding: 0.5rem 0;
   font-size: 1.1rem;
   font-weight: 600;
-  transition: transform 0.2s ease, background 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .featureItem:hover {
-  background: rgba(3, 12, 28, 0.85);
   transform: translateX(5px);
-  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .checkIcon {
