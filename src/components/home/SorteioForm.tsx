@@ -131,7 +131,7 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={styles.formContainer} onSubmit={handleSubmit}>
 
       <input 
         type="text" 
@@ -141,6 +141,7 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
         value={formData.personal_name}
         onChange={handleNameChange}
       />
+      
       <input 
         type="text" 
         placeholder="Nome do Estabelecimento" 
@@ -149,54 +150,61 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
         value={formData.establishment_name}
         onChange={(e) => setFormData({...formData, establishment_name: e.target.value})}
       />
-      <input 
-        type="text" 
-        placeholder="CNPJ" 
-        className="input-field" 
-        required 
-        value={formData.cnpj}
-        onChange={handleCnpjChange}
-        maxLength={18}
-        style={errors.cnpj ? { borderColor: '#ff4d4f', marginBottom: '0.2rem' } : {}}
-      />
-      {errors.cnpj && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginBottom: '1rem', marginTop: 0 }}>{errors.cnpj}</p>}
       
-      <input 
-        type="email" 
-        placeholder="E-mail" 
-        className="input-field" 
-        required 
-        value={formData.email}
-        onChange={(e) => setFormData({...formData, email: e.target.value})}
-        style={errors.email ? { borderColor: '#ff4d4f', marginBottom: '0.2rem' } : {}}
-      />
-      {errors.email && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginBottom: '1rem', marginTop: 0 }}>{errors.email}</p>}
-      
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '1rem' }}>
-        <select 
-          className="input-field" 
-          style={{ width: '120px', marginBottom: 0 }}
-          value={formData.ddi}
-          onChange={(e) => setFormData({...formData, ddi: e.target.value})}
-        >
-          {COUNTRIES.map(country => (
-            <option key={country.code} value={country.code}>
-              {country.flag} {country.code}
-            </option>
-          ))}
-        </select>
+      <div>
         <input 
-          type="tel" 
-          placeholder="WhatsApp (com DDD)" 
+          type="text" 
+          placeholder="CNPJ" 
           className="input-field" 
-          style={{ marginBottom: 0, flex: 1, ...(errors.whatsapp ? { borderColor: '#ff4d4f' } : {}) }}
           required 
-          value={formData.whatsapp}
-          onChange={handlePhoneChange}
-          maxLength={15}
+          value={formData.cnpj}
+          onChange={handleCnpjChange}
+          maxLength={18}
+          style={errors.cnpj ? { borderColor: '#ff4d4f' } : {}}
         />
+        {errors.cnpj && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0.4rem 0 0 0' }}>{errors.cnpj}</p>}
       </div>
-      {errors.whatsapp && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginBottom: '1rem', marginTop: '-0.8rem' }}>{errors.whatsapp}</p>}
+
+      <div>
+        <input 
+          type="email" 
+          placeholder="E-mail" 
+          className="input-field" 
+          required 
+          value={formData.email}
+          onChange={(e) => setFormData({...formData, email: e.target.value})}
+          style={errors.email ? { borderColor: '#ff4d4f' } : {}}
+        />
+        {errors.email && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0.4rem 0 0 0' }}>{errors.email}</p>}
+      </div>
+
+      <div>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <select 
+            className="input-field" 
+            style={{ width: '120px' }}
+            value={formData.ddi}
+            onChange={(e) => setFormData({...formData, ddi: e.target.value})}
+          >
+            {COUNTRIES.map(country => (
+              <option key={country.code} value={country.code}>
+                {country.flag} {country.code}
+              </option>
+            ))}
+          </select>
+          <input 
+            type="tel" 
+            placeholder="WhatsApp (com DDD)" 
+            className="input-field" 
+            style={{ flex: 1, ...(errors.whatsapp ? { borderColor: '#ff4d4f' } : {}) }}
+            required 
+            value={formData.whatsapp}
+            onChange={handlePhoneChange}
+            maxLength={15}
+          />
+        </div>
+        {errors.whatsapp && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0.4rem 0 0 0' }}>{errors.whatsapp}</p>}
+      </div>
 
       <CustomSelect 
         placeholder="Selecione a Tipologia"
@@ -205,9 +213,9 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
         onChange={(val) => setFormData({...formData, category_id: val})}
       />
 
-      {errors.general && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', marginTop: '0.5rem' }}>{errors.general}</p>}
+      {errors.general && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.general}</p>}
 
-      <button type="submit" className="btn-primary" style={{ marginTop: '0.5rem' }} disabled={loading}>
+      <button type="submit" className="btn-primary" disabled={loading} style={{ margin: 0 }}>
         {loading ? 'Enviando...' : 'Participar agora!'}
       </button>
     </form>

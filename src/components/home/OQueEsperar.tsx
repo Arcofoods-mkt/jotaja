@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import styles from './OQueEsperar.module.css';
-import { FiLayers, FiStar, FiGift } from 'react-icons/fi';
-import { LuChefHat } from 'react-icons/lu';
+import { FiStar, FiGift } from 'react-icons/fi';
+import { LuChefHat, LuSnowflake } from 'react-icons/lu';
 
 export default function OQueEsperar() {
   return (
@@ -21,10 +21,10 @@ export default function OQueEsperar() {
 
         <div className={styles.heroicFeatures}>
           <div className={styles.heroicCard}>
-            <div className={styles.heroicIcon}><FiLayers /></div>
+            <div className={styles.heroicIcon}><LuSnowflake /></div>
             <h3 className={styles.heroicCardTitle}>Novas Categorias</h3>
             <p className={styles.heroicCardText}>
-              Descubra em primeira mão lançamentos exclusivos e um portfólio expandido, pensado estrategicamente para elevar o padrão do seu menu e encantar seus clientes.
+              Descubra lançamentos exclusivos e inovações do nosso portfólio. Produtos pensados estrategicamente para destacar o seu menu e atrair mais clientes.
             </p>
           </div>
           
@@ -32,7 +32,7 @@ export default function OQueEsperar() {
             <div className={styles.heroicIcon}><FiStar /></div>
             <h3 className={styles.heroicCardTitle}>Chef</h3>
             <p className={styles.heroicCardText}>
-              Uma experiência gastronômica guiada por uma verdadeira estrela da alta culinária. Venha aprender de perto com quem conquistou os holofotes no maior reality show de gastronomia do mundo!
+              Uma verdadeira aula de alta culinária. Descubra os segredos e técnicas exclusivas de quem conquistou o maior reality show de gastronomia do mundo.
             </p>
           </div>
 
@@ -40,7 +40,7 @@ export default function OQueEsperar() {
             <div className={styles.heroicIcon}><LuChefHat /></div>
             <h3 className={styles.heroicCardTitle}>Aulas Show</h3>
             <p className={styles.heroicCardText}>
-              Aprenda com palestrantes que são referência absoluta no mercado. Insights práticos e inovações que vão alavancar a gestão e o faturamento do seu estabelecimento.
+              Aprenda com quem faz acontecer. Palestras com referências do mercado trazendo insights práticos para revolucionar a gestão e o lucro do seu negócio.
             </p>
           </div>
 

@@ -20,29 +20,29 @@ export default async function AboutTheDraw() {
   })) || [];
 
   return (
-    <section className={styles.drawSection} id="sobre2">
-      <div className={`container ${styles.aboutGrid}`}>
-        <div className={styles.aboutContent}>
-          <h2 className={styles.drawTitle}>
-            CONCORRA A <span>PRÊMIOS INCRÍVEIS</span>
-          </h2>
-          <p className={styles.text}>
-            Quer levar vantagens reais para o seu negócio? Você pode garantir <strong>brindes exclusivos e super descontos</strong> preenchendo o cadastro ao lado.
-          </p>
-          <ul className={styles.featuresList}>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon}><FiGift /></span> 
-              <span><strong>Brindes Exclusivos:</strong> Kits especiais sorteados apenas para quem se inscrever</span>
-            </li>
-            <li className={styles.featureItem}>
-              <span className={styles.checkIcon}><FiDollarSign /></span> 
-              <span><strong>Descontos Especiais:</strong> Condições únicas de compra para os ganhadores</span>
-            </li>
-          </ul>
-        </div>
-        
-        <div className={styles.formWrapper}>
-          <div className={`glass ${styles.formBox}`}>
+    <section className={styles.vipSection} id="sobre2">
+      <div className="container">
+        <div className={styles.vipBanner}>
+          <div className={styles.vipContent}>
+            <h2 className={styles.vipTitle}>
+              Vantagens <span>Exclusivas</span>
+            </h2>
+            <p className={styles.vipText}>
+              Eleve o patamar do seu negócio. Preencha seu passe VIP e concorra a prêmios, descontos surpreendentes e benefícios exclusivos que serão sorteados durante o evento.
+            </p>
+            <div className={styles.vipFeatures}>
+              <div className={styles.greenBoxItem}>
+                <div className={styles.greenBoxIcon}><FiGift /></div> 
+                <span><strong>Brindes Premium:</strong> Concorra a kits especiais sorteados apenas entre os inscritos.</span>
+              </div>
+              <div className={styles.greenBoxItem}>
+                <div className={styles.greenBoxIcon}><FiDollarSign /></div> 
+                <span><strong>Descontos Inéditos:</strong> Tenha a chance de ganhar tabelas de preços únicas reveladas no evento.</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className={styles.vipFormArea}>
             <SorteioForm tipologiaOptions={tipologiaOptions} />
           </div>
         </div>
