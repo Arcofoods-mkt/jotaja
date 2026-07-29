@@ -29,15 +29,6 @@ export default function AboutSectionArcofoods() {
           <p className={styles.text}>
             Com um dos portfólios mais completos do mercado de food service do Rio de Janeiro, oferece um mix diversificado de produtos, sempre apoiado por parcerias com as principais indústrias do setor.
           </p>
-          <a 
-            href="https://wa.me/5521965560176" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="btn-primary"
-            style={{ display: 'inline-block', marginTop: '1.5rem', maxWidth: '300px' }}
-          >
-            Realize seu pedido
-          </a>
         </div>
         
         <div className={styles.carouselContainer}>

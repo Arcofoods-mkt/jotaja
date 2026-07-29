@@ -16,7 +16,7 @@ export default function HeroSection() {
         style={{ objectFit: 'cover', objectPosition: 'center top' }}
       />
       <div className={styles.heroOverlay} />
-      <div style={{ position: 'relative', zIndex: 2 }}>
+      <div style={{ position: 'relative', zIndex: 50 }}>
         <Topbar />
       </div>
       <div className={`container ${styles.hero}`} style={{ position: 'relative', zIndex: 2 }}>
