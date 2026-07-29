@@ -1,0 +1,102 @@
+.aulasSection {
+  padding: 6rem 0;
+  background-color: var(--bg-color);
+  position: relative;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.title {
+  color: var(--accent-color);
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.speakerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.speakerCard:hover {
+  transform: translateY(-5px);
+}
+
+.imagePlaceholder {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: var(--bg-color-light);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.placeholderIcon {
+  color: rgba(255, 255, 255, 0.1);
+  font-size: 4rem;
+}
+
+.speakerName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.3rem;
+  text-align: center;
+}
+
+.speakerCompany {
+  font-size: 1rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.timeTag {
+  display: inline-block;
+  margin-top: 0.8rem;
+  background: rgba(148, 196, 28, 0.2);
+  color: var(--accent-color);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+}

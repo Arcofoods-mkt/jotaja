@@ -123,6 +123,9 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
 
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
+      <h3 style={{ marginBottom: '0.5rem' }}>Sorteio Arcofoods!</h3>
+      <p className={styles.formSubtitle}>Preencha os dados abaixo para garantir sua participação no sorteio da Arcofoods no Jotajá Summit!</p>
+
       <input 
         type="text" 
         placeholder="Nome Pessoal" 

@@ -47,9 +47,6 @@ export default async function AboutSection() {
         
         <div className={styles.formWrapper}>
           <div className={`glass ${styles.formBox}`}>
-            <h3 style={{ marginBottom: '0.5rem' }}>Sorteio Arcofoods!</h3>
-            <p className={styles.formSubtitle}>Preencha os dados abaixo para garantir sua participação no sorteio da Arcofoods no Jotajá Summit!</p>
-
             <SorteioForm tipologiaOptions={tipologiaOptions} />
           </div>
         </div>
