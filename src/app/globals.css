@@ -50,6 +50,11 @@ body {
   max-width: 100vw;
 }
 
+::selection {
+  background-color: var(--accent-color);
+  color: #000;
+}
+
 input, button, textarea, select {
   font-family: inherit;
 }
