@@ -9,14 +9,14 @@ import styles from '@/app/painel-administrador/(dashboard)/AdminLayout.module.cs
 
 export default function DashboardWrapper({ children }: { children: React.ReactNode }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { permissions, loading, isAdmin } = usePermissions();
   const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
-    if (loading || isAdmin) return; // Se for admin, pula verificação de bloqueio estrito
+    if (loading || isAdmin) return; 
 
-    // Mapeia as rotas para os módulos do JSON de permissões
     const routeModuleMap: Record<string, string> = {
       '/painel-administrador': 'Dashboard',
       '/painel-administrador/permissoes': 'Permissoes',
@@ -26,7 +26,6 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
       '/painel-administrador/sorteios': 'Sorteios'
     };
 
-    // Remove trailling slash se houver para match perfeito (exceto na raiz do painel)
     const normalizedPath = pathname.endsWith('/') && pathname !== '/painel-administrador/' 
       ? pathname.slice(0, -1) 
       : pathname;
@@ -34,7 +33,6 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
     const moduleName = routeModuleMap[normalizedPath];
 
     if (moduleName && permissions[moduleName]) {
-      // Se não tem permissão para acessar a página
       if (permissions[moduleName].acessar === false) {
         alert('Você não tem permissão para acessar esta página.');
         router.push('/painel-administrador');
@@ -48,9 +46,18 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
 
   return (
     <div className={styles.adminContainer}>
-      <Sidebar isCollapsed={isSidebarCollapsed} permissions={permissions} isAdmin={isAdmin} />
+      <Sidebar 
+        isCollapsed={isSidebarCollapsed} 
+        isMobileOpen={isMobileMenuOpen}
+        closeMobileMenu={() => setIsMobileMenuOpen(false)}
+        permissions={permissions} 
+        isAdmin={isAdmin} 
+      />
       <div className={styles.mainContent}>
-        <Topbar toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
+        <Topbar 
+          toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} 
+          toggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        />
         <main className={styles.pageContent}>
           {children}
         </main>

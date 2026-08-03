@@ -54,3 +54,11 @@
 .body {
   padding: 1.5rem;
 }
+
+@media (max-width: 768px) {
+  .modal {
+    width: 92%;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash2, FiCopy } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiCopy, FiGrid, FiList } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
@@ -16,6 +16,13 @@ export default function ParticipantesPage() {
   const [categories, setCategories] = useState<{tipologias: any[], tags: any[]}>({tipologias: [], tags: []});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setViewMode('grid');
+    }
+  }, []);
   
   // Form State
   const defaultFormData = { 
@@ -251,11 +258,17 @@ export default function ParticipantesPage() {
           <h1 className="adminPageTitle">Participantes</h1>
           <p className="adminPageDescription">Gerencie os inscritos no sorteio e gerencie as tags internas.</p>
         </div>
-        {perms.editar !== false && (
-          <button className={styles.addBtn} onClick={() => openModal()}>
-            <FiPlus /> Novo Participante
-          </button>
-        )}
+        <div className={styles.headerActions}>
+          {perms.editar !== false && (
+            <button className={styles.addBtn} onClick={() => openModal()}>
+              <FiPlus /> Novo Participante
+            </button>
+          )}
+          <div className={styles.mobileViewToggles}>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'list' ? styles.active : ''}`} onClick={() => setViewMode('list')}><FiList /></button>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'grid' ? styles.active : ''}`} onClick={() => setViewMode('grid')}><FiGrid /></button>
+          </div>
+        </div>
       </div>
 
       {loading ? (
@@ -265,10 +278,10 @@ export default function ParticipantesPage() {
           <p>Você não tem permissão para visualizar estas informações.</p>
         </div>
       ) : (
-        <AdminTable columns={columns} data={participants} searchPlaceholder="Pesquisar por nome, empresa, cnpj ou email..." />
+        <AdminTable columns={columns} data={participants} searchPlaceholder="Pesquisar por nome, empresa, cnpj ou email..." viewMode={viewMode} />
       )}
 
-      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Participante' : 'Novo Participante'} maxWidth="50%">
+      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Participante' : 'Novo Participante'}>
         <form className={styles.form} onSubmit={handleSave}>
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>

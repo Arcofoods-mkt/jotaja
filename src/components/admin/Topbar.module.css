@@ -165,8 +165,45 @@
   font-size: 1.2rem;
 }
 
+.mobileOnly {
+  display: none;
+}
+
+.desktopOnly {
+  display: flex;
+}
+
+.mobileLogo {
+  display: none;
+  align-items: center;
+}
+
+:global([data-theme='light']) .mobileLogo .logoDark {
+  display: none;
+}
+
+:global([data-theme='light']) .mobileLogo .logoLight {
+  display: block;
+}
+
+.mobileLogo .logoLight {
+  display: none;
+}
+
 @media (max-width: 768px) {
-  .menuBtn {
-    display: block;
+  .desktopOnly {
+    display: none !important;
+  }
+  
+  .mobileOnly {
+    display: flex !important;
+  }
+  
+  .mobileLogo {
+    display: flex;
+  }
+
+  .topbarTitle {
+    display: none;
   }
 }

@@ -6,11 +6,13 @@ import styles from './Topbar.module.css';
 
 interface TopbarProps {
   toggleSidebar?: () => void;
+  toggleMobileMenu?: () => void;
 }
 
 import { createClient } from '@/utils/supabase/client';
+import Image from 'next/image';
 
-export default function Topbar({ toggleSidebar }: TopbarProps) {
+export default function Topbar({ toggleSidebar, toggleMobileMenu }: TopbarProps) {
   const [theme, setTheme] = useState('dark');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [userName, setUserName] = useState('Usuário');
@@ -69,10 +71,14 @@ export default function Topbar({ toggleSidebar }: TopbarProps) {
     <header className={styles.topbar}>
       <div className={styles.left}>
         {toggleSidebar && (
-          <button className={styles.menuBtn} onClick={toggleSidebar}>
+          <button className={`${styles.menuBtn} ${styles.desktopOnly}`} onClick={toggleSidebar}>
             <FiMenu size={24} />
           </button>
         )}
+        <div className={styles.mobileLogo}>
+          <Image src="/Imagens/arcosvg.svg" alt="Arcofoods" width={110} height={32} className={styles.logoLight} />
+          <Image src="/Imagens/arcowsvg.svg" alt="Arcofoods" width={110} height={32} className={styles.logoDark} />
+        </div>
         <span className={styles.topbarTitle}>Captação de Leads</span>
       </div>
 
@@ -81,7 +87,7 @@ export default function Topbar({ toggleSidebar }: TopbarProps) {
           {theme === 'dark' ? <FiSun /> : <FiMoon />}
         </button>
 
-        <div className={styles.profileContainer}>
+        <div className={`${styles.profileContainer} ${styles.desktopOnly}`}>
           <div 
             className={styles.profile} 
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -103,6 +109,12 @@ export default function Topbar({ toggleSidebar }: TopbarProps) {
             </div>
           )}
         </div>
+
+        {toggleMobileMenu && (
+          <button className={`${styles.menuBtn} ${styles.mobileOnly}`} onClick={toggleMobileMenu}>
+            <FiMenu size={24} />
+          </button>
+        )}
       </div>
     </header>
   );

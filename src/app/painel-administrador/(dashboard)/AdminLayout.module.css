@@ -20,3 +20,9 @@
   padding: 2rem;
   background-color: var(--bg-color);
 }
+
+@media (max-width: 768px) {
+  .pageContent {
+    padding: 1.25rem;
+  }
+}

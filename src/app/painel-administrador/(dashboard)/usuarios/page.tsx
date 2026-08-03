@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import AdminModal from '@/components/admin/AdminModal';
 import AdminTable from '@/components/admin/AdminTable';
-import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiGrid, FiList } from 'react-icons/fi';
 import { createClient } from '@/utils/supabase/client';
 import { formatCPF } from '@/utils/formatters';
 import { usePermissions } from '@/contexts/PermissionsContext';
@@ -15,6 +15,13 @@ export default function UsuariosPage() {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setViewMode('grid');
+    }
+  }, []);
   
   // Form State
   const defaultFormData = { 
@@ -127,7 +134,7 @@ export default function UsuariosPage() {
   const columns = [
     { 
       key: 'name', 
-      label: 'Nome Completo', 
+      label: 'Nome', 
       render: (row: any) => <span style={{ fontWeight: 600 }}>{row.name}</span>
     },
     { 
@@ -137,7 +144,7 @@ export default function UsuariosPage() {
     },
     { 
       key: 'profile', 
-      label: 'Perfil (Acesso)', 
+      label: 'Permissão', 
       render: (row: any) => (
         row.profile ? (
           <span className={styles.badge} style={{ backgroundColor: 'rgba(148, 196, 28, 0.15)', color: 'var(--accent-color)', border: '1px solid rgba(148, 196, 28, 0.3)' }}>
@@ -182,11 +189,17 @@ export default function UsuariosPage() {
           <h1 className="adminPageTitle">Usuários</h1>
           <p className="adminPageDescription">Gerencie os membros da equipe e atribua perfis de permissão.</p>
         </div>
-        {perms.editar !== false && (
-          <button className={styles.addBtn} onClick={() => openModal()}>
-            <FiPlus /> Novo Usuário
-          </button>
-        )}
+        <div className={styles.headerActions}>
+          {perms.editar !== false && (
+            <button className={styles.addBtn} onClick={() => openModal()}>
+              <FiPlus /> Novo Usuário
+            </button>
+          )}
+          <div className={styles.mobileViewToggles}>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'list' ? styles.active : ''}`} onClick={() => setViewMode('list')}><FiList /></button>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'grid' ? styles.active : ''}`} onClick={() => setViewMode('grid')}><FiGrid /></button>
+          </div>
+        </div>
       </div>
 
       {loading ? (
@@ -196,14 +209,13 @@ export default function UsuariosPage() {
           <p>Você não tem permissão para visualizar estas informações.</p>
         </div>
       ) : (
-        <AdminTable columns={columns} data={users} searchPlaceholder="Pesquisar por nome ou email..." />
+        <AdminTable columns={columns} data={users} searchPlaceholder="Pesquisar por nome ou email..." viewMode={viewMode} />
       )}
 
-      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Usuário' : 'Novo Usuário'} maxWidth="50%">
+      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Usuário' : 'Novo Usuário'}>
         <form className={styles.form} onSubmit={handleSave}>
-          <div className={styles.formGrid}>
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Nome Completo</label>
+          <div className={styles.formGroup}>
+            <label className={styles.label}>Nome Completo</label>
               <input type="text" className="input-field" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
             </div>
             <div className={styles.formGroup}>
@@ -258,11 +270,10 @@ export default function UsuariosPage() {
                 <span>{formData.active ? 'Ativo' : 'Inativo'}</span>
               </div>
             </div>
-          </div>
 
           <div className="modal-actions">
             <button type="button" className="btn-danger" onClick={() => setIsModalOpen(false)}>Cancelar</button>
-            <button type="submit" className="btn-primary">Salvar Usuário</button>
+            <button type="submit" className="btn-primary">Salvar</button>
           </div>
         </form>
       </AdminModal>

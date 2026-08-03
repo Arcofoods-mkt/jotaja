@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiGrid, FiList } from 'react-icons/fi';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
@@ -13,6 +13,13 @@ export default function PermissoesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingRole, setEditingRole] = useState<any>(null);
   const [roleName, setRoleName] = useState('');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setViewMode('grid');
+    }
+  }, []);
   
   const defaultPermissions = {
     Dashboard: { acessar: false },
@@ -160,11 +167,17 @@ export default function PermissoesPage() {
           <h1 className="adminPageTitle">Perfis de Permissão</h1>
           <p className="adminPageDescription">Configure os níveis de acesso para os usuários do sistema.</p>
         </div>
-        {perms.editar !== false && (
-          <button className={styles.addBtn} onClick={() => openModal()}>
-            <FiPlus /> Novo Perfil
-          </button>
-        )}
+        <div className={styles.headerActions}>
+          {perms.editar !== false && (
+            <button className={styles.addBtn} onClick={() => openModal()}>
+              <FiPlus /> Novo Perfil
+            </button>
+          )}
+          <div className={styles.mobileViewToggles}>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'list' ? styles.active : ''}`} onClick={() => setViewMode('list')}><FiList /></button>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'grid' ? styles.active : ''}`} onClick={() => setViewMode('grid')}><FiGrid /></button>
+          </div>
+        </div>
       </div>
 
       {perms.ver === false ? (
@@ -172,10 +185,10 @@ export default function PermissoesPage() {
           <p>Você não tem permissão para visualizar estas informações.</p>
         </div>
       ) : (
-        <AdminTable columns={columns} data={roles} />
+        <AdminTable columns={columns} data={roles} searchPlaceholder="Pesquisar por nome de perfil..." viewMode={viewMode} />
       )}
 
-      <AdminModal isOpen={isModalOpen} onClose={closeModal} title={editingRole ? 'Editar Perfil de Permissão' : 'Novo Perfil de Permissão'} maxWidth="50%">
+      <AdminModal isOpen={isModalOpen} onClose={closeModal} title={editingRole ? 'Editar Perfil de Permissão' : 'Novo Perfil de Permissão'}>
         <form onSubmit={handleSave}>
           <div className={styles.formGroup}>
             <label>Nome do Perfil *</label>
@@ -204,7 +217,7 @@ export default function PermissoesPage() {
 
           <div className="modal-actions">
             <button type="button" className="btn-danger" onClick={closeModal}>Cancelar</button>
-            <button type="submit" className="btn-primary">Salvar Perfil</button>
+            <button type="submit" className="btn-primary">Salvar</button>
           </div>
         </form>
       </AdminModal>
