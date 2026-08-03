@@ -28,6 +28,10 @@
   line-height: 1.7;
 }
 
+.mobileText {
+  display: none;
+}
+
 .featuresSubtitle {
   font-size: 1.4rem;
   font-weight: 700;
@@ -39,7 +43,7 @@
 
 .heroicFeatures {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
@@ -88,6 +92,39 @@
   font-size: 1.05rem;
 }
 
+.mysteryTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(90deg, rgba(255, 165, 0, 0.1), rgba(255, 69, 0, 0.1));
+  border: 1px solid rgba(255, 165, 0, 0.4);
+  color: #ffa500;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 1rem;
+  width: fit-content;
+  animation: pulseMystery 2s infinite;
+}
+
+.mysteryTagMobile {
+  grid-area: tag;
+  margin-bottom: 0.5rem;
+}
+
+.mysteryIcon {
+  font-size: 1rem;
+}
+
+@keyframes pulseMystery {
+  0% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 165, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0); }
+}
+
 .drawnArrow {
   position: absolute;
   top: 90%;
@@ -97,7 +134,14 @@
   z-index: 20;
   pointer-events: none;
   opacity: 0.9;
-  filter: drop-shadow(0px 4px 6px rgba(148, 196, 28, 0.3));
+}
+
+.drawnArrowMobile {
+  display: none;
+}
+
+.mobileArrowContainer {
+  display: none;
 }
 
 .aboutSection {
@@ -414,20 +458,114 @@
   }
   .vipBanner {
     flex-direction: column;
+    background: none;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    overflow: visible;
   }
   
-  .vipContent, .vipFormArea {
-    padding: 2.5rem 1.5rem;
+  .vipContent {
+    padding: 0 0 2.5rem 0;
+    background: none;
   }
-  
+
   .vipFormArea {
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 2.5rem 1.5rem;
+    border: 1px solid rgba(148, 196, 28, 0.2);
+    border-radius: 24px;
+    background: rgba(10, 15, 30, 0.7);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  }
+  
+  .vipTitle, .vipText {
+    text-align: center;
+  }
+  
+  .vipBadge {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 768px) {
+  .desktopText {
+    display: none;
+  }
+
+  .mobileText {
+    display: inline;
+  }
+
   .heroicFeatures {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .heroicCard {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    grid-template-areas: 
+      "icon title"
+      "icon tag"
+      "icon text";
+    gap: 0.2rem 1.2rem;
+    padding: 0;
+    align-items: start;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    position: relative;
+  }
+
+  .heroicCard:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 50px;
+    width: 2px;
+    height: calc(100% - 50px + 2rem);
+    background: rgba(148, 196, 28, 0.3);
+  }
+  
+  .heroicIcon {
+    grid-area: icon;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+  
+  .mobileArrowContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+    margin-bottom: -9rem;
+    position: relative;
+    z-index: 20;
+  }
+  
+  .drawnArrowMobile {
+    display: block;
+    width: 60px;
+    height: auto;
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  
+  .heroicCardTitle {
+    grid-area: title;
+    font-size: 1.15rem;
+    margin-bottom: 0.2rem;
+    align-self: center;
+  }
+  
+  .heroicCardText {
+    grid-area: text;
+    font-size: 0.95rem;
   }
 }

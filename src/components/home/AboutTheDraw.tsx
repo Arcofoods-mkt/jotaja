@@ -28,16 +28,16 @@ export default async function AboutTheDraw() {
               Vantagens <span>Exclusivas</span>
             </h2>
             <p className={styles.vipText}>
-              Eleve o patamar do seu negócio. Preencha seu passe VIP e concorra a prêmios, descontos surpreendentes e benefícios exclusivos que serão sorteados durante o evento.
+              Eleve o patamar do seu negócio. Preencha e concorra a prêmios, descontos e benefícios que serão sorteados durante o evento.
             </p>
             <div className={styles.vipFeatures}>
               <div className={styles.greenBoxItem}>
                 <div className={styles.greenBoxIcon}><FiGift /></div> 
-                <span><strong>Brindes Premium:</strong> Concorra a kits especiais sorteados apenas entre os inscritos.</span>
+                <span><strong>Brindes Premium:</strong> Concorra a kits exclusivos para inscritos.</span>
               </div>
               <div className={styles.greenBoxItem}>
                 <div className={styles.greenBoxIcon}><FiDollarSign /></div> 
-                <span><strong>Descontos Inéditos:</strong> Tenha a chance de ganhar tabelas de preços únicas reveladas no evento.</span>
+                <span><strong>Descontos Inéditos:</strong> Ganhe tabelas de preços únicas no evento.</span>
               </div>
             </div>
           </div>

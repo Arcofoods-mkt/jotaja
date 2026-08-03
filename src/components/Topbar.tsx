@@ -105,8 +105,8 @@ export default function Topbar() {
               <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
               <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
             </div>
-              <button type="button" className={`btn-primary ${styles.navButton}`} onClick={(e) => handleScroll(e, 'sobre')}>
-                GARANTA SEU INGRESSO
+              <button type="button" className={`btn-primary ${styles.navButton}`} onClick={(e) => handleScroll(e, 'sobre2')}>
+                PARTICIPE DO SORTEIO
               </button>
           </nav>
 
@@ -138,8 +138,8 @@ export default function Topbar() {
           <a href="#sobre-arcofoods" className={styles.navLink} onClick={(e) => handleScroll(e, 'sobre-arcofoods')}>Sobre nós</a>
           <a href="#parceiros" className={styles.navLink} onClick={(e) => handleScroll(e, 'parceiros')}>Parceiros</a>
           <a href="#contatos" className={styles.navLink} onClick={(e) => handleScroll(e, 'contatos')}>Contatos</a>
-            <button type="button" className={`btn-primary ${styles.mobileNavBtn}`} onClick={(e) => handleScroll(e, 'sobre')}>
-              GARANTA SEU INGRESSO
+            <button type="button" className={`btn-primary ${styles.mobileNavBtn}`} onClick={(e) => handleScroll(e, 'sobre2')}>
+              PARTICIPE DO SORTEIO
             </button>
         </div>
       </div>

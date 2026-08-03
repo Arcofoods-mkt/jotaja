@@ -1,37 +1,102 @@
-import React from 'react';
+"use client";
+import React, { useState } from 'react';
+import Image from 'next/image';
 import styles from './AulasShow.module.css';
-import { FiUser } from 'react-icons/fi';
+import { FiClock, FiUser, FiBriefcase, FiStar } from 'react-icons/fi';
 
-const speakers = [
-  { id: 1, name: 'Nome do Palestrante', company: 'Empresa do Palestrante', time: '10:00 - 11:00' },
-  { id: 2, name: 'Nome do Palestrante', company: 'Empresa do Palestrante', time: '11:30 - 12:30' },
-  { id: 3, name: 'Nome do Palestrante', company: 'Empresa do Palestrante', time: '14:00 - 15:00' },
-  { id: 4, name: 'Nome do Palestrante', company: 'Empresa do Palestrante', time: '15:30 - 16:30' },
-  { id: 5, name: 'Nome do Palestrante', company: 'Empresa do Palestrante', time: '17:00 - 18:00' },
-  { id: 6, name: 'Nome do Palestrante', company: 'Empresa do Palestrante', time: '18:30 - 19:30' },
+const agenda = [
+  {
+    date: '18/08',
+    label: 'Primeiro Dia',
+    speakers: [
+      { id: 1, name: 'Chef Ivan', company: 'Unilever', time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefivan.webp' },
+      { id: 2, name: 'Chef ?', company: 'Cargill', time: '13:45h às 14:30h', highlight: false },
+      { id: 3, name: 'Chef Valnei', company: 'Barry Callebaut', time: '16:15h às 17:00h', highlight: false, image: '/Imagens/chefvalnei.webp' },
+    ]
+  },
+  {
+    date: '19/08',
+    label: 'Segundo Dia',
+    isSpecial: true,
+    speakers: [
+      { id: 4, name: 'Chef Elisa', company: 'Lactalis', time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefelisa.webp' },
+      { id: 5, name: 'Chef Ivan', company: 'Unilever', time: '13:00h às 13:45h', highlight: false, image: '/Imagens/chefivan.webp' },
+      { id: 6, name: 'Chef Heaven', company: 'Unilever Pro', time: '15:30h às 16:15h', highlight: true, image: '/Imagens/chefheaven.webp' },
+    ]
+  }
 ];
 
 export default function AulasShow() {
+  const [activeTab, setActiveTab] = useState(0);
+
   return (
     <section className={styles.aulasSection} id="aulas-show">
-      <div className="container">
+      <div className={styles.glowBackground}></div>
+      <div className={`container ${styles.container}`}>
         <div className={styles.sectionHeader}>
-          <h2 className={styles.title}>Aulas Show</h2>
-          <h3 className={styles.subtitle}>Conheça nossos palestrantes</h3>
+          <span className={styles.badge}>Line-up Exclusivo</span>
+          <h2 className={styles.title}>AGENDA AULAS SHOW</h2>
+          <p className={styles.subtitle}>
+            Prepare-se para experiências gastronômicas incríveis com os melhores chefs e as maiores marcas do mercado.
+          </p>
         </div>
 
-        <div className={styles.grid}>
-          {speakers.map((speaker) => (
-            <div key={speaker.id} className={styles.speakerCard}>
-              <div className={styles.imagePlaceholder}>
-                <FiUser className={styles.placeholderIcon} />
-                {/* Quando houver foto, use a tag Image do Next.js aqui */}
-              </div>
-              <div className={styles.speakerName}>{speaker.name}</div>
-              <div className={styles.speakerCompany}>{speaker.company}</div>
-              <div className={styles.timeTag}>{speaker.time}</div>
-            </div>
+        <div className={styles.tabsContainer}>
+          {agenda.map((day, index) => (
+            <button
+              key={day.date}
+              className={`${styles.tabButton} ${activeTab === index ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab(index)}
+            >
+              {day.isSpecial && <FiStar className={styles.tabStar} />}
+              <span className={styles.tabDate}>Dia {day.date}</span>
+              <span className={styles.tabLabel}>{day.label}</span>
+            </button>
           ))}
+        </div>
+
+        <div className={styles.agendaWrapper}>
+          <div className={styles.agendaList}>
+            {agenda[activeTab].speakers.map((speaker, index) => (
+              <div 
+                key={speaker.id} 
+                className={`${styles.agendaCard} ${speaker.highlight ? styles.highlightCard : ''}`}
+                style={{ animationDelay: `${index * 0.15}s` }}
+              >
+                {speaker.highlight && (
+                  <div className={styles.highlightBadge}>
+                    <FiStar className={styles.starIcon} /> Destaque
+                  </div>
+                )}
+                
+                <div className={styles.imagePlaceholder}>
+                  {speaker.image ? (
+                    <Image 
+                      src={speaker.image} 
+                      alt={`Foto de ${speaker.name}`} 
+                      fill 
+                      style={{ objectFit: 'cover' }} 
+                    />
+                  ) : (
+                    <FiUser className={styles.placeholderIcon} />
+                  )}
+                </div>
+                
+                <div className={styles.cardContent}>
+                  <h4 className={styles.speakerName}>{speaker.name}</h4>
+                  <div className={styles.companyTag}>
+                    <FiBriefcase className={styles.companyIcon} />
+                    {speaker.company}
+                  </div>
+                  
+                  <div className={styles.timeBlock}>
+                    <FiClock className={styles.timeIcon} />
+                    <span>{speaker.time}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

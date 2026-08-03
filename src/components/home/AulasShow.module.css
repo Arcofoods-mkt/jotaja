@@ -1,56 +1,230 @@
 .aulasSection {
-  padding: 6rem 0;
-  background-color: var(--bg-color);
+  padding: 8rem 0;
+  background-color: #050505;
   position: relative;
+  overflow: hidden;
+  color: #fff;
+}
+
+.glowBackground {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 800px;
+  height: 800px;
+  background: radial-gradient(circle, rgba(148, 196, 28, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
 }
 
 .sectionHeader {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
+}
+
+.badge {
+  display: inline-block;
+  background: rgba(148, 196, 28, 0.1);
+  color: var(--accent-color);
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(148, 196, 28, 0.3);
 }
 
 .title {
-  color: var(--accent-color);
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 0.5rem;
+  color: #ffffff;
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
 }
 
 .subtitle {
-  color: #ffffff;
-  font-size: 1.1rem;
-  font-weight: 400;
-  margin-bottom: 1.5rem;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4rem 2rem;
-  max-width: 1000px;
+  color: #a0a0a0;
+  font-size: 1.2rem;
+  max-width: 600px;
   margin: 0 auto;
+  line-height: 1.6;
 }
 
-.speakerCard {
+.tabsContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 5rem;
+}
+
+.tabButton {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.2rem 3rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: transform 0.3s ease;
+  gap: 0.3rem;
+  min-width: 220px;
+  position: relative;
 }
 
-.speakerCard:hover {
+.tabStar {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  background: var(--accent-color);
+  color: #000;
+  border-radius: 50%;
+  padding: 8px;
+  font-size: 1.6rem;
+  box-shadow: 0 0 15px var(--accent-color);
+  animation: pulseStar 2s infinite;
+  z-index: 2;
+}
+
+@keyframes pulseStar {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); box-shadow: 0 0 25px var(--accent-color); }
+  100% { transform: scale(1); }
+}
+
+.tabButton:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.tabButton.activeTab {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
   transform: translateY(-5px);
+  box-shadow: none;
+}
+
+.tabDate {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.activeTab .tabDate, .activeTab .tabLabel {
+  color: #000;
+}
+
+.tabLabel {
+  font-size: 0.9rem;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+}
+
+.agendaWrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.agendaList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.agendaCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  animation: slideUpFade 0.5s ease forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.agendaCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(148, 196, 28, 0.3);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.highlightCard {
+  background: linear-gradient(135deg, rgba(148, 196, 28, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(148, 196, 28, 0.4);
+}
+
+.highlightBadge {
+  position: absolute;
+  top: -15px;
+  background: var(--accent-color);
+  color: #000;
+  padding: 0.4rem 1rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 10px rgba(148, 196, 28, 0.4);
+}
+
+.starIcon {
+  font-size: 1rem;
+}
+
+.timeBlock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  background: rgba(148, 196, 28, 0.1);
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 196, 28, 0.2);
+}
+
+.timeIcon {
+  font-size: 1.3rem;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
 }
 
 .imagePlaceholder {
   width: 100%;
   aspect-ratio: 3 / 4;
-  background: var(--bg-color-light);
-  border: 2px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,39 +238,68 @@
 }
 
 .speakerName {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: #fff;
-  margin-bottom: 0.3rem;
-  text-align: center;
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.5px;
+  margin-top: 1rem;
 }
 
-.speakerCompany {
+.companyTag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #bbb;
   font-size: 1rem;
-  color: var(--text-muted);
-  text-align: center;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.companyIcon {
+  color: var(--accent-color);
+}
+
+@keyframes slideUpFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 992px) {
-  .grid {
+  .agendaList {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 576px) {
-  .grid {
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.2rem;
+  }
+  
+  .tabsContainer {
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+  
+  .tabButton {
+    flex: 1;
+    padding: 0.8rem 0.5rem;
+    min-width: 0;
+  }
+
+  .tabDate {
+    font-size: 1.3rem;
+  }
+  
+  .tabLabel {
+    font-size: 0.75rem;
+  }
+  
+  .agendaList {
     grid-template-columns: 1fr;
   }
-}
-
-.timeTag {
-  display: inline-block;
-  margin-top: 0.8rem;
-  background: rgba(148, 196, 28, 0.2);
-  color: var(--accent-color);
-  padding: 0.4rem 0.8rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 1px;
 }

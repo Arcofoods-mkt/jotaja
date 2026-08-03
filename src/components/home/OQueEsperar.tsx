@@ -12,7 +12,12 @@ export default function OQueEsperar() {
           Conheça a <span>Arco Experience</span>
         </h2>
         <p className={styles.heroicSubtitle}>
-          Esqueça tudo o que você sabe sobre distribuição. No <strong>JotaJá Summit 2026</strong>, a Arcofoods não vai apenas expor produtos, nós vamos abrir as portas para o futuro do seu negócio através de uma experiência tecnológica e imersiva.
+          <span className={styles.desktopText}>
+            Esqueça tudo o que você sabe sobre distribuição. No <strong>JotaJá Summit 2026</strong>, a Arcofoods não vai apenas expor produtos, vai abrir as portas para o futuro do seu negócio através de uma experiência tecnológica e imersiva.
+          </span>
+          <span className={styles.mobileText}>
+            Esqueça tudo o que você sabe sobre distribuição. Vai abrir novas possibilidades para o futuro do seu negócio através de uma experiência tecnológica e imersiva.
+          </span>
         </p>
 
         <h3 className={styles.featuresSubtitle}>
@@ -22,25 +27,20 @@ export default function OQueEsperar() {
         <div className={styles.heroicFeatures}>
           <div className={styles.heroicCard}>
             <div className={styles.heroicIcon}><LuSnowflake /></div>
-            <h3 className={styles.heroicCardTitle}>Novas Categorias</h3>
+            <h3 className={styles.heroicCardTitle}>Novas categorias de SKUs</h3>
             <p className={styles.heroicCardText}>
-              Descubra lançamentos exclusivos e inovações do nosso portfólio. Produtos pensados estrategicamente para destacar o seu menu e atrair mais clientes.
-            </p>
-          </div>
-          
-          <div className={styles.heroicCard}>
-            <div className={styles.heroicIcon}><FiStar /></div>
-            <h3 className={styles.heroicCardTitle}>Chef</h3>
-            <p className={styles.heroicCardText}>
-              Uma verdadeira aula de alta culinária. Descubra os segredos e técnicas exclusivas de quem conquistou o maior reality show de gastronomia do mundo.
+              Descubra lançamentos exclusivos para destacar o seu menu.
             </p>
           </div>
 
           <div className={styles.heroicCard}>
             <div className={styles.heroicIcon}><LuChefHat /></div>
             <h3 className={styles.heroicCardTitle}>Aulas Show</h3>
+            <div className={`${styles.mysteryTag} ${styles.mysteryTagMobile}`}>
+              <FiStar className={styles.mysteryIcon} /> Chef Heaven Confirmada
+            </div>
             <p className={styles.heroicCardText}>
-              Aprenda com quem faz acontecer. Palestras com referências do mercado trazendo insights práticos para revolucionar a gestão e o lucro do seu negócio.
+              Insights práticos para revolucionar a gestão do seu negócio.
             </p>
           </div>
 
@@ -59,6 +59,16 @@ export default function OQueEsperar() {
               className={styles.drawnArrow} 
             />
           </div>
+        </div>
+
+        <div className={styles.mobileArrowContainer}>
+          <Image 
+            src="/Imagens/seta2.svg" 
+            alt="Seta para baixo" 
+            width={80} 
+            height={120} 
+            className={styles.drawnArrowMobile} 
+          />
         </div>
       </div>
     </section>

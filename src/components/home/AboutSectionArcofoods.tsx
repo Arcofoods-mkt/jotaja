@@ -9,6 +9,7 @@ const imagesData = [
 ];
 
 export default function AboutSectionArcofoods() {
+  return null;
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
