@@ -43,6 +43,10 @@ export default async function AboutTheDraw() {
           </div>
           
           <div className={styles.vipFormArea}>
+            <div className={styles.mobileFormHeader}>
+              <h3 className={styles.mobileFormTitle}>Participe do sorteio</h3>
+              <p className={styles.mobileFormSub}>Preencha com seus dados e concorra!</p>
+            </div>
             <SorteioForm tipologiaOptions={tipologiaOptions} />
           </div>
         </div>

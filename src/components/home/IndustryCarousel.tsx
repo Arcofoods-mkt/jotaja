@@ -15,7 +15,7 @@ export default function IndustryCarousel() {
     <section className={styles.carousel} id="parceiros">
       <div className="container" style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h2 className={styles.carouselTitle}>
-          Empresas e Indústrias Participantes
+          Indústrias Parceiras
         </h2>
       </div>
       <div className="container" style={{ overflow: 'hidden', padding: 0 }}>
