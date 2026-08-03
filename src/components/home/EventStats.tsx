@@ -71,7 +71,7 @@ function StatItem({ end, suffix = "", label }: { end: number, suffix?: string, l
 
 export default function EventStats() {
   return (
-    <section className={`container ${styles.statsSection}`}>
+    <section className={`container ${styles.statsSection}`} id="sobre-arcofoods">
       <h2 className={styles.statsTitle}>
         A FORÇA DA NOSSA DISTRIBUIÇÃO
       </h2>
