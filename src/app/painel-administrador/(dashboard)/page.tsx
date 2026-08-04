@@ -31,6 +31,8 @@ export default function DashboardPage() {
   const [tipologiaData, setTipologiaData] = useState<any[]>([]);
   const [eventoData, setEventoData] = useState<any[]>([]);
   const [tagData, setTagData] = useState<any[]>([]);
+  const [segmentoData, setSegmentoData] = useState<any[]>([]);
+  const [classificacaoData, setClassificacaoData] = useState<any[]>([]);
   
   // Recent Lists
   const [recentWinners, setRecentWinners] = useState<any[]>([]);
@@ -44,7 +46,7 @@ export default function DashboardPage() {
       setLoading(true);
 
       // 1. Fetch all participants and categories
-      const { data: pData } = await supabase.from('participants').select('*, category:categories!participants_category_id_fkey(*), tag:categories!participants_tag_id_fkey(*), event:categories!participants_event_id_fkey(*)');
+      const { data: pData } = await supabase.from('participants').select('*, category:categories!participants_category_id_fkey(*), tag:categories!participants_tag_id_fkey(*), event:categories!participants_event_id_fkey(*), segment:categories!participants_segment_id_fkey(*), classification:categories!participants_classification_id_fkey(*)');
       const { data: categories } = await supabase.from('categories').select('*');
       
       // 2. Fetch all draws and winners
@@ -113,6 +115,40 @@ export default function DashboardPage() {
           color: tagsCount[name].color
         })).sort((a, b) => b.Quantidade - a.Quantidade).slice(0, 5); // top 5 tags
         setTagData(tagChart);
+
+        // --- Segmento Data ---
+        const segmentoCount: Record<string, { count: number, color: string }> = {};
+        pData.forEach(p => {
+          if (p.segment && p.segment.type === 'segmento') {
+            const name = p.segment.name;
+            const color = p.segment.color || '#e74c3c';
+            if (!segmentoCount[name]) segmentoCount[name] = { count: 0, color };
+            segmentoCount[name].count += 1;
+          }
+        });
+        const segmentoChart = Object.keys(segmentoCount).map(name => ({
+          name,
+          value: segmentoCount[name].count,
+          color: segmentoCount[name].color
+        }));
+        setSegmentoData(segmentoChart);
+
+        // --- Classificacao Data ---
+        const classCount: Record<string, { count: number, color: string }> = {};
+        pData.forEach(p => {
+          if (p.classification && p.classification.type === 'classificacao') {
+            const name = p.classification.name;
+            const color = p.classification.color || '#f39c12';
+            if (!classCount[name]) classCount[name] = { count: 0, color };
+            classCount[name].count += 1;
+          }
+        });
+        const classChart = Object.keys(classCount).map(name => ({
+          name,
+          value: classCount[name].count,
+          color: classCount[name].color
+        }));
+        setClassificacaoData(classChart);
 
         // --- Recent Winners ---
         const recentW = wData.slice(0, 5).map(w => {
@@ -194,7 +230,7 @@ export default function DashboardPage() {
                     outerRadius={isMobile ? 80 : 100}
                     paddingAngle={5}
                     dataKey="value"
-                    label={isMobile ? false : ({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                    label={false}
                     stroke="none"
                   >
                     {tipologiaData.map((entry, index) => (
@@ -202,10 +238,10 @@ export default function DashboardPage() {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ background: 'rgba(4, 16, 29, 0.9)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: '#fff' }}
-                    itemStyle={{ color: '#fff' }}
+                    contentStyle={{ background: 'var(--bg-color-light)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: 'var(--text-color)' }}
+                    itemStyle={{ color: 'var(--text-color)' }}
                   />
-                  {isMobile && <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />}
+                  <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -230,7 +266,7 @@ export default function DashboardPage() {
                     outerRadius={isMobile ? 80 : 100}
                     paddingAngle={5}
                     dataKey="value"
-                    label={isMobile ? false : ({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                    label={false}
                     stroke="none"
                   >
                     {eventoData.map((entry, index) => (
@@ -238,10 +274,10 @@ export default function DashboardPage() {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ background: 'rgba(4, 16, 29, 0.9)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: '#fff' }}
-                    itemStyle={{ color: '#fff' }}
+                    contentStyle={{ background: 'var(--bg-color-light)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: 'var(--text-color)' }}
+                    itemStyle={{ color: 'var(--text-color)' }}
                   />
-                  {isMobile && <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />}
+                  <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -267,8 +303,9 @@ export default function DashboardPage() {
                     width={isMobile ? 90 : 120} 
                   />
                   <Tooltip 
-                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                    contentStyle={{ background: 'rgba(4, 16, 29, 0.9)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: '#fff' }}
+                    cursor={{ fill: 'rgba(128,128,128,0.1)' }}
+                    contentStyle={{ background: 'var(--bg-color-light)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: 'var(--text-color)' }}
+                    itemStyle={{ color: 'var(--text-color)' }}
                   />
                   <Bar dataKey="Quantidade" radius={[0, 4, 4, 0]} barSize={isMobile ? 20 : 30}>
                     {tagData.map((entry, index) => (
@@ -284,6 +321,78 @@ export default function DashboardPage() {
             )}
           </div>
         </div>
+
+        <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Distribuição por Segmento</div>
+          <div className={styles.chartContainer}>
+            {segmentoData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={segmentoData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={isMobile ? 50 : 70}
+                    outerRadius={isMobile ? 80 : 100}
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={false}
+                    stroke="none"
+                  >
+                    {segmentoData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ background: 'var(--bg-color-light)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: 'var(--text-color)' }}
+                    itemStyle={{ color: 'var(--text-color)' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--text-muted)' }}>
+                Nenhum segmento atribuído
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Distribuição por Classificação</div>
+          <div className={styles.chartContainer}>
+            {classificacaoData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={classificacaoData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={isMobile ? 50 : 70}
+                    outerRadius={isMobile ? 80 : 100}
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={false}
+                    stroke="none"
+                  >
+                    {classificacaoData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ background: 'var(--bg-color-light)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: 'var(--text-color)' }}
+                    itemStyle={{ color: 'var(--text-color)' }}
+                  />
+                  <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--text-muted)' }}>
+                Nenhuma classificação atribuída
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Recent Activity */}
@@ -291,7 +400,7 @@ export default function DashboardPage() {
         <div className={styles.listCard}>
           <div className={styles.listTitle}>
             <FiStar className={styles.listTitleIcon} />
-            Hall da Fama (Últimos Ganhadores)
+            Últimos Ganhadores
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {recentWinners.length > 0 ? (

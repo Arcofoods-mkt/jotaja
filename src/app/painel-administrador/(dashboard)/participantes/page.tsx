@@ -282,6 +282,28 @@ export default function ParticipantesPage() {
       )
     },
     { 
+      key: 'segment', 
+      label: 'Segmento', 
+      render: (row: any) => (
+        row.segment ? (
+          <span className={styles.badge} style={{ backgroundColor: row.segment.color + '20', color: row.segment.color, border: `1px solid ${row.segment.color}40` }}>
+            {row.segment.name}
+          </span>
+        ) : '-'
+      )
+    },
+    { 
+      key: 'classification', 
+      label: 'Classificação', 
+      render: (row: any) => (
+        row.classification ? (
+          <span className={`${styles.badge} ${styles.tagBadge}`} style={{ color: row.classification.color, borderColor: row.classification.color }}>
+            {row.classification.name}
+          </span>
+        ) : '-'
+      )
+    },
+    { 
       key: 'active', 
       label: 'Status', 
       render: (row: any) => (

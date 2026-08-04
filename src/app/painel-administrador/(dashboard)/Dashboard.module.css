@@ -69,12 +69,14 @@
 }
 
 .chartsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1.5rem;
 }
 
 .chartCard {
+  flex: 1 1 calc(33.333% - 1.5rem);
+  min-width: 400px;
   background: var(--bg-color-light);
   border: 1px solid var(--admin-border);
   border-radius: 12px;
@@ -182,7 +184,13 @@
 }
 
 @media (max-width: 768px) {
-  .chartsGrid, .listsGrid {
+  .chartsGrid {
+    flex-direction: column;
+  }
+  .chartCard {
+    min-width: 100%;
+  }
+  .listsGrid {
     grid-template-columns: 1fr;
   }
 
