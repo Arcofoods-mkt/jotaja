@@ -12,6 +12,14 @@ import {
 export default function DashboardPage() {
   const supabase = createClient();
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize(); // trigger on mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   // KPIs
   const [totalParticipants, setTotalParticipants] = useState(0);
@@ -21,6 +29,7 @@ export default function DashboardPage() {
   
   // Charts Data
   const [tipologiaData, setTipologiaData] = useState<any[]>([]);
+  const [eventoData, setEventoData] = useState<any[]>([]);
   const [tagData, setTagData] = useState<any[]>([]);
   
   // Recent Lists
@@ -35,7 +44,7 @@ export default function DashboardPage() {
       setLoading(true);
 
       // 1. Fetch all participants and categories
-      const { data: pData } = await supabase.from('participants').select('*, category:categories!participants_category_id_fkey(*), tag:categories!participants_tag_id_fkey(*)');
+      const { data: pData } = await supabase.from('participants').select('*, category:categories!participants_category_id_fkey(*), tag:categories!participants_tag_id_fkey(*), event:categories!participants_event_id_fkey(*)');
       const { data: categories } = await supabase.from('categories').select('*');
       
       // 2. Fetch all draws and winners
@@ -70,6 +79,23 @@ export default function DashboardPage() {
           color: tipologiasCount[name].color
         }));
         setTipologiaData(tipologiaChart);
+
+        // --- Evento Data ---
+        const eventoCount: Record<string, { count: number, color: string }> = {};
+        pData.forEach(p => {
+          if (p.event && p.event.type === 'evento') {
+            const name = p.event.name;
+            const color = p.event.color || '#3498db';
+            if (!eventoCount[name]) eventoCount[name] = { count: 0, color };
+            eventoCount[name].count += 1;
+          }
+        });
+        const eventoChart = Object.keys(eventoCount).map(name => ({
+          name,
+          value: eventoCount[name].count,
+          color: eventoCount[name].color
+        }));
+        setEventoData(eventoChart);
 
         // --- Tag Data ---
         const tagsCount: Record<string, { count: number, color: string }> = {};
@@ -122,7 +148,7 @@ export default function DashboardPage() {
         <div className={styles.kpiCard}>
           <div className={styles.kpiHeader}>
             <FiUsers className={styles.kpiIcon} />
-            <span>Total de Participantes</span>
+            <span>Total de Leads</span>
           </div>
           <div className={styles.kpiValue}>{totalParticipants}</div>
         </div>
@@ -164,11 +190,11 @@ export default function DashboardPage() {
                     data={tipologiaData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={70}
-                    outerRadius={100}
+                    innerRadius={isMobile ? 50 : 70}
+                    outerRadius={isMobile ? 80 : 100}
                     paddingAngle={5}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                    label={isMobile ? false : ({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                     stroke="none"
                   >
                     {tipologiaData.map((entry, index) => (
@@ -179,6 +205,7 @@ export default function DashboardPage() {
                     contentStyle={{ background: 'rgba(4, 16, 29, 0.9)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: '#fff' }}
                     itemStyle={{ color: '#fff' }}
                   />
+                  {isMobile && <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />}
                 </PieChart>
               </ResponsiveContainer>
             ) : (
@@ -190,19 +217,60 @@ export default function DashboardPage() {
         </div>
 
         <div className={styles.chartCard}>
+          <div className={styles.chartTitle}>Distribuição por Evento</div>
+          <div className={styles.chartContainer}>
+            {eventoData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={eventoData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={isMobile ? 50 : 70}
+                    outerRadius={isMobile ? 80 : 100}
+                    paddingAngle={5}
+                    dataKey="value"
+                    label={isMobile ? false : ({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                    stroke="none"
+                  >
+                    {eventoData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ background: 'rgba(4, 16, 29, 0.9)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: '#fff' }}
+                    itemStyle={{ color: '#fff' }}
+                  />
+                  {isMobile && <Legend wrapperStyle={{ fontSize: '0.8rem', paddingTop: '20px' }} formatter={(value) => <span style={{ color: 'var(--text-color)' }}>{value}</span>} />}
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: 'var(--text-muted)' }}>
+                Nenhum evento atribuído
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className={styles.chartCard}>
           <div className={styles.chartTitle}>Top 5 Tags Mais Usadas</div>
           <div className={styles.chartContainer}>
             {tagData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={tagData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <BarChart data={tagData} layout="vertical" margin={{ top: 5, right: isMobile ? 10 : 30, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" horizontal={false} />
-                  <XAxis type="number" tick={{ fill: 'var(--text-muted)' }} />
-                  <YAxis dataKey="name" type="category" tick={{ fill: 'var(--text-color)' }} width={120} />
+                  <XAxis type="number" tick={{ fill: 'var(--text-muted)', fontSize: isMobile ? 11 : 14 }} />
+                  <YAxis 
+                    dataKey="name" 
+                    type="category" 
+                    tick={{ fill: 'var(--text-color)', fontSize: isMobile ? 11 : 14 }} 
+                    width={isMobile ? 90 : 120} 
+                  />
                   <Tooltip 
                     cursor={{ fill: 'rgba(255,255,255,0.05)' }}
                     contentStyle={{ background: 'rgba(4, 16, 29, 0.9)', border: '1px solid var(--accent-color)', borderRadius: '8px', color: '#fff' }}
                   />
-                  <Bar dataKey="Quantidade" radius={[0, 4, 4, 0]} barSize={30}>
+                  <Bar dataKey="Quantidade" radius={[0, 4, 4, 0]} barSize={isMobile ? 20 : 30}>
                     {tagData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}

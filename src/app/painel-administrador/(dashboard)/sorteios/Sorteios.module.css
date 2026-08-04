@@ -18,6 +18,60 @@
   box-shadow: 0 4px 12px rgba(148, 196, 28, 0.4);
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mobileViewToggles {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .headerActions {
+    width: 100%;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .addBtn {
+    flex: 1;
+    justify-content: center;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.9rem;
+    min-width: 0;
+  }
+
+  .mobileViewToggles {
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .viewToggleBtn {
+    background: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .viewToggleBtn.active {
+    background: var(--accent-color);
+    color: #000;
+  }
+}
+
 .actionBtn {
   background: transparent;
   border: none;
@@ -98,4 +152,34 @@
   justify-content: space-between;
   align-items: flex-end;
   margin-bottom: 0.5rem;
+}
+
+.filterHeaderRow {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+  margin-right: 1rem;
+}
+
+.filterActions {
+  display: flex;
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .filterHeader {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .filterHeaderRow {
+    flex-direction: column;
+    margin-right: 0;
+    gap: 0.8rem;
+  }
+  
+  .filterActions {
+    flex-direction: column;
+  }
 }

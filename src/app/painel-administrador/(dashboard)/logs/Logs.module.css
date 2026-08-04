@@ -2,12 +2,154 @@
   width: 100%;
 }
 
+.mobileViewToggles {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.viewToggleBtn {
+  background: transparent;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  font-size: 1.2rem;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  width: 44px;
+  height: 44px;
+}
+
+.viewToggleBtn.active {
+  background: var(--accent-color);
+  color: #000;
+}
+
 .tableContainer {
   background-color: var(--admin-table-bg, #1a1a1a);
   border: 1px solid var(--admin-border, #333);
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin-top: 1rem;
+}
+
+/* Grid / Card styles */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.card {
+  background-color: var(--admin-table-bg, #1a1a1a);
+  border: 1px solid var(--admin-border, #333);
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.5rem;
+}
+
+.cardRow:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cardLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.cardValue {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.filtersWrapper {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.searchBox {
+  position: relative;
+  flex: 1;
+  min-width: 250px;
+  max-width: 350px;
+}
+
+.filterItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterItemRight {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.filterLabel {
+  font-size: 0.85rem;
+  color: var(--text-muted, #a0a0a0);
+}
+
+.filterSelect {
+  width: auto;
+  min-width: 150px;
+  margin: 0;
+}
+
+.filterSelectSmall {
+  width: auto;
+  min-width: 70px;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .filtersWrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .searchBox {
+    max-width: 100%;
+  }
+
+  .filterItem, .filterItemRight {
+    margin-left: 0;
+  }
+
+  .filterLabel {
+    flex: 0 0 100px;
+  }
+  
+  .filterSelect, .filterSelectSmall {
+    flex: 1;
+  }
 }
 
 .table {
@@ -44,7 +186,7 @@
 .dateText {
   font-weight: 700;
   font-size: 0.95rem;
-  color: #fff;
+  color: var(--text-color);
   display: block;
 }
 
@@ -57,7 +199,7 @@
 .userName {
   font-weight: 700;
   font-size: 0.95rem;
-  color: #fff;
+  color: var(--text-color);
   display: block;
 }
 
@@ -108,8 +250,8 @@
 .moduleBadge {
   display: inline-block;
   background-color: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  border: 1px solid var(--admin-border);
+  color: var(--text-color);
   padding: 0.2rem 0.6rem;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -123,10 +265,9 @@
   color: var(--text-muted, #a0a0a0);
 }
 
-/* Detalhes */
 .detailsText {
   font-size: 0.9rem;
-  color: #fff;
+  color: var(--text-color);
   line-height: 1.4;
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiGrid, FiList } from 'react-icons/fi';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
@@ -14,6 +14,13 @@ export default function CategoriasPage() {
   const [activeTab, setActiveTab] = useState('tipologia');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setViewMode('grid');
+    }
+  }, []);
   
   // Form State
   const [formData, setFormData] = useState({ id: '', type: 'tipologia', name: '', color: '#94c41c' });
@@ -135,11 +142,17 @@ export default function CategoriasPage() {
           <h1 className="adminPageTitle">Categorias</h1>
           <p className="adminPageDescription">Gerencie as categorias disponíveis para participantes.</p>
         </div>
-        {perms.editar !== false && (
-          <button className={styles.addBtn} onClick={() => openModal()}>
-            <FiPlus /> Nova Categoria
-          </button>
-        )}
+        <div className={styles.headerActions}>
+          {perms.editar !== false && (
+            <button className={styles.addBtn} onClick={() => openModal()}>
+              <FiPlus /> Nova Categoria
+            </button>
+          )}
+          <div className={styles.mobileViewToggles}>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'list' ? styles.active : ''}`} onClick={() => setViewMode('list')}><FiList /></button>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'grid' ? styles.active : ''}`} onClick={() => setViewMode('grid')}><FiGrid /></button>
+          </div>
+        </div>
       </div>
 
       <div className={styles.tabsContainer}>
@@ -170,10 +183,10 @@ export default function CategoriasPage() {
           <p>Você não tem permissão para visualizar estas informações.</p>
         </div>
       ) : (
-        <AdminTable columns={columns} data={categories.filter(c => c.type === activeTab)} searchPlaceholder={`Pesquisar ${activeTab}...`} />
+        <AdminTable columns={columns} data={categories.filter(c => c.type === activeTab)} searchPlaceholder={`Pesquisar ${activeTab}...`} viewMode={viewMode} />
       )}
 
-      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Categoria' : 'Nova Categoria'} maxWidth="50%">
+      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Categoria' : 'Nova Categoria'}>
         <form className={styles.form} onSubmit={handleSave}>
           <div className={styles.formGroup}>
             <label className={styles.label}>Tipo</label>

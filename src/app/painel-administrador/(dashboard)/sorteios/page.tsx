@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiTrash2, FiPlayCircle } from 'react-icons/fi';
+import { FiPlus, FiTrash2, FiPlayCircle, FiGrid, FiList } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
@@ -15,14 +15,23 @@ export default function SorteiosPage() {
   const [participants, setParticipants] = useState<any[]>([]);
   const [tipologias, setTipologias] = useState<any[]>([]);
   const [tags, setTags] = useState<any[]>([]);
+  const [eventos, setEventos] = useState<any[]>([]);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setViewMode('grid');
+    }
+  }, []);
   
   // Form State
   const [drawName, setDrawName] = useState('');
   const [selectedTipologia, setSelectedTipologia] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
+  const [selectedEvento, setSelectedEvento] = useState('');
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>([]);
 
   const router = useRouter();
@@ -37,14 +46,15 @@ export default function SorteiosPage() {
     if (dData) setDraws(dData);
 
     // Fetch Participants
-    const { data: pData } = await supabase.from('participants').select('id, personal_name, establishment_name, category_id, tag_id, active').eq('active', true);
+    const { data: pData } = await supabase.from('participants').select('id, personal_name, establishment_name, category_id, tag_id, event_id, active').eq('active', true);
     if (pData) setParticipants(pData);
 
     // Fetch Categories & Tags
     const { data: cData } = await supabase.from('categories').select('*').order('name');
     if (cData) {
-      setTipologias(cData.filter(c => c.type !== 'tag'));
+      setTipologias(cData.filter(c => c.type === 'tipologia'));
       setTags(cData.filter(c => c.type === 'tag'));
+      setEventos(cData.filter(c => c.type === 'evento'));
     }
 
     setLoading(false);
@@ -58,15 +68,13 @@ export default function SorteiosPage() {
   const filteredParticipants = participants.filter(p => {
     let matchTipologia = true;
     let matchTag = true;
+    let matchEvento = true;
 
-    if (selectedTipologia) {
-      matchTipologia = p.category_id === selectedTipologia;
-    }
-    if (selectedTag) {
-      matchTag = p.tag_id === selectedTag;
-    }
+    if (selectedTipologia) matchTipologia = p.category_id === selectedTipologia;
+    if (selectedTag) matchTag = p.tag_id === selectedTag;
+    if (selectedEvento) matchEvento = p.event_id === selectedEvento;
 
-    return matchTipologia && matchTag;
+    return matchTipologia && matchTag && matchEvento;
   });
 
   const handleSelectAll = () => {
@@ -119,6 +127,7 @@ export default function SorteiosPage() {
       setSelectedParticipants([]);
       setSelectedTipologia('');
       setSelectedTag('');
+      setSelectedEvento('');
       fetchData();
       
     } catch (err: any) {
@@ -176,11 +185,17 @@ export default function SorteiosPage() {
           <h1 className="adminPageTitle">Sorteios</h1>
           <p className="adminPageDescription">Crie grupos e realize sorteios sem repetição de vencedores.</p>
         </div>
-        {perms.editar !== false && (
-          <button className={styles.addBtn} onClick={() => setIsModalOpen(true)}>
-            <FiPlus /> Novo Sorteio
-          </button>
-        )}
+        <div className={styles.headerActions}>
+          {perms.editar !== false && (
+            <button className={styles.addBtn} onClick={() => setIsModalOpen(true)}>
+              <FiPlus /> Novo Sorteio
+            </button>
+          )}
+          <div className={styles.mobileViewToggles}>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'list' ? styles.active : ''}`} onClick={() => setViewMode('list')}><FiList /></button>
+            <button className={`${styles.viewToggleBtn} ${viewMode === 'grid' ? styles.active : ''}`} onClick={() => setViewMode('grid')}><FiGrid /></button>
+          </div>
+        </div>
       </div>
 
       {loading ? (
@@ -190,10 +205,10 @@ export default function SorteiosPage() {
           <p>Você não tem permissão para visualizar estas informações.</p>
         </div>
       ) : (
-        <AdminTable columns={columns} data={draws} searchPlaceholder="Pesquisar sorteios..." />
+        <AdminTable columns={columns} data={draws} searchPlaceholder="Pesquisar sorteios..." viewMode={viewMode} />
       )}
 
-      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Criar Novo Sorteio" maxWidth="60%">
+      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Criar Novo Sorteio">
         <form className={styles.form} onSubmit={handleSave}>
           
           <div className={styles.formGroup}>
@@ -211,7 +226,7 @@ export default function SorteiosPage() {
           <hr style={{ borderColor: 'var(--admin-border)', margin: '1rem 0' }} />
 
           <div className={styles.filterHeader}>
-            <div style={{ display: 'flex', gap: '1rem', flex: 1, marginRight: '1rem' }}>
+            <div className={styles.filterHeaderRow}>
               <div className={styles.formGroup} style={{ flex: 1 }}>
                 <label className={styles.label}>Filtrar por Tipologia</label>
                 <select 
@@ -234,9 +249,20 @@ export default function SorteiosPage() {
                   {tags.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
+              <div className={styles.formGroup} style={{ flex: 1 }}>
+                <label className={styles.label}>Filtrar por Evento</label>
+                <select 
+                  className="input-field" 
+                  value={selectedEvento} 
+                  onChange={(e) => setSelectedEvento(e.target.value)}
+                >
+                  <option value="">Todos os Eventos</option>
+                  {eventos.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
             </div>
             
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className={styles.filterActions}>
               <button type="button" onClick={handleSelectAll} style={{ background: 'var(--accent-color)', border: '1px solid var(--accent-color)', color: '#000', padding: '0.8rem 1rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 Selecionar Todos
               </button>

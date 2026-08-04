@@ -210,3 +210,9 @@
 .saveBtn:hover {
   background-color: var(--accent-hover);
 }
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}

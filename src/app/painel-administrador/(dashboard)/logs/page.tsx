@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Logs.module.css';
 import { getLogsList } from './actions';
-import { FiExternalLink, FiSearch } from 'react-icons/fi';
+import { FiExternalLink, FiSearch, FiGrid, FiList } from 'react-icons/fi';
 
 export default function LogsPage() {
   const [logs, setLogs] = useState<any[]>([]);
@@ -13,6 +13,13 @@ export default function LogsPage() {
   const [filterAction, setFilterAction] = useState('Todas as Ações');
   const [filterModule, setFilterModule] = useState('Todos os Módulos');
   const [displayCount, setDisplayCount] = useState('50');
+  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+
+  useEffect(() => {
+    if (window.innerWidth <= 768) {
+      setViewMode('grid');
+    }
+  }, []);
 
   const { permissions, isAdmin } = usePermissions();
   const perms = isAdmin ? { acessar: true, ver: true } : (permissions.Logs || {});
@@ -111,10 +118,14 @@ export default function LogsPage() {
           <h1 className="adminPageTitle">Logs do Sistema</h1>
           <p className="adminPageDescription">Histórico detalhado das ações realizadas pelos usuários no painel administrativo.</p>
         </div>
+        <div className={styles.mobileViewToggles}>
+          <button className={`${styles.viewToggleBtn} ${viewMode === 'list' ? styles.active : ''}`} onClick={() => setViewMode('list')}><FiList /></button>
+          <button className={`${styles.viewToggleBtn} ${viewMode === 'grid' ? styles.active : ''}`} onClick={() => setViewMode('grid')}><FiGrid /></button>
+        </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-        <div style={{ position: 'relative', flex: '1', minWidth: '250px', maxWidth: '350px' }}>
+      <div className={styles.filtersWrapper}>
+        <div className={styles.searchBox}>
           <FiSearch style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input 
             type="text" 
@@ -126,11 +137,10 @@ export default function LogsPage() {
           />
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Filtro Rápido:</span>
+        <div className={styles.filterItem}>
+          <span className={styles.filterLabel}>Filtro Rápido:</span>
           <select 
-            className="input-field" 
-            style={{ width: 'auto', minWidth: '150px', margin: 0 }}
+            className={`input-field ${styles.filterSelect}`} 
             value={filterAction}
             onChange={(e) => setFilterAction(e.target.value)}
           >
@@ -142,11 +152,10 @@ export default function LogsPage() {
           </select>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Módulo:</span>
+        <div className={styles.filterItem}>
+          <span className={styles.filterLabel}>Módulo:</span>
           <select 
-            className="input-field" 
-            style={{ width: 'auto', minWidth: '150px', margin: 0 }}
+            className={`input-field ${styles.filterSelect}`} 
             value={filterModule}
             onChange={(e) => setFilterModule(e.target.value)}
           >
@@ -157,11 +166,10 @@ export default function LogsPage() {
           </select>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: 'auto' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Mostrar</span>
+        <div className={styles.filterItemRight}>
+          <span className={styles.filterLabel}>Mostrar</span>
           <select 
-            className="input-field" 
-            style={{ width: 'auto', minWidth: '70px', margin: 0, padding: '0.5rem' }}
+            className={`input-field ${styles.filterSelectSmall}`} 
             value={displayCount}
             onChange={(e) => setDisplayCount(e.target.value)}
           >
@@ -176,6 +184,63 @@ export default function LogsPage() {
       <div className={styles.logsContainer}>
         {loading ? (
           <p>Carregando registros de auditoria...</p>
+        ) : viewMode === 'grid' ? (
+          <div className={styles.gridContainer}>
+            {filteredLogs.length > 0 ? (
+              filteredLogs.map(log => {
+                const { date, time } = formatDate(log.created_at);
+                const desc = log.details?.description || '-';
+                return (
+                  <div key={log.id} className={styles.card}>
+                    <div className={styles.cardRow}>
+                      <span className={styles.cardLabel}>Data e Hora</span>
+                      <div className={styles.cardValue}>
+                        <span className={styles.dateText}>{date}</span>
+                        <span className={styles.timeText}>{time}</span>
+                      </div>
+                    </div>
+                    <div className={styles.cardRow}>
+                      <span className={styles.cardLabel}>Usuário</span>
+                      <div className={styles.cardValue}>
+                        <span className={styles.userName}>{log.user_name}</span>
+                        <span className={styles.userEmail}>{log.user_email}</span>
+                      </div>
+                    </div>
+                    <div className={styles.cardRow}>
+                      <span className={styles.cardLabel}>Ação</span>
+                      <div className={styles.cardValue}>
+                        <span className={`${styles.actionBadge} ${getActionClass(log.action)}`}>
+                          {getActionLabel(log.action)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className={styles.cardRow}>
+                      <span className={styles.cardLabel}>Módulo Afetado</span>
+                      <div className={styles.cardValue}>
+                        <span className={styles.moduleBadge}>{log.entity}</span>
+                        {log.entity_id && <span className={styles.moduleId}>ID: {formatId(log.entity_id)}</span>}
+                      </div>
+                    </div>
+                    <div className={styles.cardRow}>
+                      <span className={styles.cardLabel}>Detalhes</span>
+                      <div className={styles.cardValue}>
+                        <span className={styles.detailsText}>{desc}</span>
+                      </div>
+                    </div>
+                    <div className={styles.cardRow} style={{ borderBottom: 'none', justifyContent: 'flex-end' }}>
+                      <button className={styles.accessBtn} title="Ver Registro">
+                        <FiExternalLink />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className={styles.emptyState} style={{ gridColumn: '1 / -1' }}>
+                Nenhum registro encontrado no histórico.
+              </div>
+            )}
+          </div>
         ) : (
           <div className={styles.tableContainer}>
             <table className={styles.table}>
