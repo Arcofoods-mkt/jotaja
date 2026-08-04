@@ -138,12 +138,14 @@
 }
 
 .agendaList {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 2rem;
 }
 
 .agendaCard {
+  width: calc(33.333% - 1.34rem);
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 0;
@@ -269,8 +271,8 @@
 }
 
 @media (max-width: 992px) {
-  .agendaList {
-    grid-template-columns: repeat(2, 1fr);
+  .agendaCard {
+    width: calc(50% - 1rem);
   }
 }
 
@@ -299,7 +301,7 @@
     font-size: 0.75rem;
   }
   
-  .agendaList {
-    grid-template-columns: 1fr;
+  .agendaCard {
+    width: 100%;
   }
 }

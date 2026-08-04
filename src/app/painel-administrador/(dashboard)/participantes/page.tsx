@@ -13,7 +13,7 @@ import { isValidCNPJ, formatCNPJ, formatPhone } from '@/utils/formatters';
 
 export default function ParticipantesPage() {
   const [participants, setParticipants] = useState<any[]>([]);
-  const [categories, setCategories] = useState<{tipologias: any[], tags: any[]}>({tipologias: [], tags: []});
+  const [categories, setCategories] = useState<{tipologias: any[], tags: any[], eventos: any[]}>({tipologias: [], tags: [], eventos: []});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
@@ -35,6 +35,7 @@ export default function ParticipantesPage() {
     whatsapp: '', 
     category_id: '', 
     tag_id: '', 
+    event_id: '',
     active: true,
     internal_notes: ''
   };
@@ -56,7 +57,8 @@ export default function ParticipantesPage() {
       .select(`
         *,
         category:categories!participants_category_id_fkey(name, color),
-        tag:categories!participants_tag_id_fkey(name, color)
+        tag:categories!participants_tag_id_fkey(name, color),
+        event:categories!participants_event_id_fkey(name, color)
       `)
       .order('created_at', { ascending: false });
       
@@ -67,7 +69,8 @@ export default function ParticipantesPage() {
     if (!cError && cData) {
       setCategories({
         tipologias: cData.filter(c => c.type === 'tipologia'),
-        tags: cData.filter(c => c.type === 'tag')
+        tags: cData.filter(c => c.type === 'tag'),
+        eventos: cData.filter(c => c.type === 'evento')
       });
     }
 
@@ -98,6 +101,7 @@ export default function ParticipantesPage() {
         cnpj: formatCNPJ(participant.cnpj || ''),
         category_id: participant.category_id || '',
         tag_id: participant.tag_id || '',
+        event_id: participant.event_id || '',
         internal_notes: participant.internal_notes || ''
       });
       setIsEditing(true);
@@ -127,6 +131,7 @@ export default function ParticipantesPage() {
       whatsapp: cleanPhone,
       category_id: formData.category_id || null,
       tag_id: formData.tag_id || null,
+      event_id: formData.event_id || null,
       active: formData.active,
       internal_notes: formData.internal_notes
     };
@@ -218,6 +223,17 @@ export default function ParticipantesPage() {
         row.tag ? (
           <span className={`${styles.badge} ${styles.tagBadge}`} style={{ color: row.tag.color, borderColor: row.tag.color }}>
             {row.tag.name}
+          </span>
+        ) : '-'
+      )
+    },
+    { 
+      key: 'event', 
+      label: 'Evento', 
+      render: (row: any) => (
+        row.event ? (
+          <span className={styles.badge} style={{ backgroundColor: row.event.color + '20', color: row.event.color, border: `1px solid ${row.event.color}40` }}>
+            {row.event.name}
           </span>
         ) : '-'
       )
@@ -339,6 +355,14 @@ export default function ParticipantesPage() {
               <select className="input-field" value={formData.tag_id} onChange={(e) => setFormData({...formData, tag_id: e.target.value})}>
                 <option value="">Sem Tag</option>
                 {categories.tags.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
+            
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Evento Origem</label>
+              <select className="input-field" value={formData.event_id} onChange={(e) => setFormData({...formData, event_id: e.target.value})}>
+                <option value="">Sem Evento (Direto)</option>
+                {categories.eventos.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
             

@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 1. Tabela de Categorias (Tipologias e Tags)
 CREATE TABLE IF NOT EXISTS public.categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    type VARCHAR(50) NOT NULL CHECK (type IN ('tipologia', 'tag')),
+    type VARCHAR(50) NOT NULL CHECK (type IN ('tipologia', 'tag', 'evento')),
     name VARCHAR(255) NOT NULL,
     color VARCHAR(7) NOT NULL DEFAULT '#cccccc',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS public.participants (
     whatsapp VARCHAR(20) NOT NULL,
     category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
     tag_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+    event_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
     active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );

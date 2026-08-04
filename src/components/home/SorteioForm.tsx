@@ -14,9 +14,10 @@ interface Option {
 
 interface SorteioFormProps {
   tipologiaOptions: Option[];
+  eventId?: string;
 }
 
-export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
+export default function SorteioForm({ tipologiaOptions, eventId }: SorteioFormProps) {
   const [formData, setFormData] = useState({
     personal_name: '',
     establishment_name: '',
@@ -96,7 +97,8 @@ export default function SorteioForm({ tipologiaOptions }: SorteioFormProps) {
       cnpj: cleanCnpj,
       email: formData.email.trim(),
       whatsapp: cleanPhone,
-      category_id: formData.category_id
+      category_id: formData.category_id,
+      event_id: eventId || null
     }]);
 
     if (insertError) {

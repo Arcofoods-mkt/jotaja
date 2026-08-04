@@ -10,6 +10,7 @@ import styles from './Categorias.module.css';
 
 export default function CategoriasPage() {
   const [categories, setCategories] = useState<any[]>([]);
+  const [activeTab, setActiveTab] = useState('tipologia');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -41,7 +42,7 @@ export default function CategoriasPage() {
       setFormData(category);
       setIsEditing(true);
     } else {
-      setFormData({ id: '', type: 'tipologia', name: '', color: '#94c41c' });
+      setFormData({ id: '', type: activeTab, name: '', color: '#94c41c' });
       setIsEditing(false);
     }
     setIsModalOpen(true);
@@ -135,6 +136,27 @@ export default function CategoriasPage() {
         )}
       </div>
 
+      <div className={styles.tabsContainer}>
+        <button 
+          className={`${styles.tabBtn} ${activeTab === 'tipologia' ? styles.tabBtnActive : ''}`} 
+          onClick={() => setActiveTab('tipologia')}
+        >
+          Tipologia
+        </button>
+        <button 
+          className={`${styles.tabBtn} ${activeTab === 'evento' ? styles.tabBtnActive : ''}`} 
+          onClick={() => setActiveTab('evento')}
+        >
+          Evento
+        </button>
+        <button 
+          className={`${styles.tabBtn} ${activeTab === 'tag' ? styles.tabBtnActive : ''}`} 
+          onClick={() => setActiveTab('tag')}
+        >
+          Tags
+        </button>
+      </div>
+
       {loading ? (
         <p>Carregando...</p>
       ) : perms.ver === false ? (
@@ -142,7 +164,7 @@ export default function CategoriasPage() {
           <p>Você não tem permissão para visualizar estas informações.</p>
         </div>
       ) : (
-        <AdminTable columns={columns} data={categories} searchPlaceholder="Pesquisar categoria..." />
+        <AdminTable columns={columns} data={categories.filter(c => c.type === activeTab)} searchPlaceholder={`Pesquisar ${activeTab}...`} />
       )}
 
       <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Categoria' : 'Nova Categoria'} maxWidth="50%">
@@ -156,6 +178,7 @@ export default function CategoriasPage() {
               required
             >
               <option value="tipologia">Tipologia</option>
+              <option value="evento">Evento</option>
               <option value="tag">Tag</option>
             </select>
           </div>
