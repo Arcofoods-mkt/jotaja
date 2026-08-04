@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash2, FiCopy, FiGrid, FiList } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiCopy, FiGrid, FiList, FiFilter } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
+import MultiSelect from '@/components/admin/MultiSelect';
 import { createClient } from '@/utils/supabase/client';
 import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Participantes.module.css';
@@ -14,10 +15,32 @@ import { logAction } from '@/utils/logger';
 
 export default function ParticipantesPage() {
   const [participants, setParticipants] = useState<any[]>([]);
-  const [categories, setCategories] = useState<{tipologias: any[], tags: any[], eventos: any[]}>({tipologias: [], tags: [], eventos: []});
+  const [categories, setCategories] = useState<{tipologias: any[], tags: any[], eventos: any[], segmentos: any[], classificacoes: any[]}>({tipologias: [], tags: [], eventos: [], segmentos: [], classificacoes: []});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  
+  // Advanced Filter State
+  const [selectedFilters, setSelectedFilters] = useState<{tipologias: string[], tags: string[], eventos: string[], segmentos: string[], classificacoes: string[]}>({
+    tipologias: [], tags: [], eventos: [], segmentos: [], classificacoes: []
+  });
+
+  const toggleFilter = (type: keyof typeof selectedFilters, id: string) => {
+    setSelectedFilters(prev => {
+      const current = prev[type];
+      const updated = current.includes(id) ? current.filter(itemId => itemId !== id) : [...current, id];
+      return { ...prev, [type]: updated };
+    });
+  };
+
+  const getActiveFilterCount = () => {
+    return Object.values(selectedFilters).reduce((acc, curr) => acc + curr.length, 0);
+  };
+  
+  const clearFilters = () => {
+    setSelectedFilters({tipologias: [], tags: [], eventos: [], segmentos: [], classificacoes: []});
+  };
   
   // Form State
   const defaultFormData = { 
@@ -31,6 +54,8 @@ export default function ParticipantesPage() {
     category_id: '', 
     tag_id: '', 
     event_id: '',
+    segment_id: '',
+    classification_id: '',
     active: true,
     internal_notes: ''
   };
@@ -53,7 +78,9 @@ export default function ParticipantesPage() {
         *,
         category:categories!participants_category_id_fkey(name, color),
         tag:categories!participants_tag_id_fkey(name, color),
-        event:categories!participants_event_id_fkey(name, color)
+        event:categories!participants_event_id_fkey(name, color),
+        segment:categories!participants_segment_id_fkey(name, color),
+        classification:categories!participants_classification_id_fkey(name, color)
       `)
       .order('created_at', { ascending: false });
       
@@ -65,7 +92,9 @@ export default function ParticipantesPage() {
       setCategories({
         tipologias: cData.filter(c => c.type === 'tipologia'),
         tags: cData.filter(c => c.type === 'tag'),
-        eventos: cData.filter(c => c.type === 'evento')
+        eventos: cData.filter(c => c.type === 'evento'),
+        segmentos: cData.filter(c => c.type === 'segmento'),
+        classificacoes: cData.filter(c => c.type === 'classificacao')
       });
     }
 
@@ -97,6 +126,8 @@ export default function ParticipantesPage() {
         category_id: participant.category_id || '',
         tag_id: participant.tag_id || '',
         event_id: participant.event_id || '',
+        segment_id: participant.segment_id || '',
+        classification_id: participant.classification_id || '',
         internal_notes: participant.internal_notes || ''
       });
       setIsEditing(true);
@@ -127,6 +158,8 @@ export default function ParticipantesPage() {
       category_id: formData.category_id || null,
       tag_id: formData.tag_id || null,
       event_id: formData.event_id || null,
+      segment_id: formData.segment_id || null,
+      classification_id: formData.classification_id || null,
       active: formData.active,
       internal_notes: formData.internal_notes
     };
@@ -152,6 +185,16 @@ export default function ParticipantesPage() {
       fetchData();
     }
   };
+
+  const filteredParticipants = participants.filter(p => {
+    const matchTipologia = selectedFilters.tipologias.length === 0 || selectedFilters.tipologias.includes(p.category_id);
+    const matchTag = selectedFilters.tags.length === 0 || selectedFilters.tags.includes(p.tag_id);
+    const matchEvento = selectedFilters.eventos.length === 0 || selectedFilters.eventos.includes(p.event_id);
+    const matchSegmento = selectedFilters.segmentos.length === 0 || selectedFilters.segmentos.includes(p.segment_id);
+    const matchClassificacao = selectedFilters.classificacoes.length === 0 || selectedFilters.classificacoes.includes(p.classification_id);
+
+    return matchTipologia && matchTag && matchEvento && matchSegmento && matchClassificacao;
+  });
 
   const columns = [
     { 
@@ -294,7 +337,21 @@ export default function ParticipantesPage() {
           <p>Você não tem permissão para visualizar estas informações.</p>
         </div>
       ) : (
-        <AdminTable columns={columns} data={participants} searchPlaceholder="Pesquisar por nome, empresa, cnpj ou email..." viewMode={viewMode} />
+        <AdminTable 
+          columns={columns} 
+          data={filteredParticipants} 
+          searchPlaceholder="Pesquisar por nome, empresa, cnpj ou email..." 
+          viewMode={viewMode}
+          extraHeaderContent={
+            <button 
+              className={`${styles.filterBtn} ${getActiveFilterCount() > 0 ? styles.filterBtnActive : ''}`} 
+              onClick={() => setIsFilterModalOpen(true)}
+            >
+              <FiFilter /> Filtros
+              {getActiveFilterCount() > 0 && <span className={styles.filterBadge}>{getActiveFilterCount()}</span>}
+            </button>
+          }
+        />
       )}
 
       <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Lead' : 'Novo Lead'}>
@@ -348,8 +405,23 @@ export default function ParticipantesPage() {
                 {categories.tipologias.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Segmento</label>
+              <select className="input-field" value={formData.segment_id} onChange={(e) => setFormData({...formData, segment_id: e.target.value})}>
+                <option value="">Sem Segmento</option>
+                {categories.segmentos.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
             
             {/* Campos Internos */}
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Classificação (Interno)</label>
+              <select className="input-field" value={formData.classification_id} onChange={(e) => setFormData({...formData, classification_id: e.target.value})}>
+                <option value="">Sem Classificação</option>
+                {categories.classificacoes.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select>
+            </div>
             <div className={styles.formGroup}>
               <label className={styles.label}>Tag (Uso Interno)</label>
               <select className="input-field" value={formData.tag_id} onChange={(e) => setFormData({...formData, tag_id: e.target.value})}>
@@ -394,6 +466,64 @@ export default function ParticipantesPage() {
             <button type="submit" className="btn-primary">Salvar</button>
           </div>
         </form>
+      </AdminModal>
+      <AdminModal isOpen={isFilterModalOpen} onClose={() => setIsFilterModalOpen(false)} title="Filtros Avançados">
+        <div>
+          <div className={styles.filterGroup}>
+            <div className={styles.filterGroupTitle}>Tipologias (Público)</div>
+            <MultiSelect 
+              options={categories.tipologias}
+              selectedIds={selectedFilters.tipologias}
+              onChange={(ids) => setSelectedFilters({...selectedFilters, tipologias: ids})}
+              placeholder="Buscar tipologia..."
+            />
+          </div>
+
+          <div className={styles.filterGroup}>
+            <div className={styles.filterGroupTitle}>Eventos</div>
+            <MultiSelect 
+              options={categories.eventos}
+              selectedIds={selectedFilters.eventos}
+              onChange={(ids) => setSelectedFilters({...selectedFilters, eventos: ids})}
+              placeholder="Buscar evento..."
+            />
+          </div>
+
+          <div className={styles.filterGroup}>
+            <div className={styles.filterGroupTitle}>Tags (Interno)</div>
+            <MultiSelect 
+              options={categories.tags}
+              selectedIds={selectedFilters.tags}
+              onChange={(ids) => setSelectedFilters({...selectedFilters, tags: ids})}
+              placeholder="Buscar tag..."
+            />
+          </div>
+
+          <div className={styles.filterGroup}>
+            <div className={styles.filterGroupTitle}>Segmentos</div>
+            <MultiSelect 
+              options={categories.segmentos}
+              selectedIds={selectedFilters.segmentos}
+              onChange={(ids) => setSelectedFilters({...selectedFilters, segmentos: ids})}
+              placeholder="Buscar segmento..."
+            />
+          </div>
+
+          <div className={styles.filterGroup}>
+            <div className={styles.filterGroupTitle}>Classificação (Interno)</div>
+            <MultiSelect 
+              options={categories.classificacoes}
+              selectedIds={selectedFilters.classificacoes}
+              onChange={(ids) => setSelectedFilters({...selectedFilters, classificacoes: ids})}
+              placeholder="Buscar classificação..."
+            />
+          </div>
+
+          <div className="modal-actions" style={{ marginTop: '2rem' }}>
+            <button type="button" className="btn-danger" onClick={clearFilters} disabled={getActiveFilterCount() === 0}>Limpar Filtros</button>
+            <button type="button" className="btn-primary" onClick={() => setIsFilterModalOpen(false)}>Aplicar Filtros</button>
+          </div>
+        </div>
       </AdminModal>
     </div>
   );

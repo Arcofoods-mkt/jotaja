@@ -13,9 +13,10 @@ interface AdminTableProps {
   searchPlaceholder?: string;
   onSearch?: (term: string) => void;
   viewMode?: 'list' | 'grid';
+  extraHeaderContent?: React.ReactNode;
 }
 
-export default function AdminTable({ columns, data, searchPlaceholder = "Pesquisar...", onSearch, viewMode = 'list' }: AdminTableProps) {
+export default function AdminTable({ columns, data, searchPlaceholder = "Pesquisar...", onSearch, viewMode = 'list', extraHeaderContent }: AdminTableProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -104,13 +105,16 @@ export default function AdminTable({ columns, data, searchPlaceholder = "Pesquis
   return (
     <div className={styles.tableContainer}>
       <div className={styles.header}>
-        <input 
-          type="text" 
-          placeholder={searchPlaceholder} 
-          className={styles.searchInput} 
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', width: '100%', flexWrap: 'wrap' }}>
+          <input 
+            type="text" 
+            placeholder={searchPlaceholder} 
+            className={styles.searchInput} 
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          {extraHeaderContent}
+        </div>
         <div className={styles.controls}>
           Mostrar 
           <select 

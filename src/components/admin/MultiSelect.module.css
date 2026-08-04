@@ -1,0 +1,94 @@
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  min-height: 42px;
+  align-items: center;
+  cursor: text;
+}
+
+.pill {
+  background: rgba(148, 196, 28, 0.2);
+  border: 1px solid var(--accent-color);
+  color: var(--text-color);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pillRemove {
+  background: transparent;
+  border: none;
+  color: var(--accent-color);
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.pillRemove:hover {
+  color: #fff;
+}
+
+.searchInput {
+  border: none;
+  background: transparent;
+  color: var(--text-color);
+  outline: none;
+  flex: 1;
+  min-width: 120px;
+  font-size: 0.9rem;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg-color-light);
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+.option {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  color: var(--text-color);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  font-size: 0.9rem;
+}
+
+.option:hover {
+  background: rgba(148, 196, 28, 0.1);
+  color: var(--accent-color);
+}
+
+.empty {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}

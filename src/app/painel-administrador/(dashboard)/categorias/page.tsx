@@ -168,6 +168,18 @@ export default function CategoriasPage() {
         >
           Tags
         </button>
+        <button 
+          className={`${styles.tabBtn} ${activeTab === 'segmento' ? styles.tabBtnActive : ''}`} 
+          onClick={() => setActiveTab('segmento')}
+        >
+          Segmento
+        </button>
+        <button 
+          className={`${styles.tabBtn} ${activeTab === 'classificacao' ? styles.tabBtnActive : ''}`} 
+          onClick={() => setActiveTab('classificacao')}
+        >
+          Classificação
+        </button>
       </div>
 
       {loading ? (
@@ -193,6 +205,8 @@ export default function CategoriasPage() {
               <option value="tipologia">Tipologia</option>
               <option value="evento">Evento</option>
               <option value="tag">Tag</option>
+              <option value="segmento">Segmento</option>
+              <option value="classificacao">Classificação</option>
             </select>
           </div>
           

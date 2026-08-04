@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- 1. Tabela de Categorias (Tipologias e Tags)
 CREATE TABLE IF NOT EXISTS public.categories (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    type VARCHAR(50) NOT NULL CHECK (type IN ('tipologia', 'tag', 'evento')),
+    type VARCHAR(50) NOT NULL CHECK (type IN ('tipologia', 'tag', 'evento', 'segmento', 'classificacao')),
     name VARCHAR(255) NOT NULL,
     color VARCHAR(7) NOT NULL DEFAULT '#cccccc',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
@@ -44,6 +44,8 @@ CREATE TABLE IF NOT EXISTS public.participants (
     category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
     tag_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
     event_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+    segment_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+    classification_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
     active BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -80,3 +82,17 @@ CREATE POLICY "Enable insert for anon" ON public.participants FOR INSERT TO anon
 
 ALTER TABLE public.logs ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Enable all access for authenticated users" ON public.logs FOR ALL TO authenticated USING (true);
+
+-- ---------------------------------------------------------
+-- ATUALIZAÇÕES MANUAIS DE BANCO DE DADOS (Executar no Supabase)
+-- ---------------------------------------------------------
+-- Execute os comandos abaixo para aplicar as novas categorias "segmento" e "classificacao" 
+-- no seu banco de dados atual sem perder os dados existentes:
+
+/*
+ALTER TABLE public.categories DROP CONSTRAINT IF EXISTS categories_type_check;
+ALTER TABLE public.categories ADD CONSTRAINT categories_type_check CHECK (type IN ('tipologia', 'tag', 'evento', 'segmento', 'classificacao'));
+
+ALTER TABLE public.participants ADD COLUMN IF NOT EXISTS segment_id UUID REFERENCES public.categories(id) ON DELETE SET NULL;
+ALTER TABLE public.participants ADD COLUMN IF NOT EXISTS classification_id UUID REFERENCES public.categories(id) ON DELETE SET NULL;
+*/
