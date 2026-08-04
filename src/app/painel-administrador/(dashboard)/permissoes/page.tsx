@@ -15,12 +15,6 @@ export default function PermissoesPage() {
   const [editingRole, setEditingRole] = useState<any>(null);
   const [roleName, setRoleName] = useState('');
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
-
-  useEffect(() => {
-    if (window.innerWidth <= 768) {
-      setViewMode('grid');
-    }
-  }, []);
   
   const defaultPermissions = {
     Dashboard: { acessar: false },

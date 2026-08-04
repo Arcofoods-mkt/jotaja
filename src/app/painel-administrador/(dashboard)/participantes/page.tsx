@@ -18,12 +18,6 @@ export default function ParticipantesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
-
-  useEffect(() => {
-    if (window.innerWidth <= 768) {
-      setViewMode('grid');
-    }
-  }, []);
   
   // Form State
   const defaultFormData = { 

@@ -15,12 +15,6 @@ export default function LogsPage() {
   const [displayCount, setDisplayCount] = useState('50');
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
 
-  useEffect(() => {
-    if (window.innerWidth <= 768) {
-      setViewMode('grid');
-    }
-  }, []);
-
   const { permissions, isAdmin } = usePermissions();
   const perms = isAdmin ? { acessar: true, ver: true } : (permissions.Logs || {});
 
