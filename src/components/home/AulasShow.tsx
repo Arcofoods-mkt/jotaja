@@ -65,7 +65,7 @@ export default function AulasShow() {
               >
                 {speaker.highlight && (
                   <div className={styles.highlightBadge}>
-                    <FiStar className={styles.starIcon} /> Destaque
+                    <FiStar className={styles.starIcon} />
                   </div>
                 )}
                 
