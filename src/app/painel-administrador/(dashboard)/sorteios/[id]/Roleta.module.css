@@ -13,6 +13,23 @@
   text-align: center;
   margin-bottom: 2rem;
   z-index: 2;
+  width: 100%;
+}
+
+.backBtn {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  z-index: 10;
 }
 
 .title {
@@ -20,7 +37,6 @@
   font-weight: 800;
   color: var(--text-color);
   margin-bottom: 0.5rem;
-  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 .subtitle {
@@ -39,8 +55,8 @@
 }
 
 .statBadge {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   padding: 0.5rem 1rem;
   border-radius: 50px;
   font-size: 0.9rem;
@@ -48,20 +64,19 @@
 }
 
 .statValue {
-  color: #fff;
+  color: var(--text-color);
   font-weight: 700;
   margin-left: 0.5rem;
 }
 
-/* Roleta Window */
 .roletaWindow {
   width: 100%;
   max-width: 800px;
   height: 250px;
-  background: rgba(4, 16, 29, 0.8);
+  background: var(--admin-table-bg);
   border: 2px solid var(--accent-color);
   border-radius: 16px;
-  box-shadow: 0 0 40px rgba(148, 196, 28, 0.15), inset 0 0 20px rgba(0,0,0,0.8);
+  box-shadow: 0 0 40px rgba(148, 196, 28, 0.15), inset 0 0 20px rgba(0,0,0,0.15);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -117,8 +132,7 @@
 .itemName {
   font-size: 2.2rem;
   font-weight: 800;
-  color: #fff;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+  color: var(--text-color);
   margin-bottom: 0.2rem;
 }
 
@@ -217,7 +231,7 @@
 .winnerName {
   font-size: 3.5rem;
   font-weight: 800;
-  color: #fff;
+  color: var(--text-color);
   margin-bottom: 0.5rem;
 }
 
@@ -264,4 +278,61 @@
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-20px); }
   60% { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+    padding-top: 1.5rem;
+  }
+  
+  .backBtn {
+    position: relative;
+    top: 0;
+    left: 0;
+    align-self: flex-start;
+    margin-bottom: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+  }
+  
+  .stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .roletaWindow {
+    height: 200px;
+  }
+  
+  .itemName {
+    font-size: 1.5rem;
+  }
+  
+  .itemCompany {
+    font-size: 1rem;
+  }
+  
+  .spinBtn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    white-space: nowrap;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .winnerCard {
+    width: 95%;
+    padding: 2rem;
+  }
+  
+  .winnerName {
+    font-size: 2rem;
+  }
+  
+  .winnerCompany {
+    font-size: 1.2rem;
+  }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './AdminModal.module.css';
 
 interface AdminModalProps {
@@ -10,6 +10,22 @@ interface AdminModalProps {
 }
 
 export default function AdminModal({ isOpen, onClose, title, children, maxWidth }: AdminModalProps) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      // Prevent pull-to-refresh on mobile
+      document.body.style.overscrollBehaviorY = 'none';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.overscrollBehaviorY = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.overscrollBehaviorY = '';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   return (

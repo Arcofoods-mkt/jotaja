@@ -169,8 +169,8 @@ export default function RoletaPage() {
   return (
     <div className={styles.container}>
       <button 
+        className={styles.backBtn}
         onClick={() => router.push('/painel-administrador/sorteios')} 
-        style={{ position: 'absolute', top: '2rem', left: '2rem', background: 'transparent', border: 'none', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '1rem' }}
       >
         <FiArrowLeft /> Voltar
       </button>
