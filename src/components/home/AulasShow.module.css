@@ -180,15 +180,12 @@
   top: -15px;
   background: var(--accent-color);
   color: #000;
-  padding: 0.4rem 1rem;
-  border-radius: 30px;
-  font-size: 0.8rem;
-  font-weight: 800;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 0.3rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  justify-content: center;
   box-shadow: 0 4px 10px rgba(148, 196, 28, 0.4);
 }
 
