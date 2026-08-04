@@ -10,7 +10,7 @@ const agenda = [
     label: 'Primeiro Dia',
     speakers: [
       { id: 1, name: 'Chef Ivan', company: 'Unilever', time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefivan.webp' },
-      { id: 2, name: 'Chef ?', company: 'Cargill', time: '13:45h às 14:30h', highlight: false },
+      { id: 2, name: 'Chef Raissa', company: 'Cargill', time: '13:45h às 14:30h', highlight: false, image: '/Imagens/chefraissa.webp' },
       { id: 3, name: 'Chef Valnei', company: 'Barry Callebaut', time: '16:15h às 17:00h', highlight: false, image: '/Imagens/chefvalnei.webp' },
     ]
   },
