@@ -13,15 +13,18 @@ export default function AdminModal({ isOpen, onClose, title, children, maxWidth 
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       // Prevent pull-to-refresh on mobile
       document.body.style.overscrollBehaviorY = 'none';
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
       document.body.style.overscrollBehaviorY = '';
     }
 
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
       document.body.style.overscrollBehaviorY = '';
     };
   }, [isOpen]);

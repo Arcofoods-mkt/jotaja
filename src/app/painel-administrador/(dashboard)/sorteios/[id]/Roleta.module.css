@@ -7,6 +7,8 @@
   padding: 2rem;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 .header {
@@ -37,6 +39,8 @@
   font-weight: 800;
   color: var(--text-color);
   margin-bottom: 0.5rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .subtitle {
@@ -134,6 +138,12 @@
   font-weight: 800;
   color: var(--text-color);
   margin-bottom: 0.2rem;
+  width: 100%;
+  padding: 0 1rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .itemCompany {
@@ -199,6 +209,7 @@
   z-index: 100;
   backdrop-filter: blur(5px);
   animation: fadeIn 0.5s ease-out forwards;
+  overflow: hidden;
 }
 
 .winnerCard {
@@ -233,6 +244,8 @@
   font-weight: 800;
   color: var(--text-color);
   margin-bottom: 0.5rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .winnerCompany {
