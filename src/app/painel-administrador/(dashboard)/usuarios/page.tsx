@@ -84,6 +84,7 @@ export default function UsuariosPage() {
     e.preventDefault();
 
     const dataToSave: any = {
+      id: formData.id,
       name: formData.name,
       email: formData.email,
       cpf: formData.cpf.replace(/\D/g, ''), // Envia apenas os 11 números para o banco
