@@ -47,7 +47,7 @@ export default async function AboutTheDraw() {
               <h3 className={styles.mobileFormTitle}>Participe do sorteio</h3>
               <p className={styles.mobileFormSub}>Preencha com seus dados e concorra!</p>
             </div>
-            <SorteioForm tipologiaOptions={tipologiaOptions} />
+            <SorteioForm tipologiaOptions={tipologiaOptions} eventId="dc845866-9b05-4141-af66-8e4e571d9fd2" />
           </div>
         </div>
       </div>

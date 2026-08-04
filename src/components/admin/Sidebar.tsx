@@ -71,7 +71,7 @@ export default function Sidebar({ isCollapsed = false, isMobileOpen = false, clo
     {
       title: 'GESTÃO',
       items: [
-        { name: 'Participantes', path: '/painel-administrador/participantes', icon: <FiUsers />, module: 'Participantes' },
+        { name: 'Leads', path: '/painel-administrador/participantes', icon: <FiUsers />, module: 'Participantes' },
         { name: 'Categorias', path: '/painel-administrador/categorias', icon: <FiTag />, module: 'Categorias' },
         { name: 'Sorteios', path: '/painel-administrador/sorteios', icon: <FiGift />, module: 'Sorteios' }
       ]

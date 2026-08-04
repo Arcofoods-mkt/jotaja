@@ -1,0 +1,157 @@
+.logsContainer {
+  width: 100%;
+}
+
+.tableContainer {
+  background-color: var(--admin-table-bg, #1a1a1a);
+  border: 1px solid var(--admin-border, #333);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.th {
+  padding: 1rem 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted, #a0a0a0);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--admin-border, #333);
+}
+
+.td {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--admin-border, #333);
+  vertical-align: middle;
+}
+
+.tr:last-child .td {
+  border-bottom: none;
+}
+
+.tr:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Data e Hora */
+.dateText {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  display: block;
+}
+
+.timeText {
+  font-size: 0.8rem;
+  color: var(--text-muted, #a0a0a0);
+}
+
+/* Usuário */
+.userName {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  display: block;
+}
+
+.userEmail {
+  font-size: 0.8rem;
+  color: var(--text-muted, #a0a0a0);
+}
+
+/* Ação Badge */
+.actionBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actionCriar {
+  background-color: rgba(16, 185, 129, 0.15); /* Green bg */
+  color: #10b981; /* Green text */
+}
+
+.actionEditar {
+  background-color: rgba(59, 130, 246, 0.15); /* Blue bg */
+  color: #3b82f6; /* Blue text */
+}
+
+.actionApagar {
+  background-color: rgba(239, 68, 68, 0.15); /* Red bg */
+  color: #ef4444; /* Red text */
+}
+
+.actionBloquear {
+  background-color: rgba(245, 158, 11, 0.15); /* Orange bg */
+  color: #f59e0b; /* Orange text */
+}
+
+.actionDefault {
+  background-color: rgba(156, 163, 175, 0.15);
+  color: #9ca3af;
+}
+
+/* Módulo Afetado */
+.moduleBadge {
+  display: inline-block;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.moduleId {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted, #a0a0a0);
+}
+
+/* Detalhes */
+.detailsText {
+  font-size: 0.9rem;
+  color: #fff;
+  line-height: 1.4;
+}
+
+/* Acesso Externo */
+.accessBtn {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.accessBtn:hover {
+  background: #10b981;
+  color: #000;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted, #a0a0a0);
+}

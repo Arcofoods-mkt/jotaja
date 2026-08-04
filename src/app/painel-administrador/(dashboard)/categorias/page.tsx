@@ -7,6 +7,7 @@ import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
 import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Categorias.module.css';
+import { logAction } from '@/utils/logger';
 
 export default function CategoriasPage() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -50,29 +51,33 @@ export default function CategoriasPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    let savedId = formData.id;
     if (isEditing) {
       await supabase.from('categories').update({
         type: formData.type,
         name: formData.name,
         color: formData.color
       }).eq('id', formData.id);
+      await logAction({ action: 'Editar', entity: 'Categorias', entity_id: savedId, description: `Editou a ${formData.type} ${formData.name}` });
     } else {
-      await supabase.from('categories').insert([{
+      const { data } = await supabase.from('categories').insert([{
         type: formData.type,
         name: formData.name,
         color: formData.color
-      }]);
+      }]).select('id');
+      if (data && data.length > 0) savedId = data[0].id;
+      await logAction({ action: 'Criar', entity: 'Categorias', entity_id: savedId || undefined, description: `Criou a ${formData.type} ${formData.name}` });
     }
     setIsModalOpen(false);
     fetchCategories();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (row: any) => {
     // Relational check: check if any participant uses this category
     const { data: linked } = await supabase
       .from('participants')
       .select('id')
-      .or(`category_id.eq.${id},tag_id.eq.${id}`)
+      .or(`category_id.eq.${row.id},tag_id.eq.${row.id}`)
       .limit(1);
       
     if (linked && linked.length > 0) {
@@ -85,7 +90,8 @@ export default function CategoriasPage() {
       }
     }
 
-    await supabase.from('categories').delete().eq('id', id);
+    await supabase.from('categories').delete().eq('id', row.id);
+    await logAction({ action: 'Apagar', entity: 'Categorias', entity_id: row.id, description: `Apagou a ${row.type} ${row.name}` });
     fetchCategories();
   };
 
@@ -113,7 +119,7 @@ export default function CategoriasPage() {
             </button>
           )}
           {perms.excluir !== false && (
-            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)}>
+            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row)}>
               <FiTrash2 />
             </button>
           )}

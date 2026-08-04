@@ -8,6 +8,7 @@ import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
 import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Sorteios.module.css';
+import { logAction } from '@/utils/logger';
 
 export default function SorteiosPage() {
   const [draws, setDraws] = useState<any[]>([]);
@@ -111,6 +112,8 @@ export default function SorteiosPage() {
       const { error: linkError } = await supabase.from('draw_participants').insert(participantLinks);
       if (linkError) throw linkError;
 
+      await logAction({ action: 'Criar', entity: 'Sorteios', entity_id: newDraw.id, description: `Criou o sorteio ${drawName} com ${selectedParticipants.length} participantes` });
+
       setIsModalOpen(false);
       setDrawName('');
       setSelectedParticipants([]);
@@ -124,9 +127,10 @@ export default function SorteiosPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (row: any) => {
     if (window.confirm('Tem certeza que deseja apagar permanentemente este sorteio? Todo o histórico de vencedores dele será perdido!')) {
-      await supabase.from('draws').delete().eq('id', id);
+      await supabase.from('draws').delete().eq('id', row.id);
+      await logAction({ action: 'Apagar', entity: 'Sorteios', entity_id: row.id, description: `Apagou o sorteio ${row.name}` });
       fetchData();
     }
   };
@@ -156,7 +160,7 @@ export default function SorteiosPage() {
           </button>
           
           {perms.excluir !== false && (
-            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Apagar Sorteio">
+            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row)} title="Apagar Sorteio">
               <FiTrash2 />
             </button>
           )}

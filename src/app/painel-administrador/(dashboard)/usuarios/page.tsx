@@ -9,6 +9,7 @@ import { formatCPF } from '@/utils/formatters';
 import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Usuarios.module.css';
 import { createAdminUser, updateAdminUser, deleteAdminUser, getAdminUsersList } from './actions';
+import { logAction } from '@/utils/logger';
 
 export default function UsuariosPage() {
   const [users, setUsers] = useState<any[]>([]);
@@ -112,6 +113,13 @@ export default function UsuariosPage() {
         throw new Error(result.error);
       }
       
+      await logAction({
+        action: isEditing ? 'Editar' : 'Criar',
+        entity: 'Usuários',
+        entity_id: formData.id || undefined,
+        description: isEditing ? `Editou o usuário ${formData.name}` : `Criou o usuário ${formData.name}`
+      });
+      
       setIsModalOpen(false);
       fetchData();
     } catch (error: any) {
@@ -120,12 +128,18 @@ export default function UsuariosPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (user: any) => {
     if (window.confirm('Tem certeza que deseja apagar permanentemente este usuário? O acesso dele será revogado.')) {
-      const result = await deleteAdminUser(id);
+      const result = await deleteAdminUser(user.id);
       if (result.error) {
         alert("Erro ao deletar: " + result.error);
       } else {
+        await logAction({
+          action: 'Apagar',
+          entity: 'Usuários',
+          entity_id: user.id,
+          description: `Excluiu o usuário ${user.name}`
+        });
         fetchData();
       }
     }
@@ -173,7 +187,7 @@ export default function UsuariosPage() {
             </button>
           )}
           {perms.excluir !== false && (
-            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Remover Acesso">
+            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row)} title="Remover Acesso">
               <FiTrash2 />
             </button>
           )}

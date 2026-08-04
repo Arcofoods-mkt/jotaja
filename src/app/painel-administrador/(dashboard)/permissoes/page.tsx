@@ -7,6 +7,7 @@ import AdminModal from '@/components/admin/AdminModal';
 import { createClient } from '@/utils/supabase/client';
 import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Permissoes.module.css';
+import { logAction } from '@/utils/logger';
 
 export default function PermissoesPage() {
   const [roles, setRoles] = useState<any[]>([]);
@@ -77,17 +78,21 @@ export default function PermissoesPage() {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    let savedId = editingRole ? editingRole.id : undefined;
     if (editingRole) {
       await supabase.from('roles').update({ name: roleName, permissions }).eq('id', editingRole.id);
+      await logAction({ action: 'Editar', entity: 'Permissões', entity_id: savedId, description: `Editou o perfil de acesso ${roleName}` });
     } else {
-      await supabase.from('roles').insert([{ name: roleName, permissions }]);
+      const { data } = await supabase.from('roles').insert([{ name: roleName, permissions }]).select('id');
+      if (data && data.length > 0) savedId = data[0].id;
+      await logAction({ action: 'Criar', entity: 'Permissões', entity_id: savedId, description: `Criou o perfil de acesso ${roleName}` });
     }
     closeModal();
     fetchRoles();
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (name.toLowerCase() === 'admin') {
+  const handleDelete = async (row: any) => {
+    if (row.name.toLowerCase() === 'admin') {
       alert('Ação bloqueada: O perfil Admin não pode ser excluído.');
       return;
     }
@@ -96,7 +101,7 @@ export default function PermissoesPage() {
     const { data: linked } = await supabase
       .from('users_profiles')
       .select('id')
-      .eq('role_id', id)
+      .eq('role_id', row.id)
       .limit(1);
 
     if (linked && linked.length > 0) {
@@ -109,7 +114,8 @@ export default function PermissoesPage() {
       }
     }
 
-    await supabase.from('roles').delete().eq('id', id);
+    await supabase.from('roles').delete().eq('id', row.id);
+    await logAction({ action: 'Apagar', entity: 'Permissões', entity_id: row.id, description: `Apagou o perfil de acesso ${row.name}` });
     fetchRoles();
   };
 
@@ -153,7 +159,7 @@ export default function PermissoesPage() {
             <button className="actionBtn" onClick={() => openModal(row)} title="Editar"><FiEdit /></button>
           )}
           {perms.excluir !== false && (
-            <button className="actionBtn deleteBtn" onClick={() => handleDelete(row.id, row.name)} title="Excluir"><FiTrash2 /></button>
+            <button className="actionBtn deleteBtn" onClick={() => handleDelete(row)} title="Excluir"><FiTrash2 /></button>
           )}
         </div>
       ) 

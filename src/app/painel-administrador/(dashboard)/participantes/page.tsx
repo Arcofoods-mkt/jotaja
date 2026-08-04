@@ -10,6 +10,7 @@ import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './Participantes.module.css';
 import { COUNTRIES } from '@/utils/countries';
 import { isValidCNPJ, formatCNPJ, formatPhone } from '@/utils/formatters';
+import { logAction } from '@/utils/logger';
 
 export default function ParticipantesPage() {
   const [participants, setParticipants] = useState<any[]>([]);
@@ -136,19 +137,24 @@ export default function ParticipantesPage() {
       internal_notes: formData.internal_notes
     };
 
+    let savedId = formData.id;
     if (isEditing) {
       await supabase.from('participants').update(dataToSave).eq('id', formData.id);
+      await logAction({ action: 'Editar', entity: 'Leads', entity_id: savedId, description: `Editou o lead ${formData.personal_name}` });
     } else {
-      await supabase.from('participants').insert([dataToSave]);
+      const { data } = await supabase.from('participants').insert([dataToSave]).select('id');
+      if (data && data.length > 0) savedId = data[0].id;
+      await logAction({ action: 'Criar', entity: 'Leads', entity_id: savedId || undefined, description: `Criou o lead ${formData.personal_name}` });
     }
     
     setIsModalOpen(false);
     fetchData();
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (row: any) => {
     if (window.confirm('Tem certeza que deseja apagar permanentemente este participante?')) {
-      await supabase.from('participants').delete().eq('id', id);
+      await supabase.from('participants').delete().eq('id', row.id);
+      await logAction({ action: 'Apagar', entity: 'Leads', entity_id: row.id, description: `Apagou o lead ${row.personal_name}` });
       fetchData();
     }
   };
@@ -258,7 +264,7 @@ export default function ParticipantesPage() {
             </button>
           )}
           {perms.excluir !== false && (
-            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row.id)} title="Apagar">
+            <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={() => handleDelete(row)} title="Apagar">
               <FiTrash2 />
             </button>
           )}
@@ -271,13 +277,13 @@ export default function ParticipantesPage() {
     <div>
       <div className="adminPageHeader">
         <div>
-          <h1 className="adminPageTitle">Participantes</h1>
-          <p className="adminPageDescription">Gerencie os inscritos no sorteio e gerencie as tags internas.</p>
+          <h1 className="adminPageTitle">Leads</h1>
+          <p className="adminPageDescription">Gerencie os leads inscritos e as tags internas.</p>
         </div>
         <div className={styles.headerActions}>
           {perms.editar !== false && (
             <button className={styles.addBtn} onClick={() => openModal()}>
-              <FiPlus /> Novo Participante
+              <FiPlus /> Novo Lead
             </button>
           )}
           <div className={styles.mobileViewToggles}>
@@ -297,7 +303,7 @@ export default function ParticipantesPage() {
         <AdminTable columns={columns} data={participants} searchPlaceholder="Pesquisar por nome, empresa, cnpj ou email..." viewMode={viewMode} />
       )}
 
-      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Participante' : 'Novo Participante'}>
+      <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Editar Lead' : 'Novo Lead'}>
         <form className={styles.form} onSubmit={handleSave}>
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
@@ -374,7 +380,7 @@ export default function ParticipantesPage() {
                   onChange={(e) => setFormData({...formData, active: e.target.checked})} 
                   disabled={perms.bloquear === false}
                 />
-                Participante Ativo no Sistema
+                Lead Ativo no Sistema
               </label>
             </div>
 
