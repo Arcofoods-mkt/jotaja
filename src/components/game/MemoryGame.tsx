@@ -29,6 +29,7 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
   const [matches, setMatches] = useState(0);
   const [timeLeft, setTimeLeft] = useState(settings.time_limit_seconds);
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
+  const [hasStarted, setHasStarted] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const supabase = createClient();
 
@@ -39,9 +40,13 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
     // Select the required number of images
     const selectedImages = settings.images.slice(0, totalPairs);
     
-    // Duplicate to make pairs and shuffle
+    // Duplicate to make pairs and shuffle (Fisher-Yates)
     const pairedImages = [...selectedImages, ...selectedImages];
-    const shuffled = pairedImages.sort(() => Math.random() - 0.5);
+    for (let i = pairedImages.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pairedImages[i], pairedImages[j]] = [pairedImages[j], pairedImages[i]];
+    }
+    const shuffled = pairedImages;
 
     setCards(
       shuffled.map((imageUrl, index) => ({
@@ -55,7 +60,7 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
 
   // Timer
   useEffect(() => {
-    if (gameState !== 'playing') return;
+    if (gameState !== 'playing' || !hasStarted) return;
 
     const timerId = setInterval(() => {
       setTimeLeft((prev) => {
@@ -95,6 +100,10 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
     if (gameState !== 'playing') return;
     if (cards[index].isFlipped || cards[index].isMatched) return;
     if (flippedIndices.length >= 2) return; // Prevent clicking more than 2 at a time
+
+    if (!hasStarted) {
+      setHasStarted(true);
+    }
 
     const newFlipped = [...flippedIndices, index];
     setFlippedIndices(newFlipped);
