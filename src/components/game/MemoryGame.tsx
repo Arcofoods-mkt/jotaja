@@ -74,7 +74,7 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
     }, 1000);
 
     return () => clearInterval(timerId);
-  }, [gameState]);
+  }, [gameState, hasStarted, handleGameOver]);
 
   const handleGameOver = useCallback(async (won: boolean) => {
     setGameState(won ? 'won' : 'lost');
