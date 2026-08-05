@@ -73,7 +73,8 @@ export default function Sidebar({ isCollapsed = false, isMobileOpen = false, clo
       items: [
         { name: 'Leads', path: '/painel-administrador/participantes', icon: <FiUsers />, module: 'Participantes' },
         { name: 'Categorias', path: '/painel-administrador/categorias', icon: <FiTag />, module: 'Categorias' },
-        { name: 'Sorteios', path: '/painel-administrador/sorteios', icon: <FiGift />, module: 'Sorteios' }
+        { name: 'Sorteios', path: '/painel-administrador/sorteios', icon: <FiGift />, module: 'Sorteios' },
+        { name: 'Jogo da Memória', path: '/painel-administrador/jogo-memoria', icon: <FiGift />, module: 'Sorteios' }
       ]
     },
     {

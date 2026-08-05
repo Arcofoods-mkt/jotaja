@@ -15,9 +15,10 @@ interface Option {
 interface SorteioFormProps {
   tipologiaOptions: Option[];
   eventId?: string;
+  onSuccess?: (participantData: any) => void;
 }
 
-export default function SorteioForm({ tipologiaOptions, eventId }: SorteioFormProps) {
+export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: SorteioFormProps) {
   const [formData, setFormData] = useState({
     personal_name: '',
     establishment_name: '',
@@ -91,7 +92,7 @@ export default function SorteioForm({ tipologiaOptions, eventId }: SorteioFormPr
       return;
     }
 
-    const { error: insertError } = await supabase.from('participants').insert([{
+    const { error: insertError, data: insertData } = await supabase.from('participants').insert([{
       personal_name: formData.personal_name.trim(),
       establishment_name: formData.establishment_name.trim(),
       cnpj: cleanCnpj,
@@ -99,12 +100,17 @@ export default function SorteioForm({ tipologiaOptions, eventId }: SorteioFormPr
       whatsapp: cleanPhone,
       category_id: formData.category_id,
       event_id: eventId || null
-    }]);
+    }]).select().single();
 
     if (insertError) {
       console.error(insertError);
       setErrors(prev => ({ ...prev, general: 'Ocorreu um erro ao enviar sua inscrição. Verifique os dados e tente novamente.' }));
     } else {
+      if (onSuccess) {
+        onSuccess(insertData);
+        setLoading(false);
+        return;
+      }
       setSuccess(true);
       setFormData({
         personal_name: '',

@@ -17,11 +17,11 @@ const agenda = [
   {
     date: '19/08',
     label: 'Segundo Dia',
-    isSpecial: true,
+    // isSpecial: true,
     speakers: [
       { id: 4, name: 'Chef Elisa', company: 'Lactalis', time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefelisa.webp' },
       { id: 5, name: 'Chef Ivan', company: 'Unilever', time: '13:00h às 13:45h', highlight: false, image: '/Imagens/chefivan.webp' },
-      { id: 6, name: 'Chef Heaven', company: 'Unilever Pro', time: '15:30h às 16:15h', highlight: true, image: '/Imagens/chefheaven.webp' },
+      // { id: 6, name: 'Chef Heaven', company: 'Unilever Pro', time: '15:30h às 16:15h', highlight: true, image: '/Imagens/chefheaven.webp' },
     ]
   }
 ];

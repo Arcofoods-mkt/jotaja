@@ -36,9 +36,9 @@ export default function OQueEsperar() {
           <div className={styles.heroicCard}>
             <div className={styles.heroicIcon}><LuChefHat /></div>
             <h3 className={styles.heroicCardTitle}>Aulas Show</h3>
-            <div className={`${styles.mysteryTag} ${styles.mysteryTagMobile}`}>
+            {/* <div className={`${styles.mysteryTag} ${styles.mysteryTagMobile}`}>
               <FiStar className={styles.mysteryIcon} /> Chef Heaven Confirmada
-            </div>
+            </div> */}
             <p className={styles.heroicCardText}>
               Insights práticos para revolucionar a gestão do seu negócio.
             </p>

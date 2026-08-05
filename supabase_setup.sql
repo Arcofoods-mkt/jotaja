@@ -96,3 +96,32 @@ ALTER TABLE public.categories ADD CONSTRAINT categories_type_check CHECK (type I
 ALTER TABLE public.participants ADD COLUMN IF NOT EXISTS segment_id UUID REFERENCES public.categories(id) ON DELETE SET NULL;
 ALTER TABLE public.participants ADD COLUMN IF NOT EXISTS classification_id UUID REFERENCES public.categories(id) ON DELETE SET NULL;
 */
+
+-- 6. Tabela de Configurações do Jogo da Memória
+CREATE TABLE IF NOT EXISTS public.memory_game_settings (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    grid_width INT NOT NULL DEFAULT 4,
+    grid_height INT NOT NULL DEFAULT 4,
+    time_limit_seconds INT NOT NULL DEFAULT 60,
+    images JSONB NOT NULL DEFAULT '[]',
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 7. Tabela de Resultados das Partidas
+CREATE TABLE IF NOT EXISTS public.memory_game_results (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    participant_id UUID REFERENCES public.participants(id) ON DELETE CASCADE,
+    won BOOLEAN NOT NULL DEFAULT false,
+    time_taken_seconds INT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE public.memory_game_settings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Enable read access for all users" ON public.memory_game_settings FOR SELECT USING (true);
+CREATE POLICY "Enable all access for authenticated users" ON public.memory_game_settings FOR ALL TO authenticated USING (true);
+
+ALTER TABLE public.memory_game_results ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Enable insert for anon" ON public.memory_game_results FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Enable all access for authenticated users" ON public.memory_game_results FOR ALL TO authenticated USING (true);
