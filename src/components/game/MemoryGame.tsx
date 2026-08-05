@@ -58,24 +58,6 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
     );
   }, [settings, totalPairs]);
 
-  // Timer
-  useEffect(() => {
-    if (gameState !== 'playing' || !hasStarted) return;
-
-    const timerId = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerId);
-          handleGameOver(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timerId);
-  }, [gameState, hasStarted, handleGameOver]);
-
   const handleGameOver = useCallback(async (won: boolean) => {
     setGameState(won ? 'won' : 'lost');
     
@@ -95,6 +77,24 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
       console.error('Error saving game result:', err);
     }
   }, [participantId, settings.time_limit_seconds, timeLeft, supabase]);
+
+  // Timer
+  useEffect(() => {
+    if (gameState !== 'playing' || !hasStarted) return;
+
+    const timerId = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerId);
+          handleGameOver(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [gameState, hasStarted, handleGameOver]);
 
   const handleCardClick = (index: number) => {
     if (gameState !== 'playing') return;
