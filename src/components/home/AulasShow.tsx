@@ -48,7 +48,6 @@ export default function AulasShow() {
               className={`${styles.tabButton} ${activeTab === index ? styles.activeTab : ''}`}
               onClick={() => setActiveTab(index)}
             >
-              {day.isSpecial && <FiStar className={styles.tabStar} />}
               <span className={styles.tabDate}>Dia {day.date}</span>
               <span className={styles.tabLabel}>{day.label}</span>
             </button>
