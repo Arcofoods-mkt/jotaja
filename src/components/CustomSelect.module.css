@@ -55,7 +55,7 @@
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   overflow: hidden;
-  z-index: 50;
+  z-index: 9999;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   animation: fadeInDown 0.2s ease-out forwards;
   display: flex;

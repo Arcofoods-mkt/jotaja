@@ -89,9 +89,11 @@ export default function GamePage() {
 
   return (
     <main className={styles.pageContainer}>
-      <Link href="/" className={styles.backButton}>
-        <FiArrowLeft /> Voltar
-      </Link>
+      <div className={styles.topHeader}>
+        <Link href="/" className={styles.backButton}>
+          <FiArrowLeft /> Voltar
+        </Link>
+      </div>
       
       <div className={styles.contentWrapper}>
         {step === 1 && (
@@ -101,8 +103,7 @@ export default function GamePage() {
               <span>jogue e ganhe!</span>
             </h1>
             <p className={styles.description}>
-              Preencha seus dados para concorrer ao nosso grande sorteio! E tem mais: 
-              divirta-se no nosso Jogo da Memória e, se vencer o desafio, garanta um brinde exclusivo na hora.
+              Inscreva-se para o grande sorteio, vença o Jogo da Memória e garanta um brinde exclusivo na hora!
             </p>
             <SorteioForm 
               tipologiaOptions={tipologiaOptions} 

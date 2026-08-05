@@ -56,10 +56,15 @@
   font-size: 1.2rem;
 }
 
+.topHeader {
+  width: 100%;
+  padding: 1.5rem 1.5rem 0 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+  z-index: 50;
+}
+
 .backButton {
-  position: absolute;
-  top: 1.5rem;
-  left: 1.5rem;
   background: transparent;
   border: none;
   color: var(--text-color);
@@ -69,7 +74,6 @@
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
-  z-index: 50;
   padding: 0.5rem 1rem;
   border-radius: 8px;
   transition: background 0.2s;

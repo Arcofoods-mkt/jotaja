@@ -80,7 +80,7 @@ export default function EventStats() {
       </p>
 
       <div className={styles.statsGrid}>
-        <StatItem end={8000} suffix="+" label="CLIENTES ATIVOS" />
+        <StatItem end={13000} suffix="+" label="CLIENTES POR ANO" />
         <StatItem end={270} suffix="+" label="FORNECEDORES" />
         <StatItem end={3000} suffix="+" label="SKUs NO PORTFÓLIO" />
         <StatItem end={100} suffix="%" label="COBERTURA NO RJ" />
