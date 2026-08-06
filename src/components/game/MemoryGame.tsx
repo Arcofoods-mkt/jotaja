@@ -137,7 +137,7 @@ export default function MemoryGame({ participantId, settings, onFinish }: Memory
             i === firstIndex || i === secondIndex ? { ...c, isFlipped: false } : c
           ));
           setFlippedIndices([]);
-        }, 1000);
+        }, 600);
       }
     }
   };
