@@ -92,7 +92,10 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
       return;
     }
 
+    const newParticipantId = crypto.randomUUID();
+
     const { error: insertError, data: insertData } = await supabase.from('participants').insert([{
+      id: newParticipantId,
       personal_name: formData.personal_name.trim(),
       establishment_name: formData.establishment_name.trim(),
       cnpj: cleanCnpj,
@@ -100,14 +103,14 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
       whatsapp: cleanPhone,
       category_id: formData.category_id,
       event_id: eventId || null
-    }]).select().single();
+    }]);
 
     if (insertError) {
       console.error(insertError);
       setErrors(prev => ({ ...prev, general: 'Ocorreu um erro ao enviar sua inscrição. Verifique os dados e tente novamente.' }));
     } else {
       if (onSuccess) {
-        onSuccess(insertData);
+        onSuccess({ id: newParticipantId });
         setLoading(false);
         return;
       }
