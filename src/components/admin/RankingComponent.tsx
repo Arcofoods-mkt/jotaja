@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { FiRefreshCw, FiCheckCircle, FiCircle } from 'react-icons/fi';
+import { FiRefreshCw, FiCheckCircle, FiCircle, FiTrash2 } from 'react-icons/fi';
+import { usePermissions } from '@/contexts/PermissionsContext';
 import styles from './RankingComponent.module.css';
 
 interface Participant {
@@ -27,6 +28,8 @@ export default function RankingComponent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const supabase = createClient();
+  const { permissions, isAdmin } = usePermissions();
+  const perms = isAdmin ? { ver: true, editar: true, excluir: true } : (permissions.Sorteios || {});
 
   const fetchResults = async () => {
     setLoading(true);
@@ -77,6 +80,10 @@ export default function RankingComponent() {
   }, []);
 
   const togglePrize = async (resultId: string, currentStatus: boolean) => {
+    if (perms.editar === false) {
+      alert("Você não tem permissão para editar prêmios.");
+      return;
+    }
     try {
       // Optimistic update
       setResults(prev => prev.map(r => 
@@ -96,6 +103,23 @@ export default function RankingComponent() {
       alert('Erro ao atualizar o status do prêmio.');
       // Revert optimistic update
       fetchResults();
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (perms.excluir === false) {
+      alert("Você não tem permissão para excluir resultados.");
+      return;
+    }
+    if (!window.confirm('Tem certeza que deseja excluir este resultado? Esta ação não pode ser desfeita.')) return;
+    
+    try {
+      const { error: deleteError } = await supabase.from('memory_game_results').delete().eq('id', id);
+      if (deleteError) throw deleteError;
+      setResults(prev => prev.filter(r => r.id !== id));
+    } catch (err: any) {
+      console.error(err);
+      alert('Erro ao excluir resultado: ' + (err.message || ''));
     }
   };
 
@@ -150,6 +174,7 @@ export default function RankingComponent() {
                 <th>Tempo</th>
                 <th>Data</th>
                 <th>Prêmio</th>
+                {perms.excluir !== false && <th>Ações</th>}
               </tr>
             </thead>
             <tbody>
@@ -184,7 +209,7 @@ export default function RankingComponent() {
                     <button
                       className={`${styles.prizeButton} ${result.prize_received ? styles.delivered : ''}`}
                       onClick={() => togglePrize(result.id, result.prize_received || false)}
-                      disabled={!result.won}
+                      disabled={!result.won || perms.editar === false}
                       title={!result.won ? "Não ganhou o jogo" : (result.prize_received ? "Marcar como não entregue" : "Marcar como entregue")}
                     >
                       {result.prize_received ? (
@@ -194,6 +219,27 @@ export default function RankingComponent() {
                       )}
                     </button>
                   </td>
+                  {perms.excluir !== false && (
+                    <td>
+                      <button 
+                        onClick={() => handleDelete(result.id)}
+                        style={{
+                          background: 'rgba(239, 68, 68, 0.1)',
+                          border: 'none',
+                          color: '#ef4444',
+                          padding: '0.5rem',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
+                        }}
+                        title="Excluir Resultado"
+                      >
+                        <FiTrash2 />
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
