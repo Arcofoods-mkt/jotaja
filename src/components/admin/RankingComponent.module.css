@@ -1,0 +1,123 @@
+.container {
+  background: var(--admin-card);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--admin-border);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid var(--admin-border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--admin-border);
+}
+
+.table th {
+  background: rgba(255, 255, 255, 0.02);
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.statusWon {
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.statusLost {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.prizeButton {
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  color: var(--text-color);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.prizeButton:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.prizeButton.delivered {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+.prizeButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loadingBox, .errorBox, .emptyBox {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.refreshButton {
+  background: transparent;
+  border: 1px solid var(--admin-border);
+  color: var(--text-color);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s;
+}
+
+.refreshButton:hover {
+  background: rgba(255, 255, 255, 0.05);
+}

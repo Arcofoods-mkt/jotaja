@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiSave, FiImage, FiX } from 'react-icons/fi';
+import { FiSave, FiImage, FiX, FiSettings, FiAward } from 'react-icons/fi';
 import { createClient } from '@/utils/supabase/client';
 import { usePermissions } from '@/contexts/PermissionsContext';
+import RankingComponent from '@/components/admin/RankingComponent';
 import styles from './JogoMemoria.module.css';
 import { logAction } from '@/utils/logger';
 
 export default function JogoMemoriaPage() {
+  const [activeTab, setActiveTab] = useState<'config' | 'ranking'>('config');
   const [settingsId, setSettingsId] = useState<string | null>(null);
   const [gridWidth, setGridWidth] = useState(4);
   const [gridHeight, setGridHeight] = useState(4);
@@ -159,10 +161,50 @@ export default function JogoMemoriaPage() {
       <div className="adminPageHeader">
         <div>
           <h1 className="adminPageTitle">Jogo da Memória</h1>
-          <p className="adminPageDescription">Configure a dificuldade, o tempo e as imagens das cartas do jogo.</p>
+          <p className="adminPageDescription">Gerencie o jogo da memória e o ranking dos participantes.</p>
         </div>
       </div>
 
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid var(--admin-border)' }}>
+        <button 
+          onClick={() => setActiveTab('config')}
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            padding: '1rem', 
+            color: activeTab === 'config' ? 'var(--accent-color)' : 'var(--text-muted)',
+            borderBottom: activeTab === 'config' ? '2px solid var(--accent-color)' : '2px solid transparent',
+            fontWeight: activeTab === 'config' ? 600 : 400,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '1rem'
+          }}
+        >
+          <FiSettings /> Configurações
+        </button>
+        <button 
+          onClick={() => setActiveTab('ranking')}
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            padding: '1rem', 
+            color: activeTab === 'ranking' ? 'var(--accent-color)' : 'var(--text-muted)',
+            borderBottom: activeTab === 'ranking' ? '2px solid var(--accent-color)' : '2px solid transparent',
+            fontWeight: activeTab === 'ranking' ? 600 : 400,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '1rem'
+          }}
+        >
+          <FiAward /> Ranking e Prêmios
+        </button>
+      </div>
+
+      {activeTab === 'config' ? (
       <div style={{ background: 'var(--admin-card)', padding: '2rem', borderRadius: '8px', border: '1px solid var(--admin-border)' }}>
         <form onSubmit={handleSave}>
           
@@ -257,6 +299,9 @@ export default function JogoMemoriaPage() {
           </div>
         </form>
       </div>
+      ) : (
+        <RankingComponent />
+      )}
     </div>
   );
 }
