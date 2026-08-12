@@ -30,7 +30,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [errors, setErrors] = useState({ cnpj: '', email: '', whatsapp: '', general: '' });
+  const [errors, setErrors] = useState({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
 
   const supabase = createClient();
 
@@ -51,17 +51,47 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setErrors({ cnpj: '', email: '', whatsapp: '', general: '' });
+    setErrors({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
     setSuccess(false);
 
-    if (!formData.category_id) {
-      setErrors(prev => ({ ...prev, general: 'Por favor, selecione uma tipologia.' }));
-      setLoading(false);
-      return;
+    let hasErrors = false;
+    const newErrors = { personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' };
+
+    if (!formData.personal_name.trim()) {
+      newErrors.personal_name = 'O Nome Pessoal é obrigatório.';
+      hasErrors = true;
     }
 
-    if (!isValidCNPJ(formData.cnpj)) {
-      setErrors(prev => ({ ...prev, cnpj: 'CNPJ inválido. Verifique os números digitados.' }));
+    if (!formData.establishment_name.trim()) {
+      newErrors.establishment_name = 'O Nome do Estabelecimento é obrigatório.';
+      hasErrors = true;
+    }
+
+    if (!formData.cnpj.trim()) {
+      newErrors.cnpj = 'O CNPJ é obrigatório.';
+      hasErrors = true;
+    } else if (!isValidCNPJ(formData.cnpj)) {
+      newErrors.cnpj = 'CNPJ inválido. Verifique os números digitados.';
+      hasErrors = true;
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'O E-mail é obrigatório.';
+      hasErrors = true;
+    }
+
+    if (!formData.whatsapp.trim()) {
+      newErrors.whatsapp = 'O WhatsApp é obrigatório.';
+      hasErrors = true;
+    }
+
+    if (!formData.category_id) {
+      newErrors.general = 'Por favor, selecione uma tipologia.';
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      setErrors(newErrors);
       setLoading(false);
       return;
     }
@@ -70,15 +100,11 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
     const cleanCnpj = formData.cnpj.replace(/\D/g, '');
     const cleanPhone = formData.ddi + formData.whatsapp.replace(/\D/g, '');
 
-    // Verificar duplicidade de CNPJ, email e whatsapp antes de inserir
-    const { data: existingCnpj } = await supabase.from('participants').select('id').eq('cnpj', cleanCnpj).maybeSingle();
-    if (existingCnpj) {
-      setErrors(prev => ({ ...prev, cnpj: 'Esse CNPJ já está participando do sorteio' }));
-      setLoading(false);
-      return;
-    }
+    // Verificar duplicidade de email e whatsapp antes de inserir
 
-    const { data: existingEmail } = await supabase.from('participants').select('id').eq('email', formData.email.trim()).maybeSingle();
+    const normalizedEmail = formData.email.trim().toLowerCase();
+
+    const { data: existingEmail } = await supabase.from('participants').select('id').eq('email', normalizedEmail).maybeSingle();
     if (existingEmail) {
       setErrors(prev => ({ ...prev, email: 'Este e-mail já foi cadastrado no sorteio.' }));
       setLoading(false);
@@ -99,15 +125,23 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
       personal_name: formData.personal_name.trim(),
       establishment_name: formData.establishment_name.trim(),
       cnpj: cleanCnpj,
-      email: formData.email.trim(),
+      email: normalizedEmail,
       whatsapp: cleanPhone,
       category_id: formData.category_id,
       event_id: eventId || null
     }]);
 
     if (insertError) {
-      console.error(insertError);
-      setErrors(prev => ({ ...prev, general: 'Ocorreu um erro ao enviar sua inscrição. Verifique os dados e tente novamente.' }));
+      console.error("Supabase Insert Error:", insertError);
+      
+      const errMsg = insertError.message || '';
+      if (errMsg.includes('participants_email_key') || errMsg.includes('duplicate key value') && errMsg.includes('email')) {
+        setErrors(prev => ({ ...prev, email: 'Este e-mail já foi cadastrado no sorteio.' }));
+      } else if (errMsg.includes('participants_whatsapp_key') || errMsg.includes('duplicate key value') && errMsg.includes('whatsapp')) {
+        setErrors(prev => ({ ...prev, whatsapp: 'Este telefone já foi cadastrado no sorteio.' }));
+      } else {
+        setErrors(prev => ({ ...prev, general: `Ocorreu um erro ao enviar sua inscrição: ${errMsg || 'Verifique os dados'}` }));
+      }
     } else {
       if (onSuccess) {
         onSuccess({ id: newParticipantId });
@@ -142,35 +176,42 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
   }
 
   return (
-    <form className={styles.formContainer} onSubmit={handleSubmit}>
+    <form className={styles.formContainer} onSubmit={handleSubmit} noValidate>
 
-      <input 
-        type="text" 
-        placeholder="Nome Pessoal" 
-        className="input-field" 
-        required 
-        value={formData.personal_name}
-        onChange={handleNameChange}
-      />
-      
-      <input 
-        type="text" 
-        placeholder="Nome do Estabelecimento" 
-        className="input-field" 
-        required 
-        value={formData.establishment_name}
-        onChange={(e) => setFormData({...formData, establishment_name: e.target.value})}
-      />
+      <div>
+        <input 
+          type="text" 
+          placeholder="Nome Pessoal *" 
+          className="input-field" 
+          required 
+          value={formData.personal_name}
+          onChange={handleNameChange}
+          style={errors.personal_name ? { borderColor: '#ff4d4f' } : {}}
+        />
+        {errors.personal_name && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0.4rem 0 0 0' }}>{errors.personal_name}</p>}
+      </div>
       
       <div>
         <input 
           type="text" 
-          placeholder="CNPJ" 
+          placeholder="Nome do Estabelecimento *" 
+          className="input-field" 
+          required 
+          value={formData.establishment_name}
+          onChange={(e) => setFormData({...formData, establishment_name: e.target.value})}
+          style={errors.establishment_name ? { borderColor: '#ff4d4f' } : {}}
+        />
+        {errors.establishment_name && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0.4rem 0 0 0' }}>{errors.establishment_name}</p>}
+      </div>
+      
+      <div>
+        <input 
+          type="text" 
+          placeholder="CNPJ *" 
           className="input-field" 
           required 
           value={formData.cnpj}
           onChange={handleCnpjChange}
-          maxLength={18}
           style={errors.cnpj ? { borderColor: '#ff4d4f' } : {}}
         />
         {errors.cnpj && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0.4rem 0 0 0' }}>{errors.cnpj}</p>}
@@ -179,7 +220,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
       <div>
         <input 
           type="email" 
-          placeholder="E-mail" 
+          placeholder="E-mail *" 
           className="input-field" 
           required 
           value={formData.email}
@@ -205,7 +246,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
           </select>
           <input 
             type="tel" 
-            placeholder="WhatsApp (com DDD)" 
+            placeholder="WhatsApp (com DDD) *" 
             className="input-field" 
             style={{ flex: 1, ...(errors.whatsapp ? { borderColor: '#ff4d4f' } : {}) }}
             required 
@@ -218,7 +259,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
       </div>
 
       <CustomSelect 
-        placeholder="Selecione a Tipologia"
+        placeholder="Selecione a Tipologia *"
         options={tipologiaOptions.length > 0 ? tipologiaOptions : [{ value: '', label: 'Nenhuma tipologia cadastrada' }]}
         value={formData.category_id}
         onChange={(val) => setFormData({...formData, category_id: val})}

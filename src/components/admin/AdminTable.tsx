@@ -11,12 +11,13 @@ interface AdminTableProps {
   columns: Column[];
   data: any[];
   searchPlaceholder?: string;
+  searchFields?: string[];
   onSearch?: (term: string) => void;
   viewMode?: 'list' | 'grid';
   extraHeaderContent?: React.ReactNode;
 }
 
-export default function AdminTable({ columns, data, searchPlaceholder = "Pesquisar...", onSearch, viewMode = 'list', extraHeaderContent }: AdminTableProps) {
+export default function AdminTable({ columns, data, searchPlaceholder = "Pesquisar...", searchFields, onSearch, viewMode = 'list', extraHeaderContent }: AdminTableProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,10 +25,13 @@ export default function AdminTable({ columns, data, searchPlaceholder = "Pesquis
   // Client-side filtering
   const filteredData = data.filter(row => {
     if (!searchTerm) return true;
-    return columns.some(col => {
-      const val = row[col.key];
-      if (typeof val === 'string') {
-        return val.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchLower = searchTerm.toLowerCase();
+    const keysToSearch = searchFields || columns.map(col => col.key);
+
+    return keysToSearch.some(key => {
+      const val = row[key];
+      if (typeof val === 'string' || typeof val === 'number') {
+        return String(val).toLowerCase().includes(searchLower);
       }
       return false;
     });

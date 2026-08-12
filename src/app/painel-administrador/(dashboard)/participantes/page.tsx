@@ -25,6 +25,9 @@ export default function ParticipantesPage() {
   const [selectedFilters, setSelectedFilters] = useState<{tipologias: string[], tags: string[], eventos: string[], segmentos: string[], classificacoes: string[]}>({
     tipologias: [], tags: [], eventos: [], segmentos: [], classificacoes: []
   });
+  const [draftFilters, setDraftFilters] = useState<{tipologias: string[], tags: string[], eventos: string[], segmentos: string[], classificacoes: string[]}>({
+    tipologias: [], tags: [], eventos: [], segmentos: [], classificacoes: []
+  });
 
   const toggleFilter = (type: keyof typeof selectedFilters, id: string) => {
     setSelectedFilters(prev => {
@@ -39,7 +42,10 @@ export default function ParticipantesPage() {
   };
   
   const clearFilters = () => {
-    setSelectedFilters({tipologias: [], tags: [], eventos: [], segmentos: [], classificacoes: []});
+    const empty = {tipologias: [], tags: [], eventos: [], segmentos: [], classificacoes: []};
+    setSelectedFilters(empty);
+    setDraftFilters(empty);
+    setIsFilterModalOpen(false);
   };
   
   // Form State
@@ -61,6 +67,8 @@ export default function ParticipantesPage() {
   };
   const [formData, setFormData] = useState(defaultFormData);
   const [isEditing, setIsEditing] = useState(false);
+  const [errors, setErrors] = useState({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Permissions
   const { permissions, isAdmin } = usePermissions();
@@ -135,25 +143,41 @@ export default function ParticipantesPage() {
       setFormData(defaultFormData);
       setIsEditing(false);
     }
+    setErrors({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
     setIsModalOpen(true);
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
     
-    if (!isValidCNPJ(formData.cnpj)) {
-      alert('CNPJ inválido. Verifique os números digitados.');
+    let hasErrors = false;
+    const newErrors = { personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' };
+
+    if (!formData.personal_name.trim()) { newErrors.personal_name = 'Obrigatório'; hasErrors = true; }
+    if (!formData.establishment_name.trim()) { newErrors.establishment_name = 'Obrigatório'; hasErrors = true; }
+    if (!formData.email.trim()) { newErrors.email = 'Obrigatório'; hasErrors = true; }
+    if (!formData.whatsapp.trim()) { newErrors.whatsapp = 'Obrigatório'; hasErrors = true; }
+    
+    if (formData.cnpj && !isValidCNPJ(formData.cnpj)) {
+      newErrors.cnpj = 'CNPJ inválido.';
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      setErrors(newErrors);
       return;
     }
 
     const cleanCnpj = formData.cnpj.replace(/\D/g, '');
     const cleanPhone = formData.ddi + formData.whatsapp.replace(/\D/g, '');
+    const normalizedEmail = formData.email.trim().toLowerCase();
 
     const dataToSave = {
       personal_name: formData.personal_name,
       establishment_name: formData.establishment_name,
       cnpj: cleanCnpj,
-      email: formData.email,
+      email: normalizedEmail,
       whatsapp: cleanPhone,
       category_id: formData.category_id || null,
       tag_id: formData.tag_id || null,
@@ -165,17 +189,35 @@ export default function ParticipantesPage() {
     };
 
     let savedId = formData.id;
+    let insertOrUpdateError = null;
+
     if (isEditing) {
-      await supabase.from('participants').update(dataToSave).eq('id', formData.id);
-      await logAction({ action: 'Editar', entity: 'Leads', entity_id: savedId, description: `Editou o lead ${formData.personal_name}` });
+      const { error } = await supabase.from('participants').update(dataToSave).eq('id', formData.id);
+      insertOrUpdateError = error;
+      if (!error) await logAction({ action: 'Editar', entity: 'Leads', entity_id: savedId, description: `Editou o lead ${formData.personal_name}` });
     } else {
-      const { data } = await supabase.from('participants').insert([dataToSave]).select('id');
+      const { data, error } = await supabase.from('participants').insert([dataToSave]).select('id');
+      insertOrUpdateError = error;
       if (data && data.length > 0) savedId = data[0].id;
-      await logAction({ action: 'Criar', entity: 'Leads', entity_id: savedId || undefined, description: `Criou o lead ${formData.personal_name}` });
+      if (!error) await logAction({ action: 'Criar', entity: 'Leads', entity_id: savedId || undefined, description: `Criou o lead ${formData.personal_name}` });
+    }
+    
+    if (insertOrUpdateError) {
+      const errMsg = insertOrUpdateError.message || '';
+      if (errMsg.includes('participants_email_key') || errMsg.includes('duplicate key value') && errMsg.includes('email')) {
+        setErrors(prev => ({ ...prev, email: 'Este e-mail já foi cadastrado no sistema.' }));
+      } else if (errMsg.includes('participants_whatsapp_key') || errMsg.includes('duplicate key value') && errMsg.includes('whatsapp')) {
+        setErrors(prev => ({ ...prev, whatsapp: 'Este telefone já foi cadastrado no sistema.' }));
+      } else {
+        setErrors(prev => ({ ...prev, general: `Erro ao salvar: ${errMsg}` }));
+      }
+      return;
     }
     
     setIsModalOpen(false);
     fetchData();
+    setSuccessMessage(isEditing ? 'Lead atualizado com sucesso!' : 'Lead cadastrado com sucesso!');
+    setTimeout(() => setSuccessMessage(''), 4000);
   };
 
   const handleDelete = async (row: any) => {
@@ -352,6 +394,12 @@ export default function ParticipantesPage() {
         </div>
       </div>
 
+      {successMessage && (
+        <div style={{ padding: '1rem', backgroundColor: 'rgba(37, 211, 102, 0.1)', border: '1px solid #25D366', color: '#25D366', borderRadius: '8px', marginBottom: '1.5rem', textAlign: 'center', fontWeight: 'bold' }}>
+          {successMessage}
+        </div>
+      )}
+
       {loading ? (
         <p>Carregando...</p>
       ) : perms.ver === false ? (
@@ -362,12 +410,16 @@ export default function ParticipantesPage() {
         <AdminTable 
           columns={columns} 
           data={filteredParticipants} 
-          searchPlaceholder="Pesquisar por nome, empresa, cnpj ou email..." 
+          searchFields={['personal_name', 'establishment_name', 'cnpj', 'email', 'whatsapp']}
+          searchPlaceholder="Pesquisar por nome, empresa, cnpj, email ou whatsapp..." 
           viewMode={viewMode}
           extraHeaderContent={
             <button 
               className={`${styles.filterBtn} ${getActiveFilterCount() > 0 ? styles.filterBtnActive : ''}`} 
-              onClick={() => setIsFilterModalOpen(true)}
+              onClick={() => {
+                setDraftFilters(selectedFilters);
+                setIsFilterModalOpen(true);
+              }}
             >
               <FiFilter /> Filtros
               {getActiveFilterCount() > 0 && <span className={styles.filterBadge}>{getActiveFilterCount()}</span>}
@@ -380,19 +432,22 @@ export default function ParticipantesPage() {
         <form className={styles.form} onSubmit={handleSave}>
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Nome Pessoal</label>
-              <input type="text" className="input-field" value={formData.personal_name} onChange={(e) => setFormData({...formData, personal_name: e.target.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '')})} required />
+              <label className={styles.label}>Nome Pessoal *</label>
+              <input type="text" className="input-field" value={formData.personal_name} onChange={(e) => setFormData({...formData, personal_name: e.target.value.replace(/[^A-Za-zÀ-ÿ\s]/g, '')})} style={errors.personal_name ? { borderColor: '#ff4d4f' } : {}} required />
+              {errors.personal_name && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.personal_name}</p>}
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>Estabelecimento</label>
-              <input type="text" className="input-field" value={formData.establishment_name} onChange={(e) => setFormData({...formData, establishment_name: e.target.value})} required />
+              <label className={styles.label}>Estabelecimento *</label>
+              <input type="text" className="input-field" value={formData.establishment_name} onChange={(e) => setFormData({...formData, establishment_name: e.target.value})} style={errors.establishment_name ? { borderColor: '#ff4d4f' } : {}} required />
+              {errors.establishment_name && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.establishment_name}</p>}
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>CNPJ</label>
-              <input type="text" className="input-field" value={formData.cnpj} onChange={(e) => setFormData({...formData, cnpj: formatCNPJ(e.target.value)})} maxLength={18} required />
+              <label className={styles.label}>CNPJ *</label>
+              <input type="text" className="input-field" value={formData.cnpj} onChange={(e) => setFormData({...formData, cnpj: formatCNPJ(e.target.value)})} style={errors.cnpj ? { borderColor: '#ff4d4f' } : {}} required />
+              {errors.cnpj && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.cnpj}</p>}
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>WhatsApp</label>
+              <label className={styles.label}>WhatsApp *</label>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <select 
                   className="input-field" 
@@ -411,14 +466,17 @@ export default function ParticipantesPage() {
                   className="input-field" 
                   value={formData.whatsapp} 
                   onChange={(e) => setFormData({...formData, whatsapp: formatPhone(e.target.value)})} 
+                  style={errors.whatsapp ? { borderColor: '#ff4d4f' } : {}}
                   maxLength={15}
                   required 
                 />
               </div>
+              {errors.whatsapp && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.whatsapp}</p>}
             </div>
             <div className={styles.formGroup}>
-              <label className={styles.label}>E-mail</label>
-              <input type="email" className="input-field" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required />
+              <label className={styles.label}>E-mail *</label>
+              <input type="email" className="input-field" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} style={errors.email ? { borderColor: '#ff4d4f' } : {}} required />
+              {errors.email && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.email}</p>}
             </div>
             <div className={styles.formGroup}>
               <label className={styles.label}>Tipologia (Pública)</label>
@@ -483,6 +541,12 @@ export default function ParticipantesPage() {
             </div>
           </div>
 
+          {errors.general && (
+            <div style={{ padding: '0.75rem', backgroundColor: 'rgba(255, 77, 79, 0.1)', border: '1px solid #ff4d4f', color: '#ff4d4f', borderRadius: '8px', marginBottom: '1rem', textAlign: 'center' }}>
+              {errors.general}
+            </div>
+          )}
+
           <div className="modal-actions">
             <button type="button" className="btn-danger" onClick={() => setIsModalOpen(false)}>Cancelar</button>
             <button type="submit" className="btn-primary">Salvar</button>
@@ -495,8 +559,8 @@ export default function ParticipantesPage() {
             <div className={styles.filterGroupTitle}>Tipologias (Público)</div>
             <MultiSelect 
               options={categories.tipologias}
-              selectedIds={selectedFilters.tipologias}
-              onChange={(ids) => setSelectedFilters({...selectedFilters, tipologias: ids})}
+              selectedIds={draftFilters.tipologias}
+              onChange={(ids) => setDraftFilters({...draftFilters, tipologias: ids})}
               placeholder="Buscar tipologia..."
             />
           </div>
@@ -505,8 +569,8 @@ export default function ParticipantesPage() {
             <div className={styles.filterGroupTitle}>Eventos</div>
             <MultiSelect 
               options={categories.eventos}
-              selectedIds={selectedFilters.eventos}
-              onChange={(ids) => setSelectedFilters({...selectedFilters, eventos: ids})}
+              selectedIds={draftFilters.eventos}
+              onChange={(ids) => setDraftFilters({...draftFilters, eventos: ids})}
               placeholder="Buscar evento..."
             />
           </div>
@@ -515,8 +579,8 @@ export default function ParticipantesPage() {
             <div className={styles.filterGroupTitle}>Tags (Interno)</div>
             <MultiSelect 
               options={categories.tags}
-              selectedIds={selectedFilters.tags}
-              onChange={(ids) => setSelectedFilters({...selectedFilters, tags: ids})}
+              selectedIds={draftFilters.tags}
+              onChange={(ids) => setDraftFilters({...draftFilters, tags: ids})}
               placeholder="Buscar tag..."
             />
           </div>
@@ -525,8 +589,8 @@ export default function ParticipantesPage() {
             <div className={styles.filterGroupTitle}>Segmentos</div>
             <MultiSelect 
               options={categories.segmentos}
-              selectedIds={selectedFilters.segmentos}
-              onChange={(ids) => setSelectedFilters({...selectedFilters, segmentos: ids})}
+              selectedIds={draftFilters.segmentos}
+              onChange={(ids) => setDraftFilters({...draftFilters, segmentos: ids})}
               placeholder="Buscar segmento..."
             />
           </div>
@@ -535,15 +599,18 @@ export default function ParticipantesPage() {
             <div className={styles.filterGroupTitle}>Classificação (Interno)</div>
             <MultiSelect 
               options={categories.classificacoes}
-              selectedIds={selectedFilters.classificacoes}
-              onChange={(ids) => setSelectedFilters({...selectedFilters, classificacoes: ids})}
+              selectedIds={draftFilters.classificacoes}
+              onChange={(ids) => setDraftFilters({...draftFilters, classificacoes: ids})}
               placeholder="Buscar classificação..."
             />
           </div>
 
           <div className="modal-actions" style={{ marginTop: '2rem' }}>
-            <button type="button" className="btn-danger" onClick={clearFilters} disabled={getActiveFilterCount() === 0}>Limpar Filtros</button>
-            <button type="button" className="btn-primary" onClick={() => setIsFilterModalOpen(false)}>Aplicar Filtros</button>
+            <button type="button" className="btn-danger" onClick={clearFilters} disabled={getActiveFilterCount() === 0 && Object.values(draftFilters).every(v => v.length === 0)}>Limpar Filtros</button>
+            <button type="button" className="btn-primary" onClick={() => {
+              setSelectedFilters(draftFilters);
+              setIsFilterModalOpen(false);
+            }}>Aplicar Filtros</button>
           </div>
         </div>
       </AdminModal>
