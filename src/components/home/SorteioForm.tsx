@@ -267,7 +267,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
 
       {errors.general && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.general}</p>}
 
-      <button type="submit" className="btn-primary" disabled={loading} style={{ margin: 0 }}>
+      <button type="submit" className="btn-primary" disabled={loading} style={{ margin: 0, marginTop: '-0.3rem' }}>
         {loading ? 'Enviando...' : 'Participar agora!'}
       </button>
     </form>
