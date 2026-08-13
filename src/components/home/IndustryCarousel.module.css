@@ -13,8 +13,8 @@
 
 .carouselTrack {
   display: flex;
-  width: calc(250px * 10);
-  animation: scroll 50s linear infinite;
+  width: max-content;
+  animation: scroll 40s linear infinite;
   margin-top: 3.5rem;
 }
 
@@ -43,6 +43,6 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-250px * 5));
+    transform: translateX(calc(-250px * 4));
   }
 }

@@ -10,8 +10,9 @@ const agenda = [
     label: 'Primeiro Dia',
     speakers: [
       { id: 1, name: 'Chef Ivan', company: 'Unilever', time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefivan.webp' },
-      { id: 2, name: 'Chef Raissa', company: 'Cargill', time: '13:45h às 14:30h', highlight: false, image: '/Imagens/chefraissa.webp' },
+      // { id: 2, name: 'Chef Raissa', company: 'Cargill', time: '13:45h às 14:30h', highlight: false, image: '/Imagens/chefraissa.webp' },
       { id: 7, name: 'Chef Elisa', company: 'Lactalis', time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefelisa.webp' },
+      { id: 9, name: 'Chef Rafael', company: "RICH's", time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefrafael.webp' },
       // { id: 3, name: 'Chef Valnei', company: 'Barry Callebaut', time: '16:15h às 17:00h', highlight: false, image: '/Imagens/chefvalnei.webp' },
     ]
   },
@@ -22,7 +23,8 @@ const agenda = [
     speakers: [
       { id: 4, name: 'Chef Elisa', company: 'Lactalis', time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefelisa.webp' },
       { id: 5, name: 'Chef Ivan', company: 'Unilever', time: '13:00h às 13:45h', highlight: false, image: '/Imagens/chefivan.webp' },
-      { id: 8, name: 'Chef Raissa', company: 'Cargill', time: '13:45h às 14:30h', highlight: false, image: '/Imagens/chefraissa.webp' },
+      { id: 10, name: 'Chef Rafael', company: "RICH's", time: '10:15h às 11:00h', highlight: false, image: '/Imagens/chefrafael.webp' },
+      // { id: 8, name: 'Chef Raissa', company: 'Cargill', time: '13:45h às 14:30h', highlight: false, image: '/Imagens/chefraissa.webp' },
       // { id: 6, name: 'Chef Heaven', company: 'Unilever Pro', time: '15:30h às 16:15h', highlight: true, image: '/Imagens/chefheaven.webp' },
     ]
   }

@@ -19,7 +19,7 @@ export default function IndustryCarousel() {
       </div>
       <div className="container" style={{ overflow: 'hidden', padding: 0 }}>
         <div className={styles.carouselTrack}>
-          {[...logos, ...logos].map((logo, i) => (
+          {Array(10).fill(logos).flat().map((logo, i) => (
             <div key={i} className={styles.carouselItem}>
               <Image 
                 src={logo.src} 
