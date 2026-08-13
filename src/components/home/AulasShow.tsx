@@ -88,10 +88,10 @@ export default function AulasShow() {
                     {speaker.company}
                   </div>
                   
-                  <div className={styles.timeBlock}>
+                  {/* <div className={styles.timeBlock}>
                     <FiClock className={styles.timeIcon} />
                     <span>{speaker.time}</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             ))}
