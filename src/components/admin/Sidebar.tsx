@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { FiHome, FiKey, FiUsers, FiList, FiTag, FiFileText, FiGift, FiLogOut, FiX } from 'react-icons/fi';
+import { FaHamburger, FaBrain } from 'react-icons/fa';
 import styles from './Sidebar.module.css';
 import { createClient } from '@/utils/supabase/client';
 
@@ -74,14 +75,15 @@ export default function Sidebar({ isCollapsed = false, isMobileOpen = false, clo
         { name: 'Leads', path: '/painel-administrador/participantes', icon: <FiUsers />, module: 'Participantes' },
         { name: 'Categorias', path: '/painel-administrador/categorias', icon: <FiTag />, module: 'Categorias' },
         { name: 'Sorteios', path: '/painel-administrador/sorteios', icon: <FiGift />, module: 'Sorteios' },
-        { name: 'Jogo da Memória', path: '/painel-administrador/jogo-memoria', icon: <FiGift />, module: 'Sorteios' },
-        { name: 'Jogo do Hambúrguer', path: '/painel-administrador/jogo-hamburguer', icon: <FiGift />, module: 'Sorteios' },
-        { name: 'Entrega de Prêmios', path: '/painel-administrador/entrega-premios', icon: <FiGift />, module: 'Sorteios' }
+        { name: 'Jogo da Memória', path: '/painel-administrador/jogo-memoria', icon: <FaBrain />, module: 'Sorteios' },
+        { name: 'Jogo do Hambúrguer', path: '/painel-administrador/jogo-hamburguer', icon: <FaHamburger />, module: 'Sorteios' },
+        { name: 'Entrega de Prêmios', path: '/painel-administrador/entrega-premios', icon: <FiList />, module: 'Sorteios' }
       ]
     },
     {
       title: 'CONFIGURAÇÕES',
       items: [
+        { name: 'Política', path: '/painel-administrador/politica', icon: <FiFileText />, module: 'Configuracoes' },
         { name: 'Logs', path: '/painel-administrador/logs', icon: <FiFileText />, module: 'Logs' }
       ]
     }

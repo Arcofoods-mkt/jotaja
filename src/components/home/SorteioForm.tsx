@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomSelect from '../CustomSelect';
 import { createClient } from '@/utils/supabase/client';
 import styles from './OQueEsperar.module.css';
@@ -35,8 +35,24 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess, tran
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [rulesAccepted, setRulesAccepted] = useState(false);
   const [showRulesModal, setShowRulesModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [termsText, setTermsText] = useState('Carregando termos...');
 
   const supabase = createClient();
+
+  useEffect(() => {
+    if (showTermsModal) {
+      const fetchTerms = async () => {
+        const { data, error } = await supabase.from('system_settings').select('value').eq('key', 'terms_of_use').single();
+        if (data && !error) {
+          setTermsText(data.value || 'Nenhum termo cadastrado ainda.');
+        } else {
+          setTermsText('Nenhum termo cadastrado ainda.');
+        }
+      };
+      fetchTerms();
+    }
+  }, [showTermsModal, supabase]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Apenas letras, espaços e acentos
@@ -288,7 +304,18 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess, tran
               onChange={(e) => setTermsAccepted(e.target.checked)} 
               style={{ width: '16px', height: '16px', cursor: 'pointer' }}
             />
-            <span>Li e concordo com os Termos de Uso e a Política de Privacidade.</span>
+            <span>
+              Li e concordo com os{' '}
+              <span 
+                style={{ color: '#B5E51D', textDecoration: 'underline' }} 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowTermsModal(true);
+                }}
+              >
+                Termos de Uso e a Política de Privacidade
+              </span>.
+            </span>
           </label>
         </div>
         
@@ -309,7 +336,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess, tran
                   setShowRulesModal(true);
                 }}
               >
-                regras do sorteio
+                regras do sorteio e jogos
               </span>.
             </span>
           </label>
@@ -338,6 +365,26 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess, tran
               className="btn-primary" 
               style={{ marginTop: '2rem', width: '100%' }} 
               onClick={() => setShowRulesModal(false)}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showTermsModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+          <div style={{ background: '#09233F', borderRadius: '16px', padding: '2rem', maxWidth: '800px', width: '100%', border: '1px solid #247AD8', position: 'relative', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ color: '#B5E51D', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'center' }}>Termos de Uso e Política de Privacidade</h3>
+            <div 
+              style={{ color: '#FFF', fontSize: '1rem', lineHeight: '1.6', overflowY: 'auto', flex: 1, paddingRight: '10px', textAlign: 'left', whiteSpace: 'pre-wrap' }}
+              dangerouslySetInnerHTML={{ __html: termsText }}
+            />
+            <button 
+              type="button" 
+              className="btn-primary" 
+              style={{ marginTop: '2rem', width: '100%' }} 
+              onClick={() => setShowTermsModal(false)}
             >
               Entendido
             </button>
