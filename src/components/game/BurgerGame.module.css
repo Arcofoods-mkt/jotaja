@@ -166,48 +166,6 @@
   height: 100%;
 }
 
-@media (max-width: 768px) {
-  .memorizeLayout {
-    width: 100vw;
-    height: 85vh;
-    margin-left: calc(-50vw + 50%);
-    gap: 0;
-  }
-  
-  .desktopBurger {
-    display: none;
-  }
-  
-  .mobileBurger {
-    display: flex;
-    width: 90%;
-    margin-right: auto;
-  }
-  
-  .memorizeImageMobile {
-    object-fit: contain;
-    object-position: left center;
-  }
-  
-  .memorizeRight {
-    display: none;
-  }
-  
-  .memorizeLeft {
-    flex: 1;
-    justify-content: center;
-    height: 100%;
-  }
-  
-  .memorizeRight {
-    flex: 1;
-    justify-content: flex-start;
-  }
-  
-  .memorizeRight .memorizeImage {
-    object-position: left center;
-  }
-}
 
 .recipeList {
   flex: 1;
@@ -290,79 +248,98 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  padding: 1rem;
+  padding: 0;
   min-height: 100%;
-  background: rgba(0,0,0,0.2);
-  border-radius: 12px;
+  background: transparent;
   align-content: flex-start;
+  justify-content: center;
 }
 
 .ingredientItem {
-  width: 80px;
-  height: 80px;
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: grab;
+  transition: transform 0.2s;
+  width: 130px;
+  height: 130px;
   touch-action: none;
-  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
 }
-.ingredientItem:active {
-  cursor: grabbing;
-}
-.ingredientItemOverlay {
-  width: 80px;
-  height: 80px;
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
+
+.ingredientItem.dragging {
   transform: scale(1.1);
+  opacity: 0.8;
+  z-index: 10;
 }
-.dragging {
-  opacity: 0.3;
+
+.ingredientItemOverlay {
+  width: 130px;
+  height: 130px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5));
 }
 
 .slotsArea {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  width: 120px;
+  width: 100px;
+  align-items: center;
 }
 
 .slot {
-  width: 100%;
-  height: 60px;
-  background-color: rgba(255,255,255,0.05);
-  border: 1px dashed rgba(255,255,255,0.2);
-  border-radius: 8px;
+  width: 70px;
+  height: 70px;
+  background-color: #09233F;
+  border: 1px solid #247AD8;
+  border-radius: 16px;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   position: relative;
   transition: all 0.2s;
 }
 
 .slotOver {
-  background-color: rgba(181, 229, 29, 0.2);
+  background-color: rgba(36, 122, 216, 0.4);
   border-color: #B5E51D;
+  transform: scale(1.05);
 }
 
 .slotFilled {
   border-style: solid;
-  border-color: transparent;
-  background-color: rgba(255,255,255,0.1);
+  border-color: #B5E51D;
 }
 
 .slotNumber {
   position: absolute;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: rgba(255,255,255,0.2);
+  font-size: 2rem;
+  font-weight: normal;
+  color: #fff;
+  opacity: 1;
   z-index: 0;
 }
+
 .slotFilled .slotNumber {
   display: none; /* Hide number if filled */
 }
 
 .slot .ingredientItem {
   z-index: 1;
-  width: 50px;
-  height: 50px;
+  width: 70px;
+  height: 70px;
+}
+
+.ingredientImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .assemblyFooter {
@@ -403,6 +380,10 @@
   padding: 3rem;
   border-radius: 16px;
   text-align: center;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 .modalTitle {
   font-size: 2rem;
@@ -412,4 +393,145 @@
 .modalText {
   font-size: 1.2rem;
   margin-bottom: 2rem;
+}
+
+.finishedActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gabaritoLayout {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 2rem;
+}
+
+.gabaritoCol {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.gabaritoList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.gabaritoRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  padding: 0.5rem;
+}
+
+.gabaritoNumber {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  width: 30px;
+  text-align: center;
+}
+
+.gabaritoItemBox {
+  width: 60px;
+  height: 60px;
+  background: #09233F;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .memorizeLayout {
+    width: 100vw;
+    height: 85vh;
+    margin-left: calc(-50vw + 50%);
+    gap: 0;
+  }
+  
+  .desktopBurger {
+    display: none;
+  }
+  
+  .mobileBurger {
+    display: flex;
+    width: 90%;
+    margin-right: auto;
+  }
+  
+  .memorizeImageMobile {
+    object-fit: contain;
+    object-position: left center;
+  }
+  
+  .memorizeRight {
+    display: none;
+  }
+  
+  .memorizeLeft {
+    flex: 1;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .memorizeRight {
+    flex: 1;
+    justify-content: flex-start;
+  }
+  
+  .memorizeRight .memorizeImage {
+    object-position: left center;
+  }
+  
+  /* Tela 4: Assembly Mobile Adjustments */
+  .assemblyLayout {
+    gap: 0.5rem;
+  }
+  
+  .poolContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    align-items: center;
+    justify-items: center;
+  }
+  
+  .ingredientItem {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .ingredientItemOverlay {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .slot {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+  }
+  
+  .slotNumber {
+    font-size: 1.2rem;
+    font-weight: normal;
+  }
+  
+  .slot .ingredientItem {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .gabaritoLayout {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
 }

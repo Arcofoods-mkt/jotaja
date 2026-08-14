@@ -31,6 +31,7 @@ const RECIPE = [
 interface BurgerGameProps {
   participantId: string;
   onFinish?: () => void;
+  initialState?: 'rules' | 'memorizing' | 'assembly' | 'finished';
 }
 
 // --- Componentes DnD auxiliares ---
@@ -47,7 +48,7 @@ function DraggableIngredient({ id, ingredient }: { id: string, ingredient: any }
       {...attributes}
       className={`${styles.ingredientItem} ${isDragging ? styles.dragging : ''}`}
     >
-      <Image src={ingredient.img} alt={ingredient.name} width={80} height={80} style={{ objectFit: 'contain' }} draggable={false} />
+      <Image src={ingredient.img} alt={ingredient.name} width={150} height={150} className={styles.ingredientImg} draggable={false} />
     </div>
   );
 }
@@ -77,6 +78,8 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
   const [isPeek, setIsPeek] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [penalty, setPenalty] = useState(0);
+  const [hasWon, setHasWon] = useState(false);
+  const [showGabarito, setShowGabarito] = useState(false);
   
   // Estado das posições (null significa vazio, caso contrário tem o objeto do ingrediente)
   const [slots, setSlots] = useState<(typeof RECIPE[0] | null)[]>(Array(8).fill(null));
@@ -164,6 +167,8 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
         break;
       }
     }
+    
+    setHasWon(isCorrect);
 
     // Salvar no BD
     try {
@@ -311,6 +316,11 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
       {gameState === 'assembly' && (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <div className={styles.assemblyScreen}>
+            {/* Cronômetro no topo */}
+            <div className={styles.assemblyTimer} style={{ margin: '0 auto 1rem auto' }}>
+              {formatTime(timeLeft)}
+            </div>
+
             <div className={styles.assemblyLayout}>
               
               {/* Esquerda: Pool de Ingredientes */}
@@ -332,9 +342,6 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
             
             {/* Rodapé da Montagem */}
             <div className={styles.assemblyFooter}>
-              <div className={styles.assemblyTimer}>
-                {formatTime(timeLeft)}
-              </div>
               <div className={styles.assemblyActions}>
                 <button className={styles.btnSecondary} onClick={handlePeek}>
                   -10s. Ver novamente
@@ -349,7 +356,7 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
           <DragOverlay>
             {activeIngredient ? (
               <div className={styles.ingredientItemOverlay}>
-                <Image src={activeIngredient.img} alt={activeIngredient.name} width={80} height={80} style={{ objectFit: 'contain' }} />
+                <Image src={activeIngredient.img} alt={activeIngredient.name} width={150} height={150} className={styles.ingredientImg} />
               </div>
             ) : null}
           </DragOverlay>
@@ -359,16 +366,69 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
       {/* TELA 5: Resultado (Extraída para quando clica em Finalizar) */}
       {gameState === 'finished' && (
         <div className={styles.finishedScreen}>
-          <div className={styles.modal}>
-            <h2 className={styles.modalTitle}>Jogo Encerrado!</h2>
-            <p className={styles.modalText}>
-              Você levou <strong>{60 - timeLeft} segundos</strong>. <br/>
-              Penalidades de espiada: {penalty} segundos.
-              <br/><br/>
-              A sua montagem foi avaliada e a pontuação já está no Ranking!
-            </p>
-            <button className={styles.btnPrimary} onClick={onFinish}>Voltar ao Início</button>
-          </div>
+          {!showGabarito ? (
+            <div className={styles.modal}>
+              <h2 className={styles.modalTitle}>{hasWon ? 'Parabéns! 🎉' : 'Que pena! 😢'}</h2>
+              <p className={styles.modalText}>
+                {hasWon 
+                  ? 'Você montou o hambúrguer perfeitamente!' 
+                  : 'A ordem dos ingredientes não está correta.'}
+                <br/><br/>
+                Tempo de montagem: <strong>{60 - timeLeft}s</strong> <br/>
+                Penalidades: {penalty}s <br/>
+                Tempo Final: <strong>{(60 - timeLeft) + penalty}s</strong>
+              </p>
+              <div className={styles.finishedActions}>
+                <button className={styles.btnPrimary} onClick={onFinish} style={{ flex: 1 }}>Voltar ao Início</button>
+                <button className={styles.btnSecondary} onClick={() => setShowGabarito(true)} style={{ flex: 1 }}>Ver Gabarito</button>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.modal} style={{ maxWidth: '800px', width: '90%' }}>
+              <h2 className={styles.modalTitle} style={{ marginBottom: '2rem' }}>Comparação</h2>
+              
+              <div className={styles.gabaritoLayout}>
+                {/* Coluna do Usuário */}
+                <div className={styles.gabaritoCol}>
+                  <h3 style={{ color: '#B5E51D', marginBottom: '1rem', textAlign: 'center' }}>Sua Montagem</h3>
+                  <div className={styles.gabaritoList}>
+                    {slots.map((item, idx) => (
+                      <div key={idx} className={styles.gabaritoRow}>
+                        <div className={styles.gabaritoNumber}>{idx + 1}</div>
+                        <div className={styles.gabaritoItemBox}>
+                          {item ? (
+                            <Image src={item.img} alt={item.name} width={60} height={60} className={styles.ingredientImg} />
+                          ) : (
+                            <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem' }}>Vazio</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                {/* Coluna do Gabarito Oficial */}
+                <div className={styles.gabaritoCol}>
+                  <h3 style={{ color: '#247AD8', marginBottom: '1rem', textAlign: 'center' }}>Gabarito Correto</h3>
+                  <div className={styles.gabaritoList}>
+                    {RECIPE.map((item, idx) => (
+                      <div key={idx} className={styles.gabaritoRow}>
+                        <div className={styles.gabaritoNumber}>{idx + 1}</div>
+                        <div className={styles.gabaritoItemBox}>
+                          <Image src={item.img} alt={item.name} width={60} height={60} className={styles.ingredientImg} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.finishedActions} style={{ marginTop: '2rem' }}>
+                <button className={styles.btnSecondary} onClick={() => setShowGabarito(false)} style={{ flex: 1 }}>Voltar</button>
+                <button className={styles.btnPrimary} onClick={onFinish} style={{ flex: 1 }}>Voltar ao Início</button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
