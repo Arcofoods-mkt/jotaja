@@ -392,7 +392,7 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
                   <h3 style={{ color: '#B5E51D', fontSize: '1.4rem', fontWeight: 400, marginBottom: '1rem', textAlign: 'center' }}>Sua montagem</h3>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     {slots.map((item, idx) => {
-                      const isCorrect = item?.id === RECIPE[idx].id;
+                      const isCorrect = item?.name === RECIPE[idx].name;
                       const numberColor = isCorrect ? '#B5E51D' : '#ff4d4f';
                       return (
                         <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
