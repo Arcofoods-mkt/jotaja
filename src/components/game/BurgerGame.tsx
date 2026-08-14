@@ -73,7 +73,7 @@ function DroppableSlot({ id, index, currentIngredient }: { id: string, index: nu
 }
 
 export default function BurgerGame({ participantId, onFinish, initialState = 'rules' }: BurgerGameProps) {
-  const [gameState, setGameState] = useState<GameState>(initialState);
+  const [gameState, setGameState] = useState<'rules' | 'memorizing' | 'assembly' | 'finished'>(initialState as any);
   const [memorizeTime, setMemorizeTime] = useState(10);
   const [isPeek, setIsPeek] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
