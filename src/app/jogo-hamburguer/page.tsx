@@ -5,12 +5,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiArrowLeft } from 'react-icons/fi';
 import SorteioForm from '@/components/home/SorteioForm';
+import LoginParticipant from '@/components/game/LoginParticipant';
 import BurgerGame from '@/components/game/BurgerGame';
 import { createClient } from '@/utils/supabase/client';
 import styles from '../game/GamePage.module.css';
 
 export default function BurgerGamePage() {
   const [step, setStep] = useState<1 | 2>(1);
+  const [showLogin, setShowLogin] = useState(false);
   const [participantId, setParticipantId] = useState<string | null>(null);
   const [tipologiaOptions, setTipologiaOptions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,10 +39,26 @@ export default function BurgerGamePage() {
     fetchInitialData();
   }, [supabase]);
 
+  const handleGameStart = async (partId: string) => {
+    // Verificar se já jogou algum jogo
+    const { data: memData } = await supabase.from('memory_game_results').select('id').eq('participant_id', partId).maybeSingle();
+    if (memData) {
+      alert("Você já participou de um dos jogos! Só é permitido jogar uma única vez.");
+      return;
+    }
+    const { data: burData } = await supabase.from('burger_game_results').select('id').eq('participant_id', partId).maybeSingle();
+    if (burData) {
+      alert("Você já participou de um dos jogos! Só é permitido jogar uma única vez.");
+      return;
+    }
+
+    setParticipantId(partId);
+    setStep(2);
+  };
+
   const handleFormSuccess = (participantData: any) => {
     if (participantData && participantData.id) {
-      setParticipantId(participantData.id);
-      setStep(2);
+      handleGameStart(participantData.id);
     } else {
       alert("Inscrição concluída, mas não foi possível iniciar o jogo.");
     }
@@ -83,23 +101,38 @@ export default function BurgerGamePage() {
             <div style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 1, pointerEvents: 'none', transform: 'translate(-25%, 25%) rotate(-15deg)' }}>
               <Image src="/Imagens/burger2.webp" alt="Burger Bottom Left" width={400} height={400} style={{ objectFit: 'contain', maxWidth: '35vw', height: 'auto' }} />
             </div>
-          <div className={styles.formSection} style={{ maxWidth: '350px', margin: '0 auto' }}>
+          <div className={styles.formSection}>
             <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
               <Image 
                 src="/Imagens/Preencha jogue e ganhe.webp" 
                 alt="Preencha, jogue e ganhe!" 
-                width={280} 
-                height={90} 
+                width={400} 
+                height={120} 
                 style={{ objectFit: 'contain', maxWidth: '100%', height: 'auto' }} 
               />
             </div>
-            <p className={styles.description} style={{ marginTop: '0', fontSize: '0.85rem', marginBottom: '1rem', lineHeight: '1.4' }}>
-              Inscreva-se para o grande sorteio, vença o Jogo da Memória e garanta um brinde na hora!
+            <p className={styles.description} style={{ marginTop: '0', marginBottom: '2rem', lineHeight: '1.4' }}>
+              Inscreva-se para o grande sorteio, vença o Jogo do Hambúrguer e <span style={{ color: '#B5E51D' }}>garanta um brinde na hora!</span>
             </p>
-            <SorteioForm 
-              tipologiaOptions={tipologiaOptions} 
-              onSuccess={handleFormSuccess}
-            />
+            {!showLogin ? (
+              <>
+                <SorteioForm 
+                  tipologiaOptions={tipologiaOptions} 
+                  onSuccess={handleFormSuccess}
+                  transparentForm={true}
+                />
+                <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem', color: '#fff' }}>
+                  Já é inscrito? <span style={{ color: '#B5E51D', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => setShowLogin(true)}>Acesse para jogar</span>
+                </p>
+              </>
+            ) : (
+              <>
+                <LoginParticipant onSuccess={handleGameStart} transparentForm={true} />
+                <p style={{ textAlign: 'center', marginTop: '1rem', fontSize: '0.9rem', color: '#fff' }}>
+                  Ainda não é inscrito? <span style={{ color: '#B5E51D', textDecoration: 'underline', cursor: 'pointer' }} onClick={() => setShowLogin(false)}>Inscreva-se</span>
+                </p>
+              </>
+            )}
           </div>
           </>
         )}

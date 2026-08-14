@@ -384,48 +384,66 @@ export default function BurgerGame({ participantId, onFinish, initialState = 'ru
               </div>
             </div>
           ) : (
-            <div className={styles.modal} style={{ maxWidth: '800px', width: '90%' }}>
-              <h2 className={styles.modalTitle} style={{ marginBottom: '2rem' }}>Comparação</h2>
-              
-              <div className={styles.gabaritoLayout}>
+            <div style={{ maxWidth: '800px', width: '100%', margin: '0 auto', padding: '1rem 0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+                
                 {/* Coluna do Usuário */}
-                <div className={styles.gabaritoCol}>
-                  <h3 style={{ color: '#B5E51D', marginBottom: '1rem', textAlign: 'center' }}>Sua Montagem</h3>
-                  <div className={styles.gabaritoList}>
-                    {slots.map((item, idx) => (
-                      <div key={idx} className={styles.gabaritoRow}>
-                        <div className={styles.gabaritoNumber}>{idx + 1}</div>
-                        <div className={styles.gabaritoItemBox}>
-                          {item ? (
-                            <Image src={item.img} alt={item.name} width={60} height={60} className={styles.ingredientImg} />
-                          ) : (
-                            <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem' }}>Vazio</span>
-                          )}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                  <h3 style={{ color: '#B5E51D', fontSize: '1.4rem', fontWeight: 400, marginBottom: '1rem', textAlign: 'center' }}>Sua montagem</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                    {slots.map((item, idx) => {
+                      const isCorrect = item?.id === RECIPE[idx].id;
+                      const numberColor = isCorrect ? '#B5E51D' : '#ff4d4f';
+                      return (
+                        <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
+                          <span style={{ color: numberColor, fontSize: '1.8rem', fontWeight: 300, width: '25px', textAlign: 'right' }}>{idx + 1}</span>
+                          <div style={{ width: '70px', display: 'flex', justifyContent: 'center' }}>
+                            {item ? (
+                              <Image src={item.img} alt={item.name} width={70} height={70} style={{ objectFit: 'contain' }} />
+                            ) : (
+                              <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem' }}>Vazio</span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
                 
                 {/* Coluna do Gabarito Oficial */}
-                <div className={styles.gabaritoCol}>
-                  <h3 style={{ color: '#247AD8', marginBottom: '1rem', textAlign: 'center' }}>Gabarito Correto</h3>
-                  <div className={styles.gabaritoList}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                  <h3 style={{ color: '#B5E51D', fontSize: '1.4rem', fontWeight: 400, marginBottom: '1rem', textAlign: 'center' }}>Gabarito</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
                     {RECIPE.map((item, idx) => (
-                      <div key={idx} className={styles.gabaritoRow}>
-                        <div className={styles.gabaritoNumber}>{idx + 1}</div>
-                        <div className={styles.gabaritoItemBox}>
-                          <Image src={item.img} alt={item.name} width={60} height={60} className={styles.ingredientImg} />
+                      <div key={idx} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem' }}>
+                        <div style={{ width: '70px', display: 'flex', justifyContent: 'center' }}>
+                          <Image src={item.img} alt={item.name} width={70} height={70} style={{ objectFit: 'contain' }} />
                         </div>
+                        <span style={{ color: '#B5E51D', fontSize: '1.8rem', fontWeight: 300, width: '25px', textAlign: 'left' }}>{idx + 1}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </div>
 
-              <div className={styles.finishedActions} style={{ marginTop: '2rem' }}>
-                <button className={styles.btnSecondary} onClick={() => setShowGabarito(false)} style={{ flex: 1 }}>Voltar</button>
-                <button className={styles.btnPrimary} onClick={onFinish} style={{ flex: 1 }}>Voltar ao Início</button>
+              <div style={{ marginTop: '2.5rem', textAlign: 'center' }}>
+                <button 
+                  style={{ 
+                    background: '#B5E51D', 
+                    color: '#000', 
+                    border: 'none', 
+                    padding: '0.8rem 3rem', 
+                    fontSize: '1.2rem', 
+                    borderRadius: '8px', 
+                    fontWeight: 500, 
+                    cursor: 'pointer',
+                    width: 'auto',
+                    minWidth: '200px'
+                  }} 
+                  onClick={() => setShowGabarito(false)}
+                >
+                  Voltar
+                </button>
               </div>
             </div>
           )}

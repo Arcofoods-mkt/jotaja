@@ -16,9 +16,10 @@ interface SorteioFormProps {
   tipologiaOptions: Option[];
   eventId?: string;
   onSuccess?: (participantData: any) => void;
+  transparentForm?: boolean;
 }
 
-export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: SorteioFormProps) {
+export default function SorteioForm({ tipologiaOptions, eventId, onSuccess, transparentForm = false }: SorteioFormProps) {
   const [formData, setFormData] = useState({
     personal_name: '',
     establishment_name: '',
@@ -189,7 +190,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
   }
 
   return (
-    <form className={styles.formContainer} onSubmit={handleSubmit} noValidate>
+    <form className={styles.formContainer} style={transparentForm ? { background: 'transparent', border: 'none', padding: '0', boxShadow: 'none' } : {}} onSubmit={handleSubmit} noValidate>
 
       <div>
         <input 
@@ -280,7 +281,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.2rem', marginBottom: '0.5rem', textAlign: 'left' }}>
         <div>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', cursor: 'pointer', color: errors.terms ? '#ff4d4f' : '#fff' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', cursor: 'pointer', color: errors.terms ? '#ff4d4f' : '#fff' }}>
             <input 
               type="checkbox" 
               checked={termsAccepted} 
@@ -292,7 +293,7 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
         </div>
         
         <div>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', cursor: 'pointer', color: errors.rules ? '#ff4d4f' : '#fff' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', cursor: 'pointer', color: errors.rules ? '#ff4d4f' : '#fff' }}>
             <input 
               type="checkbox" 
               checked={rulesAccepted} 

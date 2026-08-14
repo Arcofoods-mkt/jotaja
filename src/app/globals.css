@@ -134,7 +134,7 @@ p {
 /* Buttons and Inputs */
 .input-field {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.65rem 0.8rem;
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--glass-border);
   border-radius: 8px;
@@ -231,13 +231,13 @@ select.input-field {
 
 .btn-primary {
   width: 100%;
-  padding: 1rem 1.5rem;
+  padding: 0.65rem 1.5rem;
   background: var(--gradient-primary);
   color: #000;
   border: none;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   text-decoration: none;
   transition: transform 0.2s, box-shadow 0.2s;
   display: inline-block;
