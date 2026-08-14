@@ -145,7 +145,7 @@
 }
 
 .agendaCard {
-  width: calc(25% - 1.5rem);
+  width: calc(33.333% - 1.5rem);
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 0;

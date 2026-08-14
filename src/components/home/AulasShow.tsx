@@ -8,7 +8,8 @@ const speakers = [
   { id: 1, name: 'Chef Ivan', company: 'Unilever', highlight: false, image: '/Imagens/chefivan.webp' },
   { id: 7, name: 'Chef Elisa', company: 'Lactalis', highlight: false, image: '/Imagens/chefelisa.webp' },
   { id: 9, name: 'Chef Rafael', company: "RICH's", highlight: false, image: '/Imagens/chefrafael.webp' },
-  { id: 11, name: 'Chef Julio', company: 'Pão de Alho do Julio', highlight: false, image: '/Imagens/chefjulio.webp' }
+  { id: 11, name: 'Chef Julio', company: 'Pão de Alho do Julio', highlight: false, image: '/Imagens/chefjulio.webp' },
+  { id: 12, name: 'Gabriela Elias', company: 'Unilever Pro', highlight: false, image: '/Imagens/gabrielaelias.webp' }
 ];
 
 export default function AulasShow() {
