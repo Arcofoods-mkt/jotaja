@@ -30,7 +30,10 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [errors, setErrors] = useState({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
+  const [errors, setErrors] = useState({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '', terms: '', rules: '' });
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [rulesAccepted, setRulesAccepted] = useState(false);
+  const [showRulesModal, setShowRulesModal] = useState(false);
 
   const supabase = createClient();
 
@@ -51,11 +54,11 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setErrors({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
+    setErrors({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '', terms: '', rules: '' });
     setSuccess(false);
 
     let hasErrors = false;
-    const newErrors = { personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' };
+    const newErrors = { personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '', terms: '', rules: '' };
 
     if (!formData.personal_name.trim()) {
       newErrors.personal_name = 'O Nome Pessoal é obrigatório.';
@@ -87,6 +90,16 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
 
     if (!formData.category_id) {
       newErrors.general = 'Por favor, selecione uma tipologia.';
+      hasErrors = true;
+    }
+
+    if (!termsAccepted) {
+      newErrors.terms = 'Aceite obrigatório para continuar.';
+      hasErrors = true;
+    }
+    
+    if (!rulesAccepted) {
+      newErrors.rules = 'Aceite obrigatório para continuar.';
       hasErrors = true;
     }
 
@@ -265,11 +278,71 @@ export default function SorteioForm({ tipologiaOptions, eventId, onSuccess }: So
         onChange={(val) => setFormData({...formData, category_id: val})}
       />
 
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.2rem', marginBottom: '0.5rem', textAlign: 'left' }}>
+        <div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', cursor: 'pointer', color: errors.terms ? '#ff4d4f' : '#fff' }}>
+            <input 
+              type="checkbox" 
+              checked={termsAccepted} 
+              onChange={(e) => setTermsAccepted(e.target.checked)} 
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            <span>Li e concordo com os Termos de Uso e a Política de Privacidade.</span>
+          </label>
+        </div>
+        
+        <div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', cursor: 'pointer', color: errors.rules ? '#ff4d4f' : '#fff' }}>
+            <input 
+              type="checkbox" 
+              checked={rulesAccepted} 
+              onChange={(e) => setRulesAccepted(e.target.checked)} 
+              style={{ width: '16px', height: '16px', cursor: 'pointer' }}
+            />
+            <span>
+              Estou ciente e de acordo com as{' '}
+              <span 
+                style={{ color: '#B5E51D', textDecoration: 'underline' }} 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowRulesModal(true);
+                }}
+              >
+                regras do sorteio
+              </span>.
+            </span>
+          </label>
+        </div>
+        {(errors.terms || errors.rules) && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>Você precisa aceitar os termos de uso e as regras para continuar.</p>}
+      </div>
+
       {errors.general && <p style={{ color: '#ff4d4f', fontSize: '0.85rem', margin: '0' }}>{errors.general}</p>}
 
       <button type="submit" className="btn-primary" disabled={loading} style={{ margin: 0, marginTop: '-0.3rem' }}>
         {loading ? 'Enviando...' : 'Participar agora!'}
       </button>
+
+      {showRulesModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+          <div style={{ background: '#09233F', borderRadius: '16px', padding: '2rem', maxWidth: '500px', width: '100%', border: '1px solid #247AD8', position: 'relative' }}>
+            <h3 style={{ color: '#B5E51D', marginBottom: '1.5rem', fontSize: '1.5rem', textAlign: 'center' }}>Regras do Sorteio</h3>
+            <div style={{ color: '#FFF', fontSize: '1rem', lineHeight: '1.6', display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
+              <p>Para receber o prêmio, é <strong>obrigatório</strong> estar presente no evento do JOTAJA.</p>
+              <p>O sorteio será realizado exclusivamente no stand da Arcofoods.</p>
+              <p>Caso a pessoa sorteada não esteja presente no momento do sorteio, um novo sorteio será realizado na sequência, até que um participante presente seja contemplado e receba o prêmio.</p>
+              <p>Todo o processo de sorteio será gravado para garantir total transparência e comprovar a presença (ou ausência) dos sorteados no nosso stand.</p>
+            </div>
+            <button 
+              type="button" 
+              className="btn-primary" 
+              style={{ marginTop: '2rem', width: '100%' }} 
+              onClick={() => setShowRulesModal(false)}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
     </form>
   );
 }

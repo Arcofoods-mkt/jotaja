@@ -33,11 +33,11 @@ export default async function AboutTheDraw() {
             <div className={styles.vipFeatures}>
               <div className={styles.greenBoxItem}>
                 <div className={styles.greenBoxIcon}><FiGift /></div> 
-                <span><strong>Brindes Premium:</strong> Concorra a kits exclusivos para inscritos.</span>
+                <span><strong>Brindes:</strong> Concorra a kits exclusivos para inscritos.</span>
               </div>
               <div className={styles.greenBoxItem}>
                 <div className={styles.greenBoxIcon}><FiDollarSign /></div> 
-                <span><strong>Descontos Inéditos:</strong> Ganhe tabelas de preços únicas no evento.</span>
+                <span><strong>Descontos:</strong> Ganhe tabelas de preços únicas no evento.</span>
               </div>
             </div>
           </div>
