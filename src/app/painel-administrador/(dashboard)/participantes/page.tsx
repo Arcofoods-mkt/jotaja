@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { FiPlus, FiEdit, FiTrash2, FiCopy, FiGrid, FiList, FiFilter } from 'react-icons/fi';
+import { FiPlus, FiEdit, FiTrash2, FiCopy, FiGrid, FiList, FiFilter, FiColumns } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import AdminTable from '@/components/admin/AdminTable';
 import AdminModal from '@/components/admin/AdminModal';
@@ -70,6 +70,24 @@ export default function ParticipantesPage() {
   const [errors, setErrors] = useState({ personal_name: '', establishment_name: '', cnpj: '', email: '', whatsapp: '', general: '' });
   const [successMessage, setSuccessMessage] = useState('');
 
+  // Column Visibility State
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [isColumnModalOpen, setIsColumnModalOpen] = useState(false);
+  const allColumnKeys = [
+    { key: 'personal_name', label: 'Nome' },
+    { key: 'establishment_name', label: 'Empresa' },
+    { key: 'cnpj', label: 'CNPJ' },
+    { key: 'contact', label: 'Contatos' },
+    { key: 'category', label: 'Tipologia' },
+    { key: 'tag', label: 'Tag' },
+    { key: 'event', label: 'Evento' },
+    { key: 'segment', label: 'Segmento' },
+    { key: 'classification', label: 'Classificação' },
+    { key: 'active', label: 'Status' },
+    { key: 'actions', label: 'Ações' }
+  ];
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(allColumnKeys.map(c => c.key));
+
   // Permissions
   const { permissions, isAdmin } = usePermissions();
   const perms = isAdmin ? { ver: true, editar: true, bloquear: true, excluir: true } : (permissions.Participantes || {});
@@ -79,6 +97,18 @@ export default function ParticipantesPage() {
   const fetchData = async () => {
     setLoading(true);
     
+    // Fetch User
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      setCurrentUser(user);
+      const savedCols = localStorage.getItem(`leads_columns_${user.id}`);
+      if (savedCols) {
+        try {
+          setVisibleColumns(JSON.parse(savedCols));
+        } catch(e) {}
+      }
+    }
+
     // Fetch Participants with Categories Join
     const { data: pData, error: pError } = await supabase
       .from('participants')
@@ -374,6 +404,8 @@ export default function ParticipantesPage() {
     }
   ];
 
+  const filteredColumnsToRender = columns.filter(col => visibleColumns.includes(col.key));
+
   return (
     <div>
       <div className="adminPageHeader">
@@ -408,22 +440,31 @@ export default function ParticipantesPage() {
         </div>
       ) : (
         <AdminTable 
-          columns={columns} 
+          columns={filteredColumnsToRender} 
           data={filteredParticipants} 
           searchFields={['personal_name', 'establishment_name', 'cnpj', 'email', 'whatsapp']}
           searchPlaceholder="Pesquisar por nome, empresa, cnpj, email ou whatsapp..." 
           viewMode={viewMode}
           extraHeaderContent={
-            <button 
-              className={`${styles.filterBtn} ${getActiveFilterCount() > 0 ? styles.filterBtnActive : ''}`} 
-              onClick={() => {
-                setDraftFilters(selectedFilters);
-                setIsFilterModalOpen(true);
-              }}
-            >
-              <FiFilter /> Filtros
-              {getActiveFilterCount() > 0 && <span className={styles.filterBadge}>{getActiveFilterCount()}</span>}
-            </button>
+            <>
+              <button 
+                className={styles.filterBtn} 
+                onClick={() => setIsColumnModalOpen(true)}
+                title="Configurar Colunas"
+              >
+                <FiColumns /> Colunas
+              </button>
+              <button 
+                className={`${styles.filterBtn} ${getActiveFilterCount() > 0 ? styles.filterBtnActive : ''}`} 
+                onClick={() => {
+                  setDraftFilters(selectedFilters);
+                  setIsFilterModalOpen(true);
+                }}
+              >
+                <FiFilter /> Filtros
+                {getActiveFilterCount() > 0 && <span className={styles.filterBadge}>{getActiveFilterCount()}</span>}
+              </button>
+            </>
           }
         />
       )}
@@ -552,6 +593,37 @@ export default function ParticipantesPage() {
             <button type="submit" className="btn-primary">Salvar</button>
           </div>
         </form>
+      </AdminModal>
+      <AdminModal isOpen={isColumnModalOpen} onClose={() => setIsColumnModalOpen(false)} title="Configurar Colunas">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '10px' }}>
+            Selecione quais colunas você deseja visualizar na tabela. Esta preferência será salva para o seu usuário.
+          </p>
+          {allColumnKeys.map(col => (
+            <label key={col.key} className={styles.checkboxContainer} style={col.key === 'personal_name' || col.key === 'actions' ? { opacity: 0.6 } : {}}>
+              <input 
+                type="checkbox" 
+                checked={visibleColumns.includes(col.key)} 
+                onChange={(e) => {
+                  const isChecked = e.target.checked;
+                  setVisibleColumns(prev => {
+                    const newCols = isChecked ? [...prev, col.key] : prev.filter(k => k !== col.key);
+                    const orderedCols = allColumnKeys.filter(c => newCols.includes(c.key)).map(c => c.key);
+                    if (currentUser) {
+                      localStorage.setItem(`leads_columns_${currentUser.id}`, JSON.stringify(orderedCols));
+                    }
+                    return orderedCols;
+                  });
+                }}
+                disabled={col.key === 'personal_name' || col.key === 'actions'}
+              />
+              {col.label}
+            </label>
+          ))}
+          <div className="modal-actions" style={{ marginTop: '2rem' }}>
+            <button type="button" className="btn-primary" onClick={() => setIsColumnModalOpen(false)}>Concluir</button>
+          </div>
+        </div>
       </AdminModal>
       <AdminModal isOpen={isFilterModalOpen} onClose={() => setIsFilterModalOpen(false)} title="Filtros Avançados">
         <div>
